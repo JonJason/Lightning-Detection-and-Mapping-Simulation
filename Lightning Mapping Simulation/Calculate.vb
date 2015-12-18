@@ -8,6 +8,15 @@
         B = temp
     End Sub
 
+    Public Sub printStation(ByVal array)
+        Dim text As String = ""
+        Console.WriteLine("---------")
+        For i = 0 To array.Length - 1
+            text = array(i).id & "|" & array(i).Latitude & "|" & array(i).Longitude & "|" & array(i).TOA
+            Console.WriteLine(text)
+        Next
+    End Sub
+
     Public Sub print2D(ByVal array)
         Dim text As String = ""
         Console.WriteLine("---------")
@@ -22,22 +31,41 @@
 
     Private Sub bubbleSort(ByRef array As Array, ByVal sortCol As Integer)
         Dim sorted As Boolean = False
-        Dim newIndex(array.GetLength(0)) As Integer
-        While (Not sorted)
-            sorted = True
-            For i = 1 To array.GetLength(0) - 1
-                If array(i, sortCol) < array(i - 1, sortCol) Then
-                    For j = 0 To array.GetLength(1) - 1
-                        swap(array(i, j), array(i - 1, j))
+        Dim indexer(array.Length - 1)
+        Select Case sortCol
+            Case 0
+                While (Not sorted)
+                    sorted = True
+                    For i = 1 To array.Length - 1
+                        If array(i).id < array(i - 1).id Then
+                            swap(array(i), array(i - 1))
+                            sorted = False
+                        End If
                     Next
-                    sorted = False
-                End If
-            Next
-        End While
+                End While
+            Case 1
+
+            Case 2
+
+            Case 3
+                While (Not sorted)
+                    sorted = True
+                    For i = 1 To array.Length - 1
+                        If array(i).TOA < array(i - 1).TOA Then
+                            swap(array(i), array(i - 1))
+                            sorted = False
+                        End If
+                    Next
+                End While
+            Case Else
+
+        End Select
     End Sub
 
     Public Function DTOAFilter(ByVal dataStation As Array, ByVal calcMode As Integer) As Array
+        printStation(dataStation)
         bubbleSort(dataStation, 3)
+        printStation(dataStation)
         Dim dataCount As Integer
         Select Case calcMode
             Case 1
@@ -47,7 +75,7 @@
             Case Else
                 Return {}
         End Select
-        Dim minDiff As Decimal = dataStation(1, 3) - dataStation(0, 3)
+        Dim minDiff As Decimal = dataStation(1).TOA - dataStation(0).TOA
         Dim iData(dataCount - 1) As Integer
         iData(0) = 1
         For i = 1 To dataCount - 1
@@ -57,15 +85,13 @@
                 iData(i) = i
             End If
         Next
-        print2D(dataStation)
-        Console.WriteLine(minDiff)
         For i = 2 To dataStation.GetLength(0) - 1
-            Console.WriteLine(minDiff & "||" & dataStation(i, 3) - dataStation(i - 1, 3))
             Console.WriteLine(i + 1)
-            If minDiff > dataStation(i, 3) - dataStation(i - 1, 3) Then     'MinDiff > DTOA stasiun i - (i-1)
+            Console.WriteLine(minDiff & "||" & dataStation(i).TOA - dataStation(i - 1).TOA)
+            If minDiff > dataStation(i).TOA - dataStation(i - 1).TOA Then     'MinDiff > DTOA stasiun i - (i-1)
                 Console.WriteLine("MULAI")
-                minDiff = dataStation(i, 3) - dataStation(i - 1, 3)
-                If i = dataStation.GetLength(0) - 1 Then
+                minDiff = dataStation(i).TOA - dataStation(i - 1).TOA
+                If i = dataStation.Length - 1 Then
                     Console.WriteLine("AKHIR")
                     iData(0) = i - 1
                     For j = 1 To dataCount - 1
@@ -77,7 +103,7 @@
                     Next
                 Else
                     If dataCount = 3 Then
-                        If dataStation(i + 1, 3) - dataStation(i, 3) > dataStation(i - 1, 3) - dataStation(i - 2, 3) Then           ' 1 2 3 4-> 4-3 > 2-1
+                        If dataStation(i + 1).TOA - dataStation(i).TOA > dataStation(i - 1).TOA - dataStation(i - 2).TOA Then           ' 1 2 3 4-> 4-3 > 2-1
                             iData(0) = i - 1
                             iData(1) = i - 2
                             iData(2) = i
@@ -88,12 +114,12 @@
                         End If
                     End If
                     If dataCount = 4 Then
-                        If dataStation(i + 1, 3) - dataStation(i, 3) > dataStation(i - 1, 3) - dataStation(i - 2, 3) Then           ' 1 2 3 4-> 4-3 > 2-1
+                        If dataStation(i + 1).TOA - dataStation(i).TOA > dataStation(i - 1).TOA - dataStation(i - 2).TOA Then           ' 1 2 3 4-> 4-3 > 2-1
                             Console.WriteLine("Y>Z")
                             iData(0) = i - 1
                             iData(1) = i - 2
                             iData(2) = i
-                            If i < dataCount - 1 Or dataStation(i + 1, 3) - dataStation(i, 3) < dataStation(i - 2, 3) - dataStation(i - 3, 3) Then
+                            If i < dataCount - 1 Or dataStation(i + 1).TOA - dataStation(i).TOA < dataStation(i - 2).TOA - dataStation(i - 3).TOA Then
                                 Console.WriteLine("V>Y")
                                 iData(3) = i + 1
                             Else
@@ -105,7 +131,7 @@
                             iData(0) = i
                             iData(1) = i - 1
                             iData(2) = i + 1
-                            If i < dataStation.GetLength(0) - 2 Or dataStation(i + 2, 3) - dataStation(i + 1, 3) > dataStation(i - 1, 3) - dataStation(i - 2, 3) Then
+                            If i < dataStation.Length - 2 Or dataStation(i + 2).TOA - dataStation(i + 1).TOA > dataStation(i - 1).TOA - dataStation(i - 2).TOA Then
                                 Console.WriteLine("W>Z")
                                 iData(3) = i - 2
                             Else
@@ -119,12 +145,10 @@
         Next
         Console.WriteLine(iData(0) & "," & iData(1) & "," & iData(2) & "," & iData(3))
         bubbleSort(dataStation, 0)
-        print2D(dataStation)
-        Dim FilteredArray(iData.Length - 1, dataStation.GetLength(1) - 1)
-        For i = 0 To FilteredArray.GetLength(0) - 1
-            For j = 0 To FilteredArray.GetLength(1) - 1
-                FilteredArray(i, j) = dataStation(iData(i), j)
-            Next
+        printStation(dataStation)
+        Dim FilteredArray(iData.Length - 1)
+        For i = 0 To FilteredArray.Length - 1
+            FilteredArray(i) = dataStation(iData(i))
         Next
         Return FilteredArray
     End Function
@@ -174,7 +198,24 @@
         Return {}
     End Function
 
-    Private Function LinearSpherical() As Array
+    Private Function LinearSpherical(ByVal dataSet As Array) As Array
+
+        Dim arrData(dataSet.GetLength(0) - 1)
+        For i = 0 To arrData.Length - 1
+            arrData(i) = New DataFormat.dataSets()
+            arrData(i).Latitude = dataSet(i, 1)
+            arrData(i).Longitude = dataSet(i, 2)
+            arrData(i).TOA = dataSet(i, 3)
+            MsgBox("Location " & i + 1 & " : " & arrData(i).Latitude & "," & arrData(i).Latitude & vbCrLf & "time: " & arrData(i).TOA)
+        Next
+        Dim K(dataSet.GetLength(0) - 1, 3)
+        'For i = 0 To K.GetLength(0) - 1
+        'K(i, 0) = (Math.Cos(dataSet(i, 1) * Math.PI / 180) * Math.Cos(dataSet(i,) / 360 * 2 * Math.PI));
+        'K(i, 0) = (Math.Cos(lat[i]/360*2*Math.PI) * Math.Sin(lon[i]/360*2*Math.PI));
+        'K(i, 0) = (Math.Sin(lat[i]/360*2*Math.PI));
+        'K(i, 0) = (-Math.Cos((c * t_i[i]) / R));
+        'Next
         Return {}
     End Function
+
 End Class
