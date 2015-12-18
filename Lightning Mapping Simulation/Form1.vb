@@ -47,7 +47,7 @@
             Next
             dataSet = calc.DTOAFilter(stations, simulation.CalcMode)
             calc.printStation(dataSet)
-            'calc.Locate(dataSet, simulation.CalcMode)
+            calc.Locate(dataSet, simulation.CalcMode)
         Next
         For Each item In stations
             Console.WriteLine(item.TOA)

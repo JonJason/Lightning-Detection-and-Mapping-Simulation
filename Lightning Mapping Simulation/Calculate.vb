@@ -199,23 +199,104 @@
     End Function
 
     Private Function LinearSpherical(ByVal dataSet As Array) As Array
-
-        Dim arrData(dataSet.GetLength(0) - 1)
-        For i = 0 To arrData.Length - 1
-            arrData(i) = New DataFormat.dataSets()
-            arrData(i).Latitude = dataSet(i, 1)
-            arrData(i).Longitude = dataSet(i, 2)
-            arrData(i).TOA = dataSet(i, 3)
-            MsgBox("Location " & i + 1 & " : " & arrData(i).Latitude & "," & arrData(i).Latitude & vbCrLf & "time: " & arrData(i).TOA)
+        Dim c As Decimal = sim.c
+        Dim R As Decimal = sim.R
+        Dim K(dataSet.Length - 1, 3) As Decimal
+        Dim Ri(dataSet.Length - 1, 2) As Decimal
+        For i = 0 To K.GetLength(0) - 1
+            K(i, 0) = (Math.Cos(dataSet(i).Latitude * Math.PI / 180) * Math.Cos(dataSet(i).Longitude * Math.PI / 180))
+            K(i, 1) = (Math.Cos(dataSet(i).Latitude * Math.PI / 180) * Math.Sin(dataSet(i).Longitude * Math.PI / 180))
+            K(i, 2) = (Math.Sin(dataSet(i).Latitude * Math.PI / 180))
+            K(i, 3) = (-Math.Cos((c * dataSet(i).TOA) / R))
+            Ri(i, 0) = K(i, 0)
+            Ri(i, 1) = K(i, 1)
+            Ri(i, 2) = K(i, 2)
         Next
-        Dim K(dataSet.GetLength(0) - 1, 3)
-        'For i = 0 To K.GetLength(0) - 1
-        'K(i, 0) = (Math.Cos(dataSet(i, 1) * Math.PI / 180) * Math.Cos(dataSet(i,) / 360 * 2 * Math.PI));
-        'K(i, 0) = (Math.Cos(lat[i]/360*2*Math.PI) * Math.Sin(lon[i]/360*2*Math.PI));
-        'K(i, 0) = (Math.Sin(lat[i]/360*2*Math.PI));
-        'K(i, 0) = (-Math.Cos((c * t_i[i]) / R));
-        'Next
+        Console.WriteLine("K")
+        print2D(K)
+        Console.WriteLine("Ri")
+        print2D(Ri)
+        Dim rotatedMatrix = Rotate(Ri, -dataSet(0).Longitude, 3)
+        Console.WriteLine("rotated")
+        print2D(rotatedMatrix)
+        rotatedMatrix = Rotate(rotatedMatrix, dataSet(0).Latitude, 2)
         Return {}
     End Function
 
+    Private Function Rotate(ByVal matrix As Array, ByVal angle As Decimal, ByVal axis As Integer)
+        angle = angle * Math.PI / 180
+        Dim rotateMatrix(2, 2) As Decimal
+        For i = 0 To rotateMatrix.GetLength(0) - 1
+            For j = 0 To rotateMatrix.GetLength(1) - 1
+                rotateMatrix(i, j) = 0
+            Next
+        Next
+        If axis = 1 Then
+            rotateMatrix(0, 0) = 1
+            rotateMatrix(1, 1) = Math.Cos(angle)
+            rotateMatrix(2, 2) = Math.Cos(angle)
+            rotateMatrix(1, 2) = -Math.Sin(angle)
+            rotateMatrix(2, 1) = Math.Sin(angle)
+        ElseIf axis = 2 Then
+            rotateMatrix(1, 1) = 1
+            rotateMatrix(2, 2) = Math.Cos(angle)
+            rotateMatrix(0, 0) = Math.Cos(angle)
+            rotateMatrix(2, 0) = -Math.Sin(angle)
+            rotateMatrix(0, 2) = Math.Sin(angle)
+        ElseIf axis = 3 Then
+            rotateMatrix(2, 2) = 1
+            rotateMatrix(0, 0) = Math.Cos(angle)
+            rotateMatrix(1, 1) = Math.Cos(angle)
+            rotateMatrix(0, 1) = -Math.Sin(angle)
+            rotateMatrix(1, 0) = Math.Sin(angle)
+        Else
+            MsgBox("axis Invalid")
+        End If
+        Console.WriteLine("rotateMatrix")
+        print2D(rotateMatrix)
+        Dim transposedRi = transposeMatrix(matrix)
+        print2D(transposedRi)
+        Dim Rxr = multiplyMatrix(rotateMatrix, transposedRi)
+        Dim rotatedMatrix = transposeMatrix(Rxr)
+        Return rotatedMatrix
+    End Function
+
+    Private Function transposeMatrix(ByVal matrix As Array) As Array
+        Dim transposedMatrix(matrix.GetLength(1) - 1, matrix.GetLength(0) - 1)
+        For i = 0 To matrix.GetLength(0) - 1
+            For j = 0 To matrix.GetLength(1) - 1
+                transposedMatrix(j, i) = matrix(i, j)
+            Next
+        Next
+        print2D(matrix)
+        print2D(transposedMatrix)
+        Return transposedMatrix
+    End Function
+
+    Private Function multiplyMatrix(ByVal A As Array, ByVal B As Array) As Array
+        Dim C(A.GetLength(0) - 1, B.GetLength(1) - 1)
+        Console.WriteLine("A")
+        print2D(A)
+        Console.WriteLine("B")
+        print2D(B)
+        Console.WriteLine("C")
+        print2D(C)
+        If A.GetLength(1) = B.GetLength(0) Then
+            For i = 0 To C.GetLength(0) - 1
+                For j = 0 To C.GetLength(1) - 1
+                    C(i, j) = 0
+                    For k = 0 To A.GetLength(1) - 1
+                        Console.WriteLine("i :" & i & vbCrLf & "j :" & j & vbCrLf & "k :" & k)
+                        C(i, j) += A(i, k) * B(k, j)
+                        Console.WriteLine(A(i, k))
+                        Console.WriteLine(B(k, j))
+                        Console.WriteLine(C(i, j))
+                    Next
+                Next
+            Next
+            Return C
+        Else
+            Return {}
+        End If
+    End Function
 End Class
