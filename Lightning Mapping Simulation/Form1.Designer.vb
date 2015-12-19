@@ -23,8 +23,8 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.startButton = New System.Windows.Forms.Button()
         Me.textBox = New System.Windows.Forms.TextBox()
+        Me.startButton = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -38,6 +38,14 @@ Partial Class Form1
         Me.Panel1.Size = New System.Drawing.Size(260, 188)
         Me.Panel1.TabIndex = 0
         '
+        'textBox
+        '
+        Me.textBox.Location = New System.Drawing.Point(4, 4)
+        Me.textBox.Multiline = True
+        Me.textBox.Name = "textBox"
+        Me.textBox.Size = New System.Drawing.Size(253, 181)
+        Me.textBox.TabIndex = 0
+        '
         'startButton
         '
         Me.startButton.Location = New System.Drawing.Point(197, 226)
@@ -46,14 +54,6 @@ Partial Class Form1
         Me.startButton.TabIndex = 1
         Me.startButton.Text = "Start"
         Me.startButton.UseVisualStyleBackColor = True
-        '
-        'textBox
-        '
-        Me.textBox.Location = New System.Drawing.Point(4, 4)
-        Me.textBox.Multiline = True
-        Me.textBox.Name = "textBox"
-        Me.textBox.Size = New System.Drawing.Size(253, 181)
-        Me.textBox.TabIndex = 0
         '
         'Form1
         '
