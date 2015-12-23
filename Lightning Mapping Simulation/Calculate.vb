@@ -63,9 +63,9 @@
     End Sub
 
     Public Function DTOAFilter(ByVal dataStation As Array, ByVal calcMode As Integer) As Array
-        printStation(dataStation)
+        'printStation(dataStation)
         bubbleSort(dataStation, 3)
-        printStation(dataStation)
+        'printStation(dataStation)
         Dim dataCount As Integer
         Select Case calcMode
             Case 1
@@ -85,6 +85,7 @@
                 iData(i) = i
             End If
         Next
+        'Condition: V Z X Y W
         For i = 2 To dataStation.GetLength(0) - 1
             'Console.WriteLine(i + 1)
             'Console.WriteLine(minDiff & "||" & dataStation(i).TOA - dataStation(i - 1).TOA)
@@ -119,24 +120,34 @@
                             iData(0) = i - 1
                             iData(1) = i - 2
                             iData(2) = i
-                            If i < dataCount - 1 Or dataStation(i + 1).TOA - dataStation(i).TOA < dataStation(i - 2).TOA - dataStation(i - 3).TOA Then
-                                'Console.WriteLine("V>Y")
-                                iData(3) = i + 1
+                            If i >= dataCount - 1 Then
+                                If dataStation(i + 1).TOA - dataStation(i).TOA < dataStation(i - 2).TOA - dataStation(i - 3).TOA Then
+                                    'Console.WriteLine("V>Y")
+                                    iData(3) = i + 1
+                                Else
+                                    'Console.WriteLine("Y>V")
+                                    iData(3) = i - 3
+                                End If
                             Else
-                                'Console.WriteLine("Y>V")
-                                iData(3) = i - 3
+                                'Console.WriteLine("MENTOK BAWAH")
+                                iData(3) = i + 1
                             End If
                         Else
                             'Console.WriteLine("Z>Y")
                             iData(0) = i
                             iData(1) = i - 1
                             iData(2) = i + 1
-                            If i < dataStation.Length - 2 Or dataStation(i + 2).TOA - dataStation(i + 1).TOA > dataStation(i - 1).TOA - dataStation(i - 2).TOA Then
-                                'Console.WriteLine("W>Z")
-                                iData(3) = i - 2
+                            If i < dataStation.Length - 2 Then
+                                If dataStation(i + 2).TOA - dataStation(i + 1).TOA > dataStation(i - 1).TOA - dataStation(i - 2).TOA Then
+                                    'Console.WriteLine("W>Z")
+                                    iData(3) = i - 2
+                                Else
+                                    'Console.WriteLine("Z>W")
+                                    iData(3) = i + 2
+                                End If
                             Else
-                                'Console.WriteLine("Z>W")
-                                iData(3) = i + 2
+                                'Console.WriteLine("MENTOK ATAS")
+                                iData(3) = i - 2
                             End If
                         End If
                     End If

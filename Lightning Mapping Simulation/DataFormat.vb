@@ -14,7 +14,6 @@
     End Class
 
     Public Class result
-        Public id As Integer
         Public Latitude As Decimal
         Public Longitude As Decimal
         Public TimeOfOccurence As Decimal

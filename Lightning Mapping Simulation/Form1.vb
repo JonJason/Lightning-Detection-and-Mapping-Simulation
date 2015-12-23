@@ -5,14 +5,23 @@
         Public firstLon As Decimal = 105.5
         Public lastLat As Decimal = -6
         Public lastLon As Decimal = 108.5
-        Public nIteration As Integer = 1
-        Public deltaLat As Decimal = 0.5
-        Public deltaLon As Decimal = 0.5
+        Public nIteration As Integer = 1000
+        Public deltaLat As Decimal = 0.05
+        Public deltaLon As Decimal = 0.05
         Public errorTOA As Decimal = 0.000001
+        Public errorTOAMean As Decimal = 0
+        Public errorTOASigma As Decimal = 0.00000025
         Public c As Decimal = 300000000
         Public R As Decimal = 6367000
     End Class
 
+    Private Function BoxMullerRandom(ByVal mean, ByVal sigma) As Decimal
+        Randomize()
+        Dim r1 = Rnd()
+        Dim r2 = Rnd()
+        Dim randomResult = mean + sigma * Math.Sqrt(-2 * Math.Log(r1)) * Math.Sin(2 * Math.PI * r2)
+        Return randomResult
+    End Function
 
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -25,6 +34,10 @@
         Dim dataSet As Array
         Dim arcDistance As Decimal
         Dim result As DataFormat.result
+        Dim arrayResult(simulation.nIteration - 1) As DataFormat.result
+        Dim totalPoint As Integer = (Math.Floor((simulation.lastLat - simulation.firstLat) / simulation.deltaLat) + 1) * (Math.Floor((simulation.lastLon - simulation.firstLon) / simulation.deltaLon) + 1)
+        Dim arrayAccuracy(totalPoint - 1, 2) As Decimal 'lat, lon, accuracy
+        Dim resultId As Integer = 0
         simulation.CalcMode = 1   '1 Linear Spherical Method    2 Quadratic Planar Method
 
         Dim arrayStation = {
@@ -45,19 +58,41 @@
         Next
         For simLat = simulation.firstLat To simulation.lastLat
             For simLon = simulation.firstLon To simulation.lastLon
+                arrayAccuracy(resultId, 2) = 0
                 For iIteration = 1 To simulation.nIteration
                     For iStation = 0 To stations.Length - 1
                         arcDistance = calc.Busur(stations(iStation).Latitude, stations(iStation).Longitude, simLat, simLon)
-                        stations(iStation).TOA = arcDistance / simulation.c
+                        stations(iStation).TOA = arcDistance / simulation.c + BoxMullerRandom(simulation.errorTOAMean, simulation.errorTOASigma)
                     Next
                     dataSet = calc.DTOAFilter(stations, simulation.CalcMode)
-                    calc.printStation(dataSet)
+                    'calc.printStation(dataSet)
                     result = calc.Locate(dataSet, simulation.CalcMode)
-                    MsgBox(result.Latitude & ", " & result.Longitude & vbCrLf & result.TimeOfOccurence)
+                    result.Accuracy = calc.Busur(result.Latitude, result.Longitude, simLat, simLon)
+                    arrayResult(iIteration - 1) = result
+                    'textBox.Text += iIteration-1 & ", "
+                    'textBox.Text += Decimal.Round(arrayResult(iIteration - 1).Latitude, 4) & ", "
+                    'textBox.Text += Decimal.Round(arrayResult(iIteration - 1).Longitude, 4) & ", "
+                    'textBox.Text += arrayResult(iIteration - 1).Accuracy & vbCrLf
+                    arrayAccuracy(resultId, 2) += arrayResult(iIteration - 1).Accuracy
                 Next
+                arrayAccuracy(resultId, 0) = simLat
+                arrayAccuracy(resultId, 1) = simLon
+                arrayAccuracy(resultId, 2) /= simulation.nIteration
+                textBox.Text += "Latitude  : " & arrayAccuracy(resultId, 0) & vbCrLf
+                textBox.Text += "Longitude : " & arrayAccuracy(resultId, 1) & vbCrLf
+                textBox.Text += "Accuracy  : " & arrayAccuracy(resultId, 2) & vbCrLf
+                resultId += 1
                 simLon += simulation.deltaLon - 1
             Next simLon
             simLat += simulation.deltaLat - 1
         Next simLat
+        MsgBox("Done")
+    End Sub
+
+    Private Sub TextBox_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles textBox.KeyPress
+        If e.KeyChar = Convert.ToChar(1) Then
+            DirectCast(sender, TextBox).SelectAll()
+            e.Handled = True
+        End If
     End Sub
 End Class
