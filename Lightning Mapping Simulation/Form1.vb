@@ -1,19 +1,27 @@
 ﻿Public Class Form1
+    Private tSimulation As Threading.Thread
+    Delegate Function tProgressBar_at_Max() As Boolean
+    Private suspended As Boolean
+
     Class SimData
         Public CalcMode As Integer
         Public firstLat As Decimal = -7.5
         Public firstLon As Decimal = 105.5
         Public lastLat As Decimal = -6
         Public lastLon As Decimal = 108.5
-        Public nIteration As Integer = 1000
-        Public deltaLat As Decimal = 0.05
-        Public deltaLon As Decimal = 0.05
+        Public nIteration As Integer = 100
+        Public deltaLat As Decimal = 0.5
+        Public deltaLon As Decimal = 0.5
         Public errorTOA As Decimal = 0.000001
         Public errorTOAMean As Decimal = 0
         Public errorTOASigma As Decimal = 0.00000025
         Public c As Decimal = 300000000
         Public R As Decimal = 6367000
     End Class
+
+    Dim simulation As New SimData
+    Dim calc As New Calculate
+    Dim totalPoint As Integer = (Math.Floor((simulation.lastLat - simulation.firstLat) / simulation.deltaLat) + 1) * (Math.Floor((simulation.lastLon - simulation.firstLon) / simulation.deltaLon) + 1)
 
     Private Function BoxMullerRandom(ByVal mean, ByVal sigma) As Decimal
         Randomize()
@@ -25,17 +33,59 @@
 
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        ProgressBar1.Visible = False
+        lblProgress.Visible = False
     End Sub
 
     Private Sub startButton_Click(sender As Object, e As EventArgs) Handles startButton.Click
-        Dim simulation As New SimData
-        Dim calc As New Calculate
+
+        If tSimulation Is Nothing Then tSimulation = New Threading.Thread(AddressOf startSimulation)
+
+        If tSimulation.IsAlive Then
+            If suspended Then
+                suspended = Not suspended
+                tSimulation.Resume()
+            Else
+                suspended = Not suspended
+                tSimulation.Suspend()
+            End If
+
+        Else
+            With ProgressBar1
+                .Style = ProgressBarStyle.Blocks
+                .Step = 1
+                .Minimum = 0
+                .Maximum = simulation.nIteration * totalPoint
+                .Value = 0
+                .Visible = True
+            End With
+            With lblProgress
+                .Text = "0/" & ProgressBar1.Maximum
+                .Visible = True
+            End With
+            tSimulation = New Threading.Thread(AddressOf startSimulation)
+            tSimulation.IsBackground = True
+            tSimulation.Start()
+
+            suspended = False
+        End If
+    End Sub
+
+    Private Function ProgressBar_at_Max() As Boolean
+        ProgressBar_at_Max = False
+        If ProgressBar1.Value >= ProgressBar1.Maximum Then
+            ProgressBar_at_Max = True
+        Else
+            ProgressBar_at_Max = False
+        End If
+
+    End Function
+
+    Private Sub startSimulation()
         Dim dataSet As Array
         Dim arcDistance As Decimal
         Dim result As DataFormat.result
         Dim arrayResult(simulation.nIteration - 1) As DataFormat.result
-        Dim totalPoint As Integer = (Math.Floor((simulation.lastLat - simulation.firstLat) / simulation.deltaLat) + 1) * (Math.Floor((simulation.lastLon - simulation.firstLon) / simulation.deltaLon) + 1)
         Dim arrayAccuracy(totalPoint - 1, 2) As Decimal 'lat, lon, accuracy
         Dim resultId As Integer = 0
         simulation.CalcMode = 1   '1 Linear Spherical Method    2 Quadratic Planar Method
@@ -64,6 +114,8 @@
                         arcDistance = calc.Busur(stations(iStation).Latitude, stations(iStation).Longitude, simLat, simLon)
                         stations(iStation).TOA = arcDistance / simulation.c + BoxMullerRandom(simulation.errorTOAMean, simulation.errorTOASigma)
                     Next
+                    Me.Invoke(New MethodInvoker(Sub() Me.ProgressBar1.Increment(1)))
+                    Me.Invoke(New MethodInvoker(Sub() Me.lblProgress.Text = Me.ProgressBar1.Value & "/" & Me.ProgressBar1.Maximum))
                     dataSet = calc.DTOAFilter(stations, simulation.CalcMode)
                     'calc.printStation(dataSet)
                     result = calc.Locate(dataSet, simulation.CalcMode)
@@ -78,15 +130,17 @@
                 arrayAccuracy(resultId, 0) = simLat
                 arrayAccuracy(resultId, 1) = simLon
                 arrayAccuracy(resultId, 2) /= simulation.nIteration
-                textBox.Text += "Latitude  : " & arrayAccuracy(resultId, 0) & vbCrLf
-                textBox.Text += "Longitude : " & arrayAccuracy(resultId, 1) & vbCrLf
-                textBox.Text += "Accuracy  : " & arrayAccuracy(resultId, 2) & vbCrLf
+                Me.Invoke(New MethodInvoker(Sub() Me.textBox.Text += "Latitude  : " & arrayAccuracy(resultId, 0) & vbCrLf))
+                Me.Invoke(New MethodInvoker(Sub() Me.textBox.Text += "Longitude : " & arrayAccuracy(resultId, 1) & vbCrLf))
+                Me.Invoke(New MethodInvoker(Sub() Me.textBox.Text += "Accuracy  : " & arrayAccuracy(resultId, 2) & vbCrLf))
                 resultId += 1
                 simLon += simulation.deltaLon - 1
             Next simLon
             simLat += simulation.deltaLat - 1
         Next simLat
-        MsgBox("Done")
+        Me.Invoke(New MethodInvoker(Sub() Me.ProgressBar1.Visible = False))
+        Me.Invoke(New MethodInvoker(Sub() Me.lblProgress.Visible = False))
+        'MsgBox("Done")
     End Sub
 
     Private Sub TextBox_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles textBox.KeyPress
@@ -95,4 +149,5 @@
             e.Handled = True
         End If
     End Sub
+
 End Class
