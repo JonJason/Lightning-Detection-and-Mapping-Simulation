@@ -1,5 +1,6 @@
 ﻿Public Class Form1
     Private tSimulation As Threading.Thread
+    Private tRemainingTime As Threading.Thread
     Delegate Function tProgressBar_at_Max() As Boolean
     Private suspended As Boolean
 
@@ -9,9 +10,9 @@
         Public firstLon As Decimal = 105.5
         Public lastLat As Decimal = -6
         Public lastLon As Decimal = 108.5
-        Public nIteration As Integer = 100
-        Public deltaLat As Decimal = 0.5
-        Public deltaLon As Decimal = 0.5
+        Public nIteration As Integer = 1000
+        Public deltaLat As Decimal = 0.01
+        Public deltaLon As Decimal = 0.05
         Public errorTOA As Decimal = 0.000001
         Public errorTOAMean As Decimal = 0
         Public errorTOASigma As Decimal = 0.00000025
@@ -35,6 +36,9 @@
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ProgressBar1.Visible = False
         lblProgress.Visible = False
+        lblRemainingTime.Visible = False
+        lblStatus.Visible = False
+        lblProgress.BackColor = Color.Transparent
     End Sub
 
     Private Sub startButton_Click(sender As Object, e As EventArgs) Handles startButton.Click
@@ -44,10 +48,16 @@
         If tSimulation.IsAlive Then
             If suspended Then
                 suspended = Not suspended
+                tRemainingTime.Resume()
                 tSimulation.Resume()
+                startButton.Text = "Pause"
+                lblStatus.Text = "Status: Resuming. . ."
             Else
                 suspended = Not suspended
+                tRemainingTime.Suspend()
                 tSimulation.Suspend()
+                startButton.Text = "Resume"
+                lblStatus.Text = "Status: Paused. . ."
             End If
 
         Else
@@ -63,23 +73,27 @@
                 .Text = "0/" & ProgressBar1.Maximum
                 .Visible = True
             End With
+            With lblStatus
+                .Text = "Status: Starting. . ."
+                .Visible = True
+            End With
+            With lblRemainingTime
+                .Text = "Unknown. . ."
+                .Visible = True
+            End With
             tSimulation = New Threading.Thread(AddressOf startSimulation)
             tSimulation.IsBackground = True
+
+            tRemainingTime = New Threading.Thread(AddressOf startPredictTime)
+            tRemainingTime.IsBackground = True
             tSimulation.Start()
+            tRemainingTime.Start()
+
+            startButton.Text = "Pause"
 
             suspended = False
         End If
     End Sub
-
-    Private Function ProgressBar_at_Max() As Boolean
-        ProgressBar_at_Max = False
-        If ProgressBar1.Value >= ProgressBar1.Maximum Then
-            ProgressBar_at_Max = True
-        Else
-            ProgressBar_at_Max = False
-        End If
-
-    End Function
 
     Private Sub startSimulation()
         Dim dataSet As Array
@@ -109,13 +123,14 @@
         For simLat = simulation.firstLat To simulation.lastLat
             For simLon = simulation.firstLon To simulation.lastLon
                 arrayAccuracy(resultId, 2) = 0
+                Me.Invoke(New MethodInvoker(Sub() Me.lblStatus.Text = "Status: " & simLat & ", " & simLon))
                 For iIteration = 1 To simulation.nIteration
                     For iStation = 0 To stations.Length - 1
                         arcDistance = calc.Busur(stations(iStation).Latitude, stations(iStation).Longitude, simLat, simLon)
                         stations(iStation).TOA = arcDistance / simulation.c + BoxMullerRandom(simulation.errorTOAMean, simulation.errorTOASigma)
                     Next
                     Me.Invoke(New MethodInvoker(Sub() Me.ProgressBar1.Increment(1)))
-                    Me.Invoke(New MethodInvoker(Sub() Me.lblProgress.Text = Me.ProgressBar1.Value & "/" & Me.ProgressBar1.Maximum))
+                    Me.Invoke(New MethodInvoker(Sub() Me.lblProgress.Text = "Process: " & Me.ProgressBar1.Value & "/" & Me.ProgressBar1.Maximum))
                     dataSet = calc.DTOAFilter(stations, simulation.CalcMode)
                     'calc.printStation(dataSet)
                     result = calc.Locate(dataSet, simulation.CalcMode)
@@ -138,8 +153,12 @@
             Next simLon
             simLat += simulation.deltaLat - 1
         Next simLat
+        MsgBox("Simulation Done")
+        Me.Invoke(New MethodInvoker(Sub() Me.startButton.Text = "Start"))
         Me.Invoke(New MethodInvoker(Sub() Me.ProgressBar1.Visible = False))
         Me.Invoke(New MethodInvoker(Sub() Me.lblProgress.Visible = False))
+        Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Visible = False))
+        Me.Invoke(New MethodInvoker(Sub() Me.lblStatus.Visible = False))
         'MsgBox("Done")
     End Sub
 
@@ -150,4 +169,52 @@
         End If
     End Sub
 
+    Private Sub startPredictTime()
+        Threading.Thread.Sleep(200)
+        Dim remainingTime As Integer = 0
+        Dim progress As Double = 0
+        Dim lastProgress As Double = progress
+        Dim speed As Double
+        Dim finish As Double = ProgressBar1.Maximum
+        Dim tick As Integer = 1000
+        Do
+            progress = ProgressBar1.Value
+            speed = (progress - lastProgress) / tick * 1000
+            remainingTime = (finish - progress) / speed
+            Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Text = "Remaining Time: " & StoHMS(remainingTime)))
+            lastProgress = progress
+            Threading.Thread.Sleep(tick)
+        Loop Until ProgressBar_at_Max()
+    End Sub
+
+    Private Function ProgressBar_at_Max() As Boolean
+        ProgressBar_at_Max = False
+        If ProgressBar1.Value >= ProgressBar1.Maximum Then
+            ProgressBar_at_Max = True
+        Else
+            ProgressBar_at_Max = False
+        End If
+
+    End Function
+
+    Private Function StoHMS(ByVal second) As String
+        Dim hms As String
+        Dim minute As Integer
+        Dim hour As Integer
+        If second < 60 Then
+            hms = second & " s"
+        Else
+            If second < 3600 Then
+                minute = second / 60
+                second = second Mod 60
+                hms = minute & " m " & second & " s"
+            Else
+                hour = second / 3600
+                minute = (second Mod 3600) / 60
+                second = second Mod 60
+                hms = hour & " h " & minute & " m " '& second & " s "
+            End If
+        End If
+        Return hms
+    End Function
 End Class
