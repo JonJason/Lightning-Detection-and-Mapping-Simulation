@@ -1,6 +1,5 @@
 ﻿Public Class Calculate
     Dim sim As New Form1.SimData
-
     Private Sub swap(ByRef A, ByRef B)
         Dim temp
         temp = A
@@ -203,9 +202,67 @@
         Return Result
     End Function
 
-    Private Function QuadraticPlanar() As Array
+    Private Function QuadraticPlanar(ByVal dataSet As Array) As DataFormat.result
 
-        Return {}
+        Dim c As Decimal = sim.c / 1000
+        Dim R As Decimal = sim.R / 1000
+        Dim qa(dataSet.Length - 1) As Decimal
+        Dim q1 As Decimal
+        Dim q2 As Decimal
+        Dim ri2(dataSet.Length - 1) As Decimal
+        Dim x(dataSet.Length - 1) As Decimal
+        Dim y(dataSet.Length - 1) As Decimal
+        Dim dTOA(dataSet.Length - 1) As Decimal
+        Dim result As New DataFormat.result()
+        Dim lightningR As Decimal
+        Dim lightningx As Decimal
+        Dim lightningy As Decimal
+
+        For i = 0 To dataSet.Length - 1
+            dTOA(i) = (dataSet(i).TOA - dataSet(0).TOA)
+            x(i) = latLonToXY(dataSet(0).Latitude, dataSet(0).Longitude, dataSet(i).Latitude, dataSet(i).Longitude)(0) / 1000
+            y(i) = latLonToXY(dataSet(0).Latitude, dataSet(0).Longitude, dataSet(i).Latitude, dataSet(i).Longitude)(1) / 1000
+            ri2(i) = (x(i) * x(i) + y(i) * y(i))
+            qa(i) = (ri2(i) - c * c * dTOA(i) * dTOA(i)) / 2
+            'Console.WriteLine("----------------" & vbCrLf & x(i) & ", " & y(i) & vbCrLf & dTOA(i) & vbCrLf & ri2(i) & vbCrLf & qa(i))
+        Next
+
+        Dim fA As Decimal = c * c * (ri2(2) * dTOA(1) * dTOA(1) - 2 * (x(1) * x(2) + y(1) * y(2)) * dTOA(1) * dTOA(2) + ri2(1) * dTOA(2) * dTOA(2)) - (x(1) * y(2) - y(1) * x(2)) * (x(1) * y(2) - y(1) * x(2))
+        Dim fB As Decimal = 2 * c * (-ri2(2) * qa(1) * dTOA(1) + (x(1) * x(2) + y(1) * y(2)) * (qa(1) * dTOA(2) + qa(2) * dTOA(1)) - ri2(1) * qa(2) * dTOA(2))
+        Dim fC As Decimal = ri2(2) * qa(1) * qa(1) - 2 * (x(1) * x(2) + y(1) * y(2)) * qa(1) * qa(2) + ri2(1) * qa(2) * qa(2)
+        Dim fD As Decimal = fB * fB - 4 * fA * fC
+
+        'Console.WriteLine("---------------" & vbCrLf & fA & vbCrLf & fB & vbCrLf & fC & vbCrLf & fD & vbCrLf)
+
+        Dim r1 = (-fB + Math.Sqrt(fD)) / 2 / fA
+        Dim r2 = (-fB - Math.Sqrt(fD)) / 2 / fA
+        'Console.WriteLine(r1 & ", " & r2)
+
+        If Not (r1 < 0 And r2 < 0) Then
+            If r1 < 0 Then
+                lightningR = r2
+            ElseIf r2 < 0 Then
+                lightningR = r1
+            Else
+                'Console.WriteLine("Shit Happened: " & r1 & ", " & r2)
+                Return result
+            End If
+            q1 = qa(1) - c * dTOA(1) * lightningR
+            q2 = qa(2) - c * dTOA(2) * lightningR
+
+            lightningx = (y(2) * q1 - y(1) * q2) / (x(1) * y(2) - y(1) * x(2)) * 1000
+            lightningy = (x(1) * q2 - x(2) * q1) / (x(1) * y(2) - y(1) * x(2)) * 1000
+
+            result.Latitude = xyToLatLon(dataSet(0).Latitude, dataSet(0).Longitude, lightningx, lightningy)(0)
+            result.Longitude = xyToLatLon(dataSet(0).Latitude, dataSet(0).Longitude, lightningx, lightningy)(1)
+            result.TimeOfOccurence = dataSet(0).TOA - lightningR / c
+
+            result.Latitude = Decimal.Round(result.Latitude, 3)
+            result.Longitude = Decimal.Round(result.Longitude, 3)
+            'Console.WriteLine("Result: " & result.Latitude & ", " & result.Longitude & vbCrLf & result.TimeOfOccurence)
+            Console.WriteLine(result.Latitude & ", " & result.Longitude)
+        End If
+        Return result
     End Function
 
     Private Function LinearSpherical(ByVal dataSet As Array) As DataFormat.result
@@ -246,6 +303,9 @@
         Dim LonY = K(0, 1) * Math.Cos(la_) * Math.Cos(lo_) + Math.Cos(dataSet(0).Longitude * Math.PI / 180) * Math.Cos(la_) * Math.Sin(lo_) - K(0, 2) * Math.Sin(dataSet(0).Longitude * Math.PI / 180) * Math.Sin(la_)
         Dim LonX = K(0, 0) * Math.Cos(la_) * Math.Cos(lo_) - Math.Sin(dataSet(0).Longitude * Math.PI / 180) * Math.Cos(la_) * Math.Sin(lo_) - K(0, 2) * Math.Cos(dataSet(0).Longitude * Math.PI / 180) * Math.Sin(la_)
         result.Longitude = Math.Atan2(LonY, LonX) * 180 / Math.PI
+
+        result.Latitude = Decimal.Round(result.Latitude, 3)
+        result.Longitude = Decimal.Round(result.Longitude, 3)
         Return result
     End Function
 

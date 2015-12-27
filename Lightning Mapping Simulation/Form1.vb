@@ -10,12 +10,11 @@
         Public firstLon As Decimal = 105.5
         Public lastLat As Decimal = -6
         Public lastLon As Decimal = 108.5
-        Public nIteration As Integer = 1000
-        Public deltaLat As Decimal = 0.01
-        Public deltaLon As Decimal = 0.05
-        Public errorTOA As Decimal = 0.000001
+        Public nIteration As Integer = 1
+        Public deltaLat As Decimal = 0.2
+        Public deltaLon As Decimal = 0.2
         Public errorTOAMean As Decimal = 0
-        Public errorTOASigma As Decimal = 0.00000025
+        Public errorTOASigma As Decimal = 0 '0.00000025
         Public c As Decimal = 300000000
         Public R As Decimal = 6367000
     End Class
@@ -102,7 +101,7 @@
         Dim arrayResult(simulation.nIteration - 1) As DataFormat.result
         Dim arrayAccuracy(totalPoint - 1, 2) As Decimal 'lat, lon, accuracy
         Dim resultId As Integer = 0
-        simulation.CalcMode = 1   '1 Linear Spherical Method    2 Quadratic Planar Method
+        simulation.CalcMode = 2 '1 Linear Spherical Method    2 Quadratic Planar Method
 
         Dim arrayStation = {
             {1, -6.9867, 106.5558, vbNull},
@@ -145,9 +144,9 @@
                 arrayAccuracy(resultId, 0) = simLat
                 arrayAccuracy(resultId, 1) = simLon
                 arrayAccuracy(resultId, 2) /= simulation.nIteration
-                Me.Invoke(New MethodInvoker(Sub() Me.textBox.Text += "Latitude  : " & arrayAccuracy(resultId, 0) & vbCrLf))
-                Me.Invoke(New MethodInvoker(Sub() Me.textBox.Text += "Longitude : " & arrayAccuracy(resultId, 1) & vbCrLf))
-                Me.Invoke(New MethodInvoker(Sub() Me.textBox.Text += "Accuracy  : " & arrayAccuracy(resultId, 2) & vbCrLf))
+                Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "Latitude  : " & arrayAccuracy(resultId, 0) & vbCrLf))
+                Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "Longitude : " & arrayAccuracy(resultId, 1) & vbCrLf))
+                Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "Accuracy  : " & arrayAccuracy(resultId, 2) & vbCrLf))
                 resultId += 1
                 simLon += simulation.deltaLon - 1
             Next simLon
@@ -162,7 +161,7 @@
         'MsgBox("Done")
     End Sub
 
-    Private Sub TextBox_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles textBox.KeyPress
+    Private Sub TextBox_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles textBox1.KeyPress
         If e.KeyChar = Convert.ToChar(1) Then
             DirectCast(sender, TextBox).SelectAll()
             e.Handled = True

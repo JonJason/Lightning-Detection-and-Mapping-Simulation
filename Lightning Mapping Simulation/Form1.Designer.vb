@@ -23,7 +23,7 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.textBox = New System.Windows.Forms.TextBox()
+        Me.textBox1 = New System.Windows.Forms.TextBox()
         Me.startButton = New System.Windows.Forms.Button()
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         Me.lblProgress = New System.Windows.Forms.Label()
@@ -39,26 +39,26 @@ Partial Class Form1
         Me.Panel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel1.Controls.Add(Me.textBox)
+        Me.Panel1.Controls.Add(Me.textBox1)
         Me.Panel1.Location = New System.Drawing.Point(12, 12)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(552, 298)
         Me.Panel1.TabIndex = 0
         '
-        'textBox
+        'textBox1
         '
-        Me.textBox.AcceptsReturn = True
-        Me.textBox.AcceptsTab = True
-        Me.textBox.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.textBox1.AcceptsReturn = True
+        Me.textBox1.AcceptsTab = True
+        Me.textBox1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.textBox.BackColor = System.Drawing.SystemColors.Window
-        Me.textBox.Location = New System.Drawing.Point(4, 4)
-        Me.textBox.Multiline = True
-        Me.textBox.Name = "textBox"
-        Me.textBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.textBox.Size = New System.Drawing.Size(545, 291)
-        Me.textBox.TabIndex = 0
+        Me.textBox1.BackColor = System.Drawing.SystemColors.Window
+        Me.textBox1.Location = New System.Drawing.Point(4, 4)
+        Me.textBox1.Multiline = True
+        Me.textBox1.Name = "textBox1"
+        Me.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.textBox1.Size = New System.Drawing.Size(545, 291)
+        Me.textBox1.TabIndex = 0
         '
         'startButton
         '
@@ -147,10 +147,10 @@ Partial Class Form1
 
     Friend WithEvents Panel1 As Panel
     Friend WithEvents startButton As Button
-    Friend WithEvents textBox As TextBox
     Friend WithEvents ProgressBar1 As ProgressBar
     Friend WithEvents lblProgress As Label
     Friend WithEvents lblStatus As Label
     Friend WithEvents lblRemainingTime As Label
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
+    Public WithEvents textBox1 As TextBox
 End Class

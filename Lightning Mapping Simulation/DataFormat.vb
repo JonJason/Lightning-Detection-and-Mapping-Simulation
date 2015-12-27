@@ -19,4 +19,5 @@
         Public TimeOfOccurence As Decimal
         Public Accuracy As Decimal
     End Class
+
 End Class
