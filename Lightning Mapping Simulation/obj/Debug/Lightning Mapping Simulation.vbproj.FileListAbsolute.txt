@@ -1,10 +1,10 @@
-c:\users\asus pc\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning Mapping Simulation.vbprojResolveAssemblyReference.cache
-c:\users\asus pc\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning_Mapping_Simulation.Form1.resources
-c:\users\asus pc\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning_Mapping_Simulation.Resources.resources
-c:\users\asus pc\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning Mapping Simulation.vbproj.GenerateResource.Cache
-c:\users\asus pc\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\bin\Debug\Lightning Mapping Simulation.exe
-c:\users\asus pc\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\bin\Debug\Lightning Mapping Simulation.pdb
-c:\users\asus pc\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\bin\Debug\Lightning Mapping Simulation.xml
-c:\users\asus pc\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning Mapping Simulation.exe
-c:\users\asus pc\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning Mapping Simulation.xml
-c:\users\asus pc\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning Mapping Simulation.pdb
+C:\Users\Asus PC\Documents\Visual Studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\bin\Debug\Lightning Mapping Simulation.exe
+C:\Users\Asus PC\Documents\Visual Studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\bin\Debug\Lightning Mapping Simulation.pdb
+C:\Users\Asus PC\Documents\Visual Studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\bin\Debug\Lightning Mapping Simulation.xml
+C:\Users\Asus PC\Documents\Visual Studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning Mapping Simulation.vbprojResolveAssemblyReference.cache
+C:\Users\Asus PC\Documents\Visual Studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning_Mapping_Simulation.Form1.resources
+C:\Users\Asus PC\Documents\Visual Studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning_Mapping_Simulation.Resources.resources
+C:\Users\Asus PC\Documents\Visual Studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning Mapping Simulation.vbproj.GenerateResource.Cache
+C:\Users\Asus PC\Documents\Visual Studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning Mapping Simulation.exe
+C:\Users\Asus PC\Documents\Visual Studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning Mapping Simulation.xml
+C:\Users\Asus PC\Documents\Visual Studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning Mapping Simulation.pdb

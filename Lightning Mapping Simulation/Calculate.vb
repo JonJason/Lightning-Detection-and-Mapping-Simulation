@@ -7,6 +7,16 @@
         B = temp
     End Sub
 
+    Private Sub printArray(ByVal array)
+        Dim text As String = ""
+        Console.WriteLine("---------")
+        For i = 0 To array.GetLength(0) - 1
+            text += array(i) & "|"
+            Console.WriteLine(text)
+            text = ""
+        Next
+    End Sub
+
     Public Sub printStation(ByVal array)
         Dim text As String = ""
         Console.WriteLine("---------")
@@ -101,13 +111,16 @@
                             iData(j) = i + 1 - dataCount + j
                         End If
                     Next
+                    'printArray(iData)
                 Else
                     If dataCount = 3 Then
-                        If dataStation(i + 1).TOA - dataStation(i).TOA > dataStation(i - 1).TOA - dataStation(i - 2).TOA Then           ' 1 2 3 4-> 4-3 > 2-1
+                        If dataStation(i + 1).TOA - dataStation(i).TOA > dataStation(i - 1).TOA - dataStation(i - 2).TOA Then          ' 1 2 3 4-> 4-3 > 2-1
+                            'Console.WriteLine("Y>Z")
                             iData(0) = i - 1
                             iData(1) = i - 2
                             iData(2) = i
                         Else
+                            'Console.WriteLine("Z>Y")
                             iData(0) = i
                             iData(1) = i - 1
                             iData(2) = i + 1
@@ -153,13 +166,13 @@
                 End If
             End If
         Next
-        'Console.WriteLine(iData(0) & "," & iData(1) & "," & iData(2) & "," & iData(3))
-        bubbleSort(dataStation, 0)
-        'printStation(dataStation)
         Dim FilteredArray(iData.Length - 1)
         For i = 0 To FilteredArray.Length - 1
             FilteredArray(i) = dataStation(iData(i))
         Next
+        'Console.WriteLine(iData(0) & "," & iData(1) & "," & iData(2) & "," & iData(3))
+        bubbleSort(dataStation, 0)
+        'printStation(dataStation)
         Return FilteredArray
     End Function
 
@@ -190,13 +203,22 @@
 
     End Function
 
-    Public Function Locate(ByVal dataSet As Array, ByVal locateMode As Integer) As DataFormat.result
+    Public Function Locate(ByVal dataSet As Array, ByVal locateMode As Integer, ByVal dataStation As Array) As DataFormat.result
         Dim Result As New DataFormat.result
+        'printStation(dataSet)
+        bubbleSort(dataStation, 3)
+        'printStation(wholeStationData)
         Select Case locateMode
             Case 1
                 Result = LinearSpherical(dataSet)
+                'printStation(dataSet)
+                'printStation(dataStation)
+                'Console.WriteLine(Result.Latitude & ", " & Result.Longitude)
             Case 2
                 Result = QuadraticPlanar(dataSet)
+                'printStation(dataSet)
+                'printStation(dataStation)
+                'Console.WriteLine(Result.Latitude & ", " & Result.Longitude)
             Case Else
         End Select
         Return Result
@@ -260,7 +282,7 @@
             result.Latitude = Decimal.Round(result.Latitude, 3)
             result.Longitude = Decimal.Round(result.Longitude, 3)
             'Console.WriteLine("Result: " & result.Latitude & ", " & result.Longitude & vbCrLf & result.TimeOfOccurence)
-            Console.WriteLine(result.Latitude & ", " & result.Longitude)
+            'Console.WriteLine(result.Latitude & ", " & result.Longitude)
         End If
         Return result
     End Function
@@ -306,6 +328,34 @@
 
         result.Latitude = Decimal.Round(result.Latitude, 3)
         result.Longitude = Decimal.Round(result.Longitude, 3)
+        Return result
+    End Function
+
+    Public Function anotherCombination(ByVal dataSet As Array, ByVal dataStation As Array) As DataFormat.result
+        Dim result As New DataFormat.result()
+        'Console.WriteLine("Another try")
+
+        Dim newDataSet(dataSet.Length - 1)
+        Select Case dataSet.Length
+            Case 3
+                For i = 0 To dataStation.Length - 3
+                    For j = i + 1 To dataStation.Length - 2
+                        For k = j + 1 To dataStation.Length - 1
+                            newDataSet(0) = dataStation(j)
+                            newDataSet(1) = dataStation(i)
+                            newDataSet(2) = dataStation(k)
+                            result = QuadraticPlanar(newDataSet)
+                            If Not (result.Latitude = 0 And result.Longitude = 0 And result.TimeOfOccurence = 0) Then
+                                Return result
+                            End If
+                        Next
+                    Next
+                Next
+            Case 4
+                Return result
+            Case Else
+                Return result
+        End Select
         Return result
     End Function
 
