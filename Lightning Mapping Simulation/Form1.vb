@@ -5,18 +5,18 @@
     Private suspended As Boolean
 
     Class SimData
-        Public CalcMode As Integer
-        Public firstLat As Decimal = -7.5
-        Public firstLon As Decimal = 105.5
-        Public lastLat As Decimal = -6
-        Public lastLon As Decimal = 108.5
-        Public nIteration As Integer = 1000
-        Public deltaLat As Decimal = 0.05
-        Public deltaLon As Decimal = 0.05
-        Public errorTOAMean As Decimal = 0
-        Public errorTOASigma As Decimal = 0.00000025
-        Public c As Decimal = 300000000
-        Public R As Decimal = 6367000
+        Public Property CalcMode As Integer = 1
+        Public Property firstLat As Decimal = -7.5
+        Public Property firstLon As Decimal = 105.5
+        Public Property lastLat As Decimal = -6
+        Public Property lastLon As Decimal = 108.5
+        Public Property nIteration As Integer = 1000
+        Public Property deltaLat As Decimal = 0.05
+        Public Property deltaLon As Decimal = 0.05
+        Public Property errorTOAMean As Decimal = 0
+        Public Property errorTOASigma As Decimal = 0.00000025
+        Public Property c As Decimal = 300000000
+        Public Property R As Decimal = 6367000
     End Class
 
     Dim simulation As New SimData
@@ -33,6 +33,20 @@
 
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        'set binding
+        txtFLat.DataBindings.Add("Text", simulation, "firstLat")
+        txtFlon.DataBindings.Add("Text", simulation, "firstLon")
+        txtLastLat.DataBindings.Add("Text", simulation, "lastLat")
+        txtLastLon.DataBindings.Add("Text", simulation, "lastLon")
+        txtDLat.DataBindings.Add("Text", simulation, "deltaLat")
+        txtDLon.DataBindings.Add("Text", simulation, "deltaLon")
+        txtN.DataBindings.Add("Text", simulation, "nIteration")
+        txtC.DataBindings.Add("Text", simulation, "c")
+        txtR.DataBindings.Add("Text", simulation, "R")
+        txtErrorMean.DataBindings.Add("Text", simulation, "errorTOAMean")
+        txtErrorSigma.DataBindings.Add("Text", simulation, "errorTOASigma")
+        txtCalcMode.DataBindings.Add("Text", simulation, "CalcMode")
+
         ProgressBar1.Visible = False
         lblProgress.Visible = False
         lblRemainingTime.Visible = False
@@ -101,7 +115,6 @@
         Dim arrayResult(simulation.nIteration - 1) As DataFormat.result
         Dim arrayAccuracy(totalPoint - 1, 2) As Decimal 'lat, lon, accuracy
         Dim resultId As Integer = 0
-        simulation.CalcMode = 1 '1 Linear Spherical Method    2 Quadratic Planar Method
 
         Dim arrayStation = {
             {1, -6.9867, 106.5558, vbNull},
@@ -154,6 +167,7 @@
                 Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "-------------------------------------------------------" & vbCrLf))
                 Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "Lightning Simulation  : " & arrayAccuracy(resultId, 0) & ", " & arrayAccuracy(resultId, 1) & vbCrLf))
                 Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "Accuracy  : " & arrayAccuracy(resultId, 2) & vbCrLf))
+                Me.Invoke(New MethodInvoker(Sub() Me.DataGridView1.Rows.Add(Me.ProgressBar1.Value / simulation.nIteration, arrayAccuracy(resultId, 0), arrayAccuracy(resultId, 1), arrayAccuracy(resultId, 2))))
                 resultId += 1
                 simLon += simulation.deltaLon - 1
             Next simLon
@@ -168,7 +182,7 @@
         'MsgBox("Done")
     End Sub
 
-    Private Sub TextBox_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles textBox1.KeyPress
+    Private Sub TextBox_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs)
         If e.KeyChar = Convert.ToChar(1) Then
             DirectCast(sender, TextBox).SelectAll()
             e.Handled = True
@@ -186,8 +200,12 @@
         Do
             progress = ProgressBar1.Value
             speed = (progress - lastProgress) / tick * 1000
-            remainingTime = (finish - progress) / speed
-            Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Text = "Remaining Time: " & StoHMS(remainingTime)))
+            If speed = 0 Then
+                Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Text = "Remaining Time: Infinity..."))
+            Else
+                remainingTime = (finish - progress) / speed
+                Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Text = "Remaining Time: " & StoHMS(remainingTime)))
+            End If
             lastProgress = progress
             Threading.Thread.Sleep(tick)
         Loop Until ProgressBar_at_Max()
@@ -223,4 +241,8 @@
         End If
         Return hms
     End Function
+
+    Private Sub btnCalcModeHint_Click(sender As Object, e As EventArgs) Handles btnCalcModeHint.Click
+        MsgBox("1. Lightning Sperical Method" & vbCrLf & "2. Quadratic Planar Method",, "Method hint")
+    End Sub
 End Class
