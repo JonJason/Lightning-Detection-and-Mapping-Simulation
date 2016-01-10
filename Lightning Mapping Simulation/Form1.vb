@@ -3,6 +3,7 @@
     Private tRemainingTime As Threading.Thread
     Delegate Function tProgressBar_at_Max() As Boolean
     Private suspended As Boolean
+    Dim stationsData = New List(Of DataFormat.StationsData)
 
     Class SimData
         Public Property CalcMode As Integer = 1
@@ -46,6 +47,23 @@
         txtErrorMean.DataBindings.Add("Text", simulation, "errorTOAMean")
         txtErrorSigma.DataBindings.Add("Text", simulation, "errorTOASigma")
         txtCalcMode.DataBindings.Add("Text", simulation, "CalcMode")
+
+        stationsData.Add(New DataFormat.StationsData(1, -6.9867, 106.5558))
+        stationsData.Add(New DataFormat.StationsData(2, -7.3259, 107.7953))
+        stationsData.Add(New DataFormat.StationsData(3, -6.1647, 107.2979))
+        stationsData.Add(New DataFormat.StationsData(4, -6.7588, 108.4802))
+        stationsData.Add(New DataFormat.StationsData(5, -6.127, 106.2472))
+
+        DataGridStations.DataSource = stationsData
+
+        Dim columnId As DataGridViewColumn = DataGridStations.Columns(0)
+        columnId.Width = 20
+        columnId.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+
+        Dim columnLat As DataGridViewColumn = DataGridStations.Columns(1)
+        columnLat.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+        Dim columnLon As DataGridViewColumn = DataGridStations.Columns(2)
+        columnLon.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
 
         ProgressBar1.Visible = False
         lblProgress.Visible = False
@@ -116,21 +134,13 @@
         Dim arrayAccuracy(totalPoint - 1, 2) As Decimal 'lat, lon, accuracy
         Dim resultId As Integer = 0
 
-        Dim arrayStation = {
-            {1, -6.9867, 106.5558, vbNull},
-            {2, -7.3259, 107.7953, vbNull},
-            {3, -6.1647, 107.2979, vbNull},
-            {4, -6.7588, 108.4802, vbNull},
-            {5, -6.127, 106.2472, vbNull}
-        }
-
-        Dim stations(arrayStation.GetLength(0) - 1)
+        Dim stations(stationsData.count - 1)
         For i = 0 To stations.Length - 1
             stations(i) = New DataFormat.Station()
-            stations(i).id = arrayStation(i, 0)
-            stations(i).Latitude = arrayStation(i, 1)
-            stations(i).Longitude = arrayStation(i, 2)
-            stations(i).TOA = arrayStation(i, 3)
+            stations(i).id = stationsData(i).id
+            stations(i).Latitude = stationsData(i).Latitude
+            stations(i).Longitude = stationsData(i).Longitude
+            stations(i).TOA = vbNull
         Next
         For simLat = simulation.firstLat To simulation.lastLat
             For simLon = simulation.firstLon To simulation.lastLon
@@ -155,10 +165,6 @@
                     'End If
                     result.Accuracy = calc.Busur(result.Latitude, result.Longitude, simLat, simLon)
                     arrayResult(iIteration - 1) = result
-                    'textBox.Text += iIteration-1 & ", "
-                    'textBox.Text += Decimal.Round(arrayResult(iIteration - 1).Latitude, 4) & ", "
-                    'textBox.Text += Decimal.Round(arrayResult(iIteration - 1).Longitude, 4) & ", "
-                    'textBox.Text += arrayResult(iIteration - 1).Accuracy & vbCrLf
                     arrayAccuracy(resultId, 2) += arrayResult(iIteration - 1).Accuracy
                 Next
                 arrayAccuracy(resultId, 0) = simLat
@@ -243,6 +249,7 @@
     End Function
 
     Private Sub btnCalcModeHint_Click(sender As Object, e As EventArgs) Handles btnCalcModeHint.Click
-        MsgBox("1. Lightning Sperical Method" & vbCrLf & "2. Quadratic Planar Method",, "Method hint")
+        MsgBox("Mode:" & vbCrLf & "1. Lightning Sperical Method" & vbCrLf & "2. Quadratic Planar Method",, "Method hint")
+        MsgBox(stationsData.count)
     End Sub
 End Class
