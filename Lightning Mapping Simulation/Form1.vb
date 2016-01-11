@@ -2,7 +2,7 @@
     Private tSimulation As Threading.Thread
     Private tRemainingTime As Threading.Thread
     Delegate Function tProgressBar_at_Max() As Boolean
-    Private suspended As Boolean
+    Private suspended As Boolean = True
     Dim stationsData = New List(Of DataFormat.StationsData)
 
     Class SimData
@@ -54,7 +54,8 @@
         stationsData.Add(New DataFormat.StationsData(4, -6.7588, 108.4802))
         stationsData.Add(New DataFormat.StationsData(5, -6.127, 106.2472))
 
-        DataGridStations.DataSource = stationsData
+        stationsDataBindingSource.DataSource = stationsData
+        DataGridStations.DataSource = stationsDataBindingSource
 
         Dim columnId As DataGridViewColumn = DataGridStations.Columns(0)
         columnId.Width = 20
@@ -81,12 +82,14 @@
                 suspended = Not suspended
                 tRemainingTime.Resume()
                 tSimulation.Resume()
+                btnStop.Visible = False
                 startButton.Text = "Pause"
                 lblStatus.Text = "Status: Resuming. . ."
             Else
                 suspended = Not suspended
                 tRemainingTime.Suspend()
                 tSimulation.Suspend()
+                btnStop.Visible = True
                 startButton.Text = "Resume"
                 lblStatus.Text = "Status: Paused. . ."
             End If
@@ -251,5 +254,69 @@
     Private Sub btnCalcModeHint_Click(sender As Object, e As EventArgs) Handles btnCalcModeHint.Click
         MsgBox("Mode:" & vbCrLf & "1. Lightning Sperical Method" & vbCrLf & "2. Quadratic Planar Method",, "Method hint")
         MsgBox(stationsData.count)
+    End Sub
+
+    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        If Not suspended Then
+            e.Cancel = True
+            Beep()
+        End If
+    End Sub
+
+    Private Sub btnStop_Click(sender As Object, e As EventArgs) Handles btnStop.Click
+        tRemainingTime.Resume()
+        tRemainingTime.Abort()
+        tSimulation.Resume()
+        tSimulation.Abort()
+        btnStop.Visible = False
+        startButton.Text = "Start"
+        ProgressBar1.Visible = False
+        lblProgress.Visible = False
+        lblRemainingTime.Visible = False
+        lblStatus.Visible = False
+
+    End Sub
+
+    Private Sub DataGridStations_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DataGridStations.CellMouseUp
+        Select Case e.Button
+            Case MouseButtons.Right
+                If e.RowIndex > -1 Then
+                    Me.DataGridStations.Rows(e.RowIndex).Selected = True
+                    Me.DataGridStations.CurrentCell = Me.DataGridStations.Rows(e.RowIndex).Cells(1)
+                End If
+                DGStationCMS.Show(Cursor.Position)
+            Case MouseButtons.Left
+                If e.RowIndex = -1 And e.ColumnIndex > -1 Then
+                    DataGridStations.ClearSelection()
+                End If
+            Case Else
+
+        End Select
+    End Sub
+
+    Private Sub DGStationCMS_ItemClicked(sender As Object, e As ToolStripItemClickedEventArgs) Handles DGStationCMS.ItemClicked
+        Select Case e.ClickedItem.Text
+            Case "Add New Station"
+                stationsData.add(New DataFormat.StationsData(stationsData.count + 1, 0, 0))
+                stationsDataBindingSource.ResetBindings(False)
+            Case "Delete Selected Station"
+                For Each rows In DataGridStations.SelectedRows
+                    stationsData.removeat(rows.index)
+                    stationsDataBindingSource.ResetBindings(False)
+                Next
+            Case "Reset Stations"
+                'For Each item In stationsData
+                'MsgBox(item.id & "," & item.Latitude & "," & item.Longitude)
+                'Next
+                stationsData.clear()
+                stationsData.Add(New DataFormat.StationsData(1, -6.9867, 106.5558))
+                stationsData.Add(New DataFormat.StationsData(2, -7.3259, 107.7953))
+                stationsData.Add(New DataFormat.StationsData(3, -6.1647, 107.2979))
+                stationsData.Add(New DataFormat.StationsData(4, -6.7588, 108.4802))
+                stationsData.Add(New DataFormat.StationsData(5, -6.127, 106.2472))
+                stationsDataBindingSource.ResetBindings(False)
+            Case Else
+
+        End Select
     End Sub
 End Class

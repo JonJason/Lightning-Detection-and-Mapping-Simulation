@@ -22,6 +22,7 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -55,7 +56,9 @@ Partial Class Form1
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.btnCalcModeHint = New System.Windows.Forms.Button()
+        Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
         Me.DataGridStations = New System.Windows.Forms.DataGridView()
+        Me.lblStationsLocation = New System.Windows.Forms.Label()
         Me.startButton = New System.Windows.Forms.Button()
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         Me.lblProgress = New System.Windows.Forms.Label()
@@ -64,6 +67,7 @@ Partial Class Form1
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.Setting = New System.Windows.Forms.TabPage()
+        Me.btnStop = New System.Windows.Forms.Button()
         Me.Result = New System.Windows.Forms.TabPage()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.id = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -72,9 +76,15 @@ Partial Class Form1
         Me.Accuracy = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.textBox1 = New System.Windows.Forms.TextBox()
+        Me.stationsDataBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.DGStationCMS = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.AddNewStationToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DeleteSelectedStationToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ResetStationsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel3.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
+        Me.TableLayoutPanel4.SuspendLayout()
         CType(Me.DataGridStations, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.TabControl1.SuspendLayout()
@@ -82,6 +92,8 @@ Partial Class Form1
         Me.Result.SuspendLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage3.SuspendLayout()
+        CType(Me.stationsDataBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.DGStationCMS.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -103,9 +115,10 @@ Partial Class Form1
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60.8365!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 39.1635!))
         Me.TableLayoutPanel3.Controls.Add(Me.TableLayoutPanel2, 0, 0)
-        Me.TableLayoutPanel3.Controls.Add(Me.DataGridStations, 3, 0)
+        Me.TableLayoutPanel3.Controls.Add(Me.TableLayoutPanel4, 1, 0)
         Me.TableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel3.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanel3.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel3.Name = "TableLayoutPanel3"
         Me.TableLayoutPanel3.RowCount = 1
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
@@ -148,7 +161,8 @@ Partial Class Form1
         Me.TableLayoutPanel2.Controls.Add(Me.Label6, 1, 10)
         Me.TableLayoutPanel2.Controls.Add(Me.btnCalcModeHint, 2, 11)
         Me.TableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Left
-        Me.TableLayoutPanel2.Location = New System.Drawing.Point(3, 3)
+        Me.TableLayoutPanel2.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanel2.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
         Me.TableLayoutPanel2.RowCount = 12
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
@@ -163,7 +177,7 @@ Partial Class Form1
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel2.Size = New System.Drawing.Size(311, 316)
+        Me.TableLayoutPanel2.Size = New System.Drawing.Size(311, 322)
         Me.TableLayoutPanel2.TabIndex = 6
         '
         'lblFCoordinate
@@ -351,7 +365,7 @@ Partial Class Form1
         Me.lblCalcMode.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblCalcMode.Location = New System.Drawing.Point(3, 290)
         Me.lblCalcMode.Name = "lblCalcMode"
-        Me.lblCalcMode.Size = New System.Drawing.Size(158, 26)
+        Me.lblCalcMode.Size = New System.Drawing.Size(158, 32)
         Me.lblCalcMode.TabIndex = 20
         Me.lblCalcMode.Text = "Method"
         Me.lblCalcMode.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -437,8 +451,27 @@ Partial Class Form1
         Me.btnCalcModeHint.Text = "hint"
         Me.btnCalcModeHint.UseVisualStyleBackColor = True
         '
+        'TableLayoutPanel4
+        '
+        Me.TableLayoutPanel4.ColumnCount = 1
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel4.Controls.Add(Me.DataGridStations, 0, 1)
+        Me.TableLayoutPanel4.Controls.Add(Me.lblStationsLocation, 0, 0)
+        Me.TableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel4.Location = New System.Drawing.Point(324, 0)
+        Me.TableLayoutPanel4.Margin = New System.Windows.Forms.Padding(0)
+        Me.TableLayoutPanel4.Name = "TableLayoutPanel4"
+        Me.TableLayoutPanel4.RowCount = 2
+        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanel4.Size = New System.Drawing.Size(210, 322)
+        Me.TableLayoutPanel4.TabIndex = 7
+        '
         'DataGridStations
         '
+        Me.DataGridStations.AllowUserToResizeColumns = False
+        Me.DataGridStations.AllowUserToResizeRows = False
         Me.DataGridStations.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
@@ -450,12 +483,24 @@ Partial Class Form1
         Me.DataGridStations.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.DataGridStations.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridStations.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridStations.Location = New System.Drawing.Point(327, 3)
+        Me.DataGridStations.Location = New System.Drawing.Point(3, 23)
         Me.DataGridStations.Name = "DataGridStations"
         Me.DataGridStations.RowHeadersWidth = 25
         Me.DataGridStations.ScrollBars = System.Windows.Forms.ScrollBars.None
-        Me.DataGridStations.Size = New System.Drawing.Size(204, 316)
+        Me.DataGridStations.Size = New System.Drawing.Size(204, 296)
         Me.DataGridStations.TabIndex = 7
+        '
+        'lblStationsLocation
+        '
+        Me.lblStationsLocation.AutoSize = True
+        Me.lblStationsLocation.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.lblStationsLocation.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStationsLocation.Location = New System.Drawing.Point(3, 0)
+        Me.lblStationsLocation.Name = "lblStationsLocation"
+        Me.lblStationsLocation.Size = New System.Drawing.Size(204, 20)
+        Me.lblStationsLocation.TabIndex = 9
+        Me.lblStationsLocation.Text = "Stations Location"
+        Me.lblStationsLocation.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'startButton
         '
@@ -474,7 +519,7 @@ Partial Class Form1
         Me.ProgressBar1.Location = New System.Drawing.Point(4, 328)
         Me.ProgressBar1.MarqueeAnimationSpeed = 1000
         Me.ProgressBar1.Name = "ProgressBar1"
-        Me.ProgressBar1.Size = New System.Drawing.Size(527, 23)
+        Me.ProgressBar1.Size = New System.Drawing.Size(446, 23)
         Me.ProgressBar1.TabIndex = 2
         '
         'lblProgress
@@ -543,6 +588,7 @@ Partial Class Form1
         '
         'Setting
         '
+        Me.Setting.Controls.Add(Me.btnStop)
         Me.Setting.Controls.Add(Me.Panel1)
         Me.Setting.Controls.Add(Me.TableLayoutPanel1)
         Me.Setting.Controls.Add(Me.ProgressBar1)
@@ -554,6 +600,16 @@ Partial Class Form1
         Me.Setting.TabIndex = 0
         Me.Setting.Text = "Setting"
         Me.Setting.UseVisualStyleBackColor = True
+        '
+        'btnStop
+        '
+        Me.btnStop.Location = New System.Drawing.Point(456, 328)
+        Me.btnStop.Name = "btnStop"
+        Me.btnStop.Size = New System.Drawing.Size(75, 23)
+        Me.btnStop.TabIndex = 7
+        Me.btnStop.Text = "Stop"
+        Me.btnStop.UseVisualStyleBackColor = True
+        Me.btnStop.Visible = False
         '
         'Result
         '
@@ -643,6 +699,30 @@ Partial Class Form1
         Me.textBox1.Size = New System.Drawing.Size(528, 380)
         Me.textBox1.TabIndex = 2
         '
+        'DGStationCMS
+        '
+        Me.DGStationCMS.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddNewStationToolStripMenuItem, Me.DeleteSelectedStationToolStripMenuItem, Me.ResetStationsToolStripMenuItem})
+        Me.DGStationCMS.Name = "DGStationCMS"
+        Me.DGStationCMS.Size = New System.Drawing.Size(195, 70)
+        '
+        'AddNewStationToolStripMenuItem
+        '
+        Me.AddNewStationToolStripMenuItem.Name = "AddNewStationToolStripMenuItem"
+        Me.AddNewStationToolStripMenuItem.Size = New System.Drawing.Size(194, 22)
+        Me.AddNewStationToolStripMenuItem.Text = "Add New Station"
+        '
+        'DeleteSelectedStationToolStripMenuItem
+        '
+        Me.DeleteSelectedStationToolStripMenuItem.Name = "DeleteSelectedStationToolStripMenuItem"
+        Me.DeleteSelectedStationToolStripMenuItem.Size = New System.Drawing.Size(194, 22)
+        Me.DeleteSelectedStationToolStripMenuItem.Text = "Delete Selected Station"
+        '
+        'ResetStationsToolStripMenuItem
+        '
+        Me.ResetStationsToolStripMenuItem.Name = "ResetStationsToolStripMenuItem"
+        Me.ResetStationsToolStripMenuItem.Size = New System.Drawing.Size(194, 22)
+        Me.ResetStationsToolStripMenuItem.Text = "Reset Stations"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -657,6 +737,8 @@ Partial Class Form1
         Me.TableLayoutPanel3.ResumeLayout(False)
         Me.TableLayoutPanel2.ResumeLayout(False)
         Me.TableLayoutPanel2.PerformLayout()
+        Me.TableLayoutPanel4.ResumeLayout(False)
+        Me.TableLayoutPanel4.PerformLayout()
         CType(Me.DataGridStations, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
@@ -665,6 +747,8 @@ Partial Class Form1
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage3.ResumeLayout(False)
         Me.TabPage3.PerformLayout()
+        CType(Me.stationsDataBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.DGStationCMS.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -716,4 +800,12 @@ Partial Class Form1
     Friend WithEvents btnCalcModeHint As Button
     Friend WithEvents TableLayoutPanel3 As TableLayoutPanel
     Friend WithEvents DataGridStations As DataGridView
+    Friend WithEvents btnStop As Button
+    Friend WithEvents TableLayoutPanel4 As TableLayoutPanel
+    Friend WithEvents lblStationsLocation As Label
+    Friend WithEvents stationsDataBindingSource As BindingSource
+    Friend WithEvents DGStationCMS As ContextMenuStrip
+    Friend WithEvents AddNewStationToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DeleteSelectedStationToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ResetStationsToolStripMenuItem As ToolStripMenuItem
 End Class
