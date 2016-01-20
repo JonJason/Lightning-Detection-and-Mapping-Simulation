@@ -4,6 +4,7 @@
     Delegate Function tProgressBar_at_Max() As Boolean
     Private suspended As Boolean = True
     Dim stationsData = New List(Of DataFormat.StationsData)
+    Dim finalResultData = New List(Of DataFormat.finalResultData)
 
     Class SimData
         Public Property CalcMode As Integer = 1
@@ -54,6 +55,7 @@
         stationsData.Add(New DataFormat.StationsData(4, -6.7588, 108.4802))
         stationsData.Add(New DataFormat.StationsData(5, -6.127, 106.2472))
 
+        'setup stationsData gridView
         stationsDataBindingSource.DataSource = stationsData
         DataGridStations.DataSource = stationsDataBindingSource
 
@@ -65,6 +67,10 @@
         columnLat.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
         Dim columnLon As DataGridViewColumn = DataGridStations.Columns(2)
         columnLon.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+
+        'setup final result data gridView
+        finalResultDataBindingSource.DataSource = finalResultData
+        DataGridViewFinalResult.DataSource = finalResultDataBindingSource
 
         ProgressBar1.Visible = False
         lblProgress.Visible = False
@@ -176,7 +182,10 @@
                 Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "-------------------------------------------------------" & vbCrLf))
                 Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "Lightning Simulation  : " & arrayAccuracy(resultId, 0) & ", " & arrayAccuracy(resultId, 1) & vbCrLf))
                 Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "Accuracy  : " & arrayAccuracy(resultId, 2) & vbCrLf))
-                Me.Invoke(New MethodInvoker(Sub() Me.DataGridView1.Rows.Add(Me.ProgressBar1.Value / simulation.nIteration, arrayAccuracy(resultId, 0), arrayAccuracy(resultId, 1), arrayAccuracy(resultId, 2))))
+                'Me.Invoke(New MethodInvoker(Sub() Me.DataGridViewFinalResult.Rows.Add(resultId + 1, arrayAccuracy(resultId, 0), arrayAccuracy(resultId, 1), arrayAccuracy(resultId, 2))))
+                finalResultData.add(New DataFormat.finalResultData(resultId + 1, arrayAccuracy(resultId, 0), arrayAccuracy(resultId, 1), arrayAccuracy(resultId, 2)))
+                Me.Invoke(New MethodInvoker(Sub() Me.finalResultDataBindingSource.ResetBindings(False)))
+
                 resultId += 1
                 simLon += simulation.deltaLon - 1
             Next simLon
@@ -253,7 +262,7 @@
 
     Private Sub btnCalcModeHint_Click(sender As Object, e As EventArgs) Handles btnCalcModeHint.Click
         MsgBox("Mode:" & vbCrLf & "1. Lightning Sperical Method" & vbCrLf & "2. Quadratic Planar Method",, "Method hint")
-        MsgBox(stationsData.count)
+        'MsgBox(stationsData.count)
     End Sub
 
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing

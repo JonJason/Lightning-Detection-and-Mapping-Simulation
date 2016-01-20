@@ -25,7 +25,6 @@ Partial Class Form1
         Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
@@ -69,11 +68,7 @@ Partial Class Form1
         Me.Setting = New System.Windows.Forms.TabPage()
         Me.btnStop = New System.Windows.Forms.Button()
         Me.Result = New System.Windows.Forms.TabPage()
-        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
-        Me.id = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Latitude = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Longitude = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Accuracy = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewFinalResult = New System.Windows.Forms.DataGridView()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.textBox1 = New System.Windows.Forms.TextBox()
         Me.stationsDataBindingSource = New System.Windows.Forms.BindingSource(Me.components)
@@ -81,6 +76,7 @@ Partial Class Form1
         Me.AddNewStationToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeleteSelectedStationToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ResetStationsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.finalResultDataBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel3.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
@@ -90,10 +86,11 @@ Partial Class Form1
         Me.TabControl1.SuspendLayout()
         Me.Setting.SuspendLayout()
         Me.Result.SuspendLayout()
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DataGridViewFinalResult, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage3.SuspendLayout()
         CType(Me.stationsDataBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.DGStationCMS.SuspendLayout()
+        CType(Me.finalResultDataBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
@@ -613,7 +610,7 @@ Partial Class Form1
         '
         'Result
         '
-        Me.Result.Controls.Add(Me.DataGridView1)
+        Me.Result.Controls.Add(Me.DataGridViewFinalResult)
         Me.Result.Location = New System.Drawing.Point(4, 22)
         Me.Result.Name = "Result"
         Me.Result.Padding = New System.Windows.Forms.Padding(3)
@@ -622,10 +619,10 @@ Partial Class Form1
         Me.Result.Text = "Result"
         Me.Result.UseVisualStyleBackColor = True
         '
-        'DataGridView1
+        'DataGridViewFinalResult
         '
-        Me.DataGridView1.AllowUserToAddRows = False
-        Me.DataGridView1.AllowUserToDeleteRows = False
+        Me.DataGridViewFinalResult.AllowUserToAddRows = False
+        Me.DataGridViewFinalResult.AllowUserToDeleteRows = False
         DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -633,47 +630,14 @@ Partial Class Form1
         DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
-        Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.id, Me.Latitude, Me.Longitude, Me.Accuracy})
-        Me.DataGridView1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridView1.Location = New System.Drawing.Point(3, 3)
-        Me.DataGridView1.Name = "DataGridView1"
-        Me.DataGridView1.ReadOnly = True
-        Me.DataGridView1.Size = New System.Drawing.Size(528, 380)
-        Me.DataGridView1.TabIndex = 1
-        '
-        'id
-        '
-        Me.id.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.id.HeaderText = "Id"
-        Me.id.Name = "id"
-        Me.id.ReadOnly = True
-        '
-        'Latitude
-        '
-        Me.Latitude.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.Latitude.HeaderText = "Latitude"
-        Me.Latitude.Name = "Latitude"
-        Me.Latitude.ReadOnly = True
-        '
-        'Longitude
-        '
-        Me.Longitude.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.Longitude.HeaderText = "Longitude"
-        Me.Longitude.Name = "Longitude"
-        Me.Longitude.ReadOnly = True
-        '
-        'Accuracy
-        '
-        Me.Accuracy.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        DataGridViewCellStyle3.Format = "N0"
-        DataGridViewCellStyle3.NullValue = Nothing
-        Me.Accuracy.DefaultCellStyle = DataGridViewCellStyle3
-        Me.Accuracy.HeaderText = "Accuracy (m)"
-        Me.Accuracy.Name = "Accuracy"
-        Me.Accuracy.ReadOnly = True
-        Me.Accuracy.ToolTipText = "Error distance"
+        Me.DataGridViewFinalResult.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        Me.DataGridViewFinalResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridViewFinalResult.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridViewFinalResult.Location = New System.Drawing.Point(3, 3)
+        Me.DataGridViewFinalResult.Name = "DataGridViewFinalResult"
+        Me.DataGridViewFinalResult.ReadOnly = True
+        Me.DataGridViewFinalResult.Size = New System.Drawing.Size(528, 380)
+        Me.DataGridViewFinalResult.TabIndex = 1
         '
         'TabPage3
         '
@@ -744,11 +708,12 @@ Partial Class Form1
         Me.TabControl1.ResumeLayout(False)
         Me.Setting.ResumeLayout(False)
         Me.Result.ResumeLayout(False)
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DataGridViewFinalResult, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage3.ResumeLayout(False)
         Me.TabPage3.PerformLayout()
         CType(Me.stationsDataBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.DGStationCMS.ResumeLayout(False)
+        CType(Me.finalResultDataBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -763,11 +728,7 @@ Partial Class Form1
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents Setting As TabPage
     Friend WithEvents Result As TabPage
-    Friend WithEvents DataGridView1 As DataGridView
-    Friend WithEvents id As DataGridViewTextBoxColumn
-    Friend WithEvents Latitude As DataGridViewTextBoxColumn
-    Friend WithEvents Longitude As DataGridViewTextBoxColumn
-    Friend WithEvents Accuracy As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewFinalResult As DataGridView
     Friend WithEvents TabPage3 As TabPage
     Public WithEvents textBox1 As TextBox
     Friend WithEvents lblR As Label
@@ -808,4 +769,5 @@ Partial Class Form1
     Friend WithEvents AddNewStationToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents DeleteSelectedStationToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ResetStationsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents finalResultDataBindingSource As BindingSource
 End Class
