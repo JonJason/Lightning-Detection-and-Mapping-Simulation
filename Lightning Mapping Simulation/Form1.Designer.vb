@@ -68,7 +68,9 @@ Partial Class Form1
         Me.Setting = New System.Windows.Forms.TabPage()
         Me.btnStop = New System.Windows.Forms.Button()
         Me.Result = New System.Windows.Forms.TabPage()
+        Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
         Me.DataGridViewFinalResult = New System.Windows.Forms.DataGridView()
+        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.textBox1 = New System.Windows.Forms.TextBox()
         Me.stationsDataBindingSource = New System.Windows.Forms.BindingSource(Me.components)
@@ -86,6 +88,7 @@ Partial Class Form1
         Me.TabControl1.SuspendLayout()
         Me.Setting.SuspendLayout()
         Me.Result.SuspendLayout()
+        Me.TableLayoutPanel5.SuspendLayout()
         CType(Me.DataGridViewFinalResult, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPage3.SuspendLayout()
         CType(Me.stationsDataBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -610,14 +613,30 @@ Partial Class Form1
         '
         'Result
         '
-        Me.Result.Controls.Add(Me.DataGridViewFinalResult)
+        Me.Result.Controls.Add(Me.TableLayoutPanel5)
         Me.Result.Location = New System.Drawing.Point(4, 22)
+        Me.Result.Margin = New System.Windows.Forms.Padding(0)
         Me.Result.Name = "Result"
-        Me.Result.Padding = New System.Windows.Forms.Padding(3)
         Me.Result.Size = New System.Drawing.Size(534, 386)
         Me.Result.TabIndex = 1
         Me.Result.Text = "Result"
         Me.Result.UseVisualStyleBackColor = True
+        '
+        'TableLayoutPanel5
+        '
+        Me.TableLayoutPanel5.ColumnCount = 1
+        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel5.Controls.Add(Me.DataGridViewFinalResult, 0, 0)
+        Me.TableLayoutPanel5.Controls.Add(Me.Panel2, 0, 1)
+        Me.TableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel5.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanel5.Margin = New System.Windows.Forms.Padding(0)
+        Me.TableLayoutPanel5.Name = "TableLayoutPanel5"
+        Me.TableLayoutPanel5.RowCount = 2
+        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 90.67358!))
+        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.326425!))
+        Me.TableLayoutPanel5.Size = New System.Drawing.Size(534, 386)
+        Me.TableLayoutPanel5.TabIndex = 2
         '
         'DataGridViewFinalResult
         '
@@ -636,8 +655,16 @@ Partial Class Form1
         Me.DataGridViewFinalResult.Location = New System.Drawing.Point(3, 3)
         Me.DataGridViewFinalResult.Name = "DataGridViewFinalResult"
         Me.DataGridViewFinalResult.ReadOnly = True
-        Me.DataGridViewFinalResult.Size = New System.Drawing.Size(528, 380)
+        Me.DataGridViewFinalResult.Size = New System.Drawing.Size(528, 344)
         Me.DataGridViewFinalResult.TabIndex = 1
+        '
+        'Panel2
+        '
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel2.Location = New System.Drawing.Point(3, 353)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(528, 30)
+        Me.Panel2.TabIndex = 2
         '
         'TabPage3
         '
@@ -708,6 +735,7 @@ Partial Class Form1
         Me.TabControl1.ResumeLayout(False)
         Me.Setting.ResumeLayout(False)
         Me.Result.ResumeLayout(False)
+        Me.TableLayoutPanel5.ResumeLayout(False)
         CType(Me.DataGridViewFinalResult, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabPage3.ResumeLayout(False)
         Me.TabPage3.PerformLayout()
@@ -770,4 +798,6 @@ Partial Class Form1
     Friend WithEvents DeleteSelectedStationToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ResetStationsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents finalResultDataBindingSource As BindingSource
+    Friend WithEvents TableLayoutPanel5 As TableLayoutPanel
+    Friend WithEvents Panel2 As Panel
 End Class

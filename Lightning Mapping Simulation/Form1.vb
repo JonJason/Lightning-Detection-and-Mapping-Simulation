@@ -1,4 +1,6 @@
-﻿Public Class Form1
+﻿Imports System.IO
+
+Public Class Form1
     Private tSimulation As Threading.Thread
     Private tRemainingTime As Threading.Thread
     Delegate Function tProgressBar_at_Max() As Boolean
@@ -65,12 +67,40 @@
 
         Dim columnLat As DataGridViewColumn = DataGridStations.Columns(1)
         columnLat.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+
         Dim columnLon As DataGridViewColumn = DataGridStations.Columns(2)
         columnLon.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
 
         'setup final result data gridView
         finalResultDataBindingSource.DataSource = finalResultData
         DataGridViewFinalResult.DataSource = finalResultDataBindingSource
+
+        Dim resultcolumnId As DataGridViewColumn = DataGridViewFinalResult.Columns(0)
+        With resultcolumnId
+            .Width = 40
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+        End With
+
+        Dim resultcolumnLat As DataGridViewColumn = DataGridViewFinalResult.Columns(1)
+        With resultcolumnLat
+            .HeaderText = "Latitude"
+            .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+        End With
+
+        Dim resultcolumnLon As DataGridViewColumn = DataGridViewFinalResult.Columns(2)
+        With resultcolumnLon
+            .HeaderText = "Longitude"
+            .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+        End With
+
+        Dim resultcolumnLAcc As DataGridViewColumn = DataGridViewFinalResult.Columns(3)
+        With resultcolumnLAcc
+            .HeaderText = "Accuracy (m)"
+            .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+        End With
 
         ProgressBar1.Visible = False
         lblProgress.Visible = False
@@ -136,6 +166,8 @@
     End Sub
 
     Private Sub startSimulation()
+        finalResultData.Clear()
+        Me.Invoke(New MethodInvoker(Sub() Me.finalResultDataBindingSource.ResetBindings(False)))
         Dim dataSet As Array
         Dim arcDistance As Decimal
         Dim result As DataFormat.result
@@ -179,11 +211,11 @@
                 arrayAccuracy(resultId, 0) = simLat
                 arrayAccuracy(resultId, 1) = simLon
                 arrayAccuracy(resultId, 2) /= simulation.nIteration
-                Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "-------------------------------------------------------" & vbCrLf))
-                Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "Lightning Simulation  : " & arrayAccuracy(resultId, 0) & ", " & arrayAccuracy(resultId, 1) & vbCrLf))
-                Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "Accuracy  : " & arrayAccuracy(resultId, 2) & vbCrLf))
-                'Me.Invoke(New MethodInvoker(Sub() Me.DataGridViewFinalResult.Rows.Add(resultId + 1, arrayAccuracy(resultId, 0), arrayAccuracy(resultId, 1), arrayAccuracy(resultId, 2))))
-                finalResultData.add(New DataFormat.finalResultData(resultId + 1, arrayAccuracy(resultId, 0), arrayAccuracy(resultId, 1), arrayAccuracy(resultId, 2)))
+                'Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "-------------------------------------------------------" & vbCrLf))
+                'Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "Lightning Simulation  : " & arrayAccuracy(resultId, 0) & ", " & arrayAccuracy(resultId, 1) & vbCrLf))
+                'Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "Accuracy  : " & arrayAccuracy(resultId, 2) & vbCrLf))
+                Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += arrayAccuracy(resultId, 1) & "," & arrayAccuracy(resultId, 0) & "," & Decimal.Round(arrayAccuracy(resultId, 2), 2) & vbCrLf))
+                finalResultData.add(New DataFormat.finalResultData(resultId + 1, arrayAccuracy(resultId, 0), arrayAccuracy(resultId, 1), Decimal.Round(arrayAccuracy(resultId, 2), 2)))
                 Me.Invoke(New MethodInvoker(Sub() Me.finalResultDataBindingSource.ResetBindings(False)))
 
                 resultId += 1
@@ -197,6 +229,7 @@
         Me.Invoke(New MethodInvoker(Sub() Me.lblProgress.Visible = False))
         Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Visible = False))
         Me.Invoke(New MethodInvoker(Sub() Me.lblStatus.Visible = False))
+        suspended = True
         'MsgBox("Done")
     End Sub
 

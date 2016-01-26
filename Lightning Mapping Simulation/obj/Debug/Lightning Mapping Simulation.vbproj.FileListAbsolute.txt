@@ -8,3 +8,6 @@ C:\Users\Asus PC\Documents\Visual Studio 2015\Projects\Lightning Mapping Simulat
 C:\Users\Asus PC\Documents\Visual Studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning Mapping Simulation.exe
 C:\Users\Asus PC\Documents\Visual Studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning Mapping Simulation.xml
 C:\Users\Asus PC\Documents\Visual Studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning Mapping Simulation.pdb
+C:\Users\Asus PC\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\bin\Debug\Interop.GEPlugin.dll
+C:\Users\Asus PC\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Interop.GEPlugin.dll
+C:\Users\Asus PC\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Debug\Lightning Mapping Simulation.vbproj.ResolveComReference.cache
