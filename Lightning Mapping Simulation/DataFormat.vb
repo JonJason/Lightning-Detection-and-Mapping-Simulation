@@ -10,7 +10,7 @@
         Public Property id As Integer
         Public Property Latitude As Decimal
         Public Property Longitude As Decimal
-        Public TOA As Decimal
+        Public Property TOA As Decimal
     End Class
 
     Public Class StationsData
@@ -20,32 +20,32 @@
             _lon = lon
         End Sub
 
-        Private _id As String
-        Public Property Id() As String
+        Private _id As Integer
+        Public Property Id() As Integer
             Get
                 Return _id
             End Get
-            Set(ByVal value As String)
+            Set(ByVal value As Integer)
                 _id = value
             End Set
         End Property
 
         Private _lat As Decimal
-        Public Property Latitude() As String
+        Public Property Latitude() As Decimal
             Get
                 Return _lat
             End Get
-            Set(ByVal value As String)
+            Set(ByVal value As Decimal)
                 _lat = value
             End Set
         End Property
 
         Private _lon As Decimal
-        Public Property Longitude() As String
+        Public Property Longitude() As Decimal
             Get
                 Return _lon
             End Get
-            Set(ByVal value As String)
+            Set(ByVal value As Decimal)
                 _lon = value
             End Set
         End Property
@@ -66,45 +66,74 @@
             _acc = acc
         End Sub
 
-        Private _id As String
-        Public Property Id() As String
+        Private _id As Integer
+        Public Property Id() As Integer
             Get
                 Return _id
             End Get
-            Set(ByVal value As String)
+            Set(ByVal value As Integer)
                 _id = value
             End Set
         End Property
 
         Private _lat As Decimal
-        Public Property Latitude() As String
+        Public Property Latitude() As Decimal
             Get
                 Return _lat
             End Get
-            Set(ByVal value As String)
+            Set(ByVal value As Decimal)
                 _lat = value
             End Set
         End Property
 
         Private _lon As Decimal
-        Public Property Longitude() As String
+        Public Property Longitude() As Decimal
             Get
                 Return _lon
             End Get
-            Set(ByVal value As String)
+            Set(ByVal value As Decimal)
                 _lon = value
             End Set
         End Property
 
         Private _acc As Decimal
-        Public Property Accuracy() As String
+        Public Property Accuracy() As Decimal
             Get
                 Return _acc
             End Get
-            Set(ByVal value As String)
+            Set(ByVal value As Decimal)
                 _acc = value
             End Set
         End Property
     End Class
 
+    Public Class SphericalCoord
+        Dim _latitude As Decimal
+        Dim _longitude As Decimal
+        Dim _altitude As Decimal
+        Public Property Latitude() As Decimal
+            Get
+                Return _latitude
+            End Get
+            Set(value As Decimal)
+                _latitude = value
+            End Set
+        End Property
+        Public Property Longitude() As Decimal
+            Get
+                Return _longitude
+            End Get
+            Set(value As Decimal)
+                _longitude = value
+            End Set
+        End Property
+        Public Property altitude() As Decimal
+            Get
+                Return _altitude
+            End Get
+            Set(value As Decimal)
+                _altitude = value
+            End Set
+        End Property
+    End Class
 End Class

@@ -3,7 +3,6 @@
 Public Class Form1
     Private tSimulation As Threading.Thread
     Private tRemainingTime As Threading.Thread
-    Delegate Function tProgressBar_at_Max() As Boolean
     Private suspended As Boolean = True
     Dim stationsData = New List(Of DataFormat.StationsData)
     Dim finalResultData = New List(Of DataFormat.finalResultData)
@@ -25,7 +24,7 @@ Public Class Form1
 
     Dim simulation As New SimData
     Dim calc As New Calculate
-    Dim totalPoint As Integer = (Math.Floor((simulation.lastLat - simulation.firstLat) / simulation.deltaLat) + 1) * (Math.Floor((simulation.lastLon - simulation.firstLon) / simulation.deltaLon) + 1)
+    Dim totalPoint As Integer
 
     Private Function BoxMullerRandom(ByVal mean, ByVal sigma) As Decimal
         Randomize()
@@ -110,7 +109,7 @@ Public Class Form1
     End Sub
 
     Private Sub startButton_Click(sender As Object, e As EventArgs) Handles startButton.Click
-
+        totalPoint = (Math.Floor((simulation.lastLat - simulation.firstLat) / simulation.deltaLat) + 1) * (Math.Floor((simulation.lastLon - simulation.firstLon) / simulation.deltaLon) + 1)
         If tSimulation Is Nothing Then tSimulation = New Threading.Thread(AddressOf startSimulation)
 
         If tSimulation.IsAlive Then
@@ -119,6 +118,7 @@ Public Class Form1
                 tRemainingTime.Resume()
                 tSimulation.Resume()
                 btnStop.Visible = False
+                btnToKmlFile.Enabled = False
                 startButton.Text = "Pause"
                 lblStatus.Text = "Status: Resuming. . ."
             Else
@@ -151,6 +151,7 @@ Public Class Form1
                 .Text = "Unknown. . ."
                 .Visible = True
             End With
+
             tSimulation = New Threading.Thread(AddressOf startSimulation)
             tSimulation.IsBackground = True
 
@@ -159,6 +160,7 @@ Public Class Form1
             tSimulation.Start()
             tRemainingTime.Start()
 
+            btnToKmlFile.Enabled = False
             startButton.Text = "Pause"
 
             suspended = False
@@ -214,7 +216,8 @@ Public Class Form1
                 'Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "-------------------------------------------------------" & vbCrLf))
                 'Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "Lightning Simulation  : " & arrayAccuracy(resultId, 0) & ", " & arrayAccuracy(resultId, 1) & vbCrLf))
                 'Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "Accuracy  : " & arrayAccuracy(resultId, 2) & vbCrLf))
-                Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += arrayAccuracy(resultId, 1) & "," & arrayAccuracy(resultId, 0) & "," & Decimal.Round(arrayAccuracy(resultId, 2), 2) & vbCrLf))
+                'Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += arrayAccuracy(resultId, 1) & "," & arrayAccuracy(resultId, 0) & "," & Decimal.Round(arrayAccuracy(resultId, 2), 2) & vbCrLf))
+
                 finalResultData.add(New DataFormat.finalResultData(resultId + 1, arrayAccuracy(resultId, 0), arrayAccuracy(resultId, 1), Decimal.Round(arrayAccuracy(resultId, 2), 2)))
                 Me.Invoke(New MethodInvoker(Sub() Me.finalResultDataBindingSource.ResetBindings(False)))
 
@@ -229,6 +232,7 @@ Public Class Form1
         Me.Invoke(New MethodInvoker(Sub() Me.lblProgress.Visible = False))
         Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Visible = False))
         Me.Invoke(New MethodInvoker(Sub() Me.lblStatus.Visible = False))
+        Me.Invoke(New MethodInvoker(Sub() Me.btnToKmlFile.Enabled = True))
         suspended = True
         'MsgBox("Done")
     End Sub
@@ -293,7 +297,7 @@ Public Class Form1
         Return hms
     End Function
 
-    Private Sub btnCalcModeHint_Click(sender As Object, e As EventArgs) Handles btnCalcModeHint.Click
+    Private Sub btnCalcModeHint_Click(sender As Object, e As EventArgs)
         MsgBox("Mode:" & vbCrLf & "1. Lightning Sperical Method" & vbCrLf & "2. Quadratic Planar Method",, "Method hint")
         'MsgBox(stationsData.count)
     End Sub
@@ -316,10 +320,11 @@ Public Class Form1
         lblProgress.Visible = False
         lblRemainingTime.Visible = False
         lblStatus.Visible = False
+        btnToKmlFile.Enabled = True
 
     End Sub
 
-    Private Sub DataGridStations_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DataGridStations.CellMouseUp
+    Private Sub DataGridStations_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs)
         Select Case e.Button
             Case MouseButtons.Right
                 If e.RowIndex > -1 Then
@@ -360,5 +365,28 @@ Public Class Form1
             Case Else
 
         End Select
+    End Sub
+
+    Private Sub btnToKmlFile_Click(sender As Object, e As EventArgs) Handles btnToKmlFile.Click
+        Dim limits = {}
+        'MsgBox(finalResultData.Count)
+        If finalResultData.Count > 0 Then
+            'MsgBox("masuk")
+            Dim line = calc.getContourLine(500, finalResultData, simulation)
+            textBox1.Text = ""
+            For Each point In line
+                textBox1.Text += point.Longitude & "," & point.Latitude & vbCrLf & "," & point.Accuracy
+            Next
+        End If
+        Dim filePath = "E:\Kuliah\Semester 8\TA 2\Google Earth\MyTest.kml"
+        calc.createContourKMLFile(filePath, finalResultData, limits, simulation)
+    End Sub
+
+    Public Sub printInTextbox1(ByVal text)
+        textBox1 += text
+    End Sub
+
+    Private Sub btnCalcModeHint_Click_1(sender As Object, e As EventArgs) Handles btnCalcModeHint.Click
+        MsgBox("1. Lightning Spherical Method" & vbCrLf & "2. Quadratic Planar Method")
     End Sub
 End Class

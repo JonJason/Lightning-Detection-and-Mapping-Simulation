@@ -23,10 +23,14 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Me.Panel1 = New System.Windows.Forms.Panel()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Me.TabControl1 = New System.Windows.Forms.TabControl()
+        Me.Setting = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
+        Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
+        Me.DataGridStations = New System.Windows.Forms.DataGridView()
+        Me.lblStationsLocation = New System.Windows.Forms.Label()
         Me.TableLayoutPanel2 = New System.Windows.Forms.TableLayoutPanel()
         Me.lblFCoordinate = New System.Windows.Forms.Label()
         Me.lblC = New System.Windows.Forms.Label()
@@ -55,22 +59,11 @@ Partial Class Form1
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.btnCalcModeHint = New System.Windows.Forms.Button()
-        Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
-        Me.DataGridStations = New System.Windows.Forms.DataGridView()
-        Me.lblStationsLocation = New System.Windows.Forms.Label()
-        Me.startButton = New System.Windows.Forms.Button()
-        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
-        Me.lblProgress = New System.Windows.Forms.Label()
-        Me.lblStatus = New System.Windows.Forms.Label()
-        Me.lblRemainingTime = New System.Windows.Forms.Label()
-        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.TabControl1 = New System.Windows.Forms.TabControl()
-        Me.Setting = New System.Windows.Forms.TabPage()
-        Me.btnStop = New System.Windows.Forms.Button()
         Me.Result = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
         Me.DataGridViewFinalResult = New System.Windows.Forms.DataGridView()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.btnToKmlFile = New System.Windows.Forms.Button()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.textBox1 = New System.Windows.Forms.TextBox()
         Me.stationsDataBindingSource = New System.Windows.Forms.BindingSource(Me.components)
@@ -79,52 +72,124 @@ Partial Class Form1
         Me.DeleteSelectedStationToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ResetStationsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.finalResultDataBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.Panel1.SuspendLayout()
-        Me.TableLayoutPanel3.SuspendLayout()
-        Me.TableLayoutPanel2.SuspendLayout()
-        Me.TableLayoutPanel4.SuspendLayout()
-        CType(Me.DataGridStations, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.TableLayoutPanel1.SuspendLayout()
+        Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.btnStop = New System.Windows.Forms.Button()
+        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.lblRemainingTime = New System.Windows.Forms.Label()
+        Me.lblStatus = New System.Windows.Forms.Label()
+        Me.lblProgress = New System.Windows.Forms.Label()
+        Me.startButton = New System.Windows.Forms.Button()
+        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         Me.TabControl1.SuspendLayout()
         Me.Setting.SuspendLayout()
+        Me.TableLayoutPanel3.SuspendLayout()
+        Me.TableLayoutPanel4.SuspendLayout()
+        CType(Me.DataGridStations, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TableLayoutPanel2.SuspendLayout()
         Me.Result.SuspendLayout()
         Me.TableLayoutPanel5.SuspendLayout()
         CType(Me.DataGridViewFinalResult, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel2.SuspendLayout()
         Me.TabPage3.SuspendLayout()
         CType(Me.stationsDataBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.DGStationCMS.SuspendLayout()
         CType(Me.finalResultDataBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TableLayoutPanel6.SuspendLayout()
+        Me.Panel3.SuspendLayout()
+        Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
-        'Panel1
+        'TabControl1
         '
-        Me.Panel1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Panel1.AutoScroll = True
-        Me.Panel1.AutoScrollMargin = New System.Drawing.Size(0, 500)
-        Me.Panel1.Controls.Add(Me.TableLayoutPanel3)
-        Me.Panel1.Location = New System.Drawing.Point(0, 0)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(534, 322)
-        Me.Panel1.TabIndex = 0
+        Me.TabControl1.Controls.Add(Me.Setting)
+        Me.TabControl1.Controls.Add(Me.Result)
+        Me.TabControl1.Controls.Add(Me.TabPage3)
+        Me.TabControl1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabControl1.Location = New System.Drawing.Point(3, 3)
+        Me.TabControl1.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
+        Me.TabControl1.Name = "TabControl1"
+        Me.TabControl1.SelectedIndex = 0
+        Me.TabControl1.Size = New System.Drawing.Size(536, 351)
+        Me.TabControl1.TabIndex = 7
+        '
+        'Setting
+        '
+        Me.Setting.Controls.Add(Me.TableLayoutPanel3)
+        Me.Setting.Location = New System.Drawing.Point(4, 22)
+        Me.Setting.Margin = New System.Windows.Forms.Padding(0)
+        Me.Setting.Name = "Setting"
+        Me.Setting.Size = New System.Drawing.Size(528, 325)
+        Me.Setting.TabIndex = 0
+        Me.Setting.Text = "Setting"
+        Me.Setting.UseVisualStyleBackColor = True
         '
         'TableLayoutPanel3
         '
         Me.TableLayoutPanel3.ColumnCount = 2
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60.8365!))
         Me.TableLayoutPanel3.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 39.1635!))
-        Me.TableLayoutPanel3.Controls.Add(Me.TableLayoutPanel2, 0, 0)
         Me.TableLayoutPanel3.Controls.Add(Me.TableLayoutPanel4, 1, 0)
+        Me.TableLayoutPanel3.Controls.Add(Me.TableLayoutPanel2, 0, 0)
         Me.TableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel3.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanel3.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel3.Name = "TableLayoutPanel3"
         Me.TableLayoutPanel3.RowCount = 1
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 322.0!))
-        Me.TableLayoutPanel3.Size = New System.Drawing.Size(534, 322)
+        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 325.0!))
+        Me.TableLayoutPanel3.Size = New System.Drawing.Size(528, 325)
         Me.TableLayoutPanel3.TabIndex = 7
+        '
+        'TableLayoutPanel4
+        '
+        Me.TableLayoutPanel4.ColumnCount = 1
+        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel4.Controls.Add(Me.DataGridStations, 0, 1)
+        Me.TableLayoutPanel4.Controls.Add(Me.lblStationsLocation, 0, 0)
+        Me.TableLayoutPanel4.Location = New System.Drawing.Point(321, 0)
+        Me.TableLayoutPanel4.Margin = New System.Windows.Forms.Padding(0)
+        Me.TableLayoutPanel4.Name = "TableLayoutPanel4"
+        Me.TableLayoutPanel4.RowCount = 2
+        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanel4.Size = New System.Drawing.Size(207, 303)
+        Me.TableLayoutPanel4.TabIndex = 8
+        '
+        'DataGridStations
+        '
+        Me.DataGridStations.AllowUserToResizeColumns = False
+        Me.DataGridStations.AllowUserToResizeRows = False
+        Me.DataGridStations.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridStations.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
+        Me.DataGridStations.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridStations.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DataGridStations.Location = New System.Drawing.Point(3, 23)
+        Me.DataGridStations.Name = "DataGridStations"
+        Me.DataGridStations.RowHeadersWidth = 25
+        Me.DataGridStations.ScrollBars = System.Windows.Forms.ScrollBars.None
+        Me.DataGridStations.Size = New System.Drawing.Size(201, 277)
+        Me.DataGridStations.TabIndex = 7
+        '
+        'lblStationsLocation
+        '
+        Me.lblStationsLocation.AutoSize = True
+        Me.lblStationsLocation.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.lblStationsLocation.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStationsLocation.Location = New System.Drawing.Point(3, 0)
+        Me.lblStationsLocation.Name = "lblStationsLocation"
+        Me.lblStationsLocation.Size = New System.Drawing.Size(201, 20)
+        Me.lblStationsLocation.TabIndex = 9
+        Me.lblStationsLocation.Text = "Stations Location"
+        Me.lblStationsLocation.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'TableLayoutPanel2
         '
@@ -160,7 +225,6 @@ Partial Class Form1
         Me.TableLayoutPanel2.Controls.Add(Me.Label5, 2, 8)
         Me.TableLayoutPanel2.Controls.Add(Me.Label6, 1, 10)
         Me.TableLayoutPanel2.Controls.Add(Me.btnCalcModeHint, 2, 11)
-        Me.TableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Left
         Me.TableLayoutPanel2.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanel2.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
@@ -177,8 +241,8 @@ Partial Class Form1
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel2.Size = New System.Drawing.Size(311, 322)
-        Me.TableLayoutPanel2.TabIndex = 6
+        Me.TableLayoutPanel2.Size = New System.Drawing.Size(311, 317)
+        Me.TableLayoutPanel2.TabIndex = 7
         '
         'lblFCoordinate
         '
@@ -365,7 +429,7 @@ Partial Class Form1
         Me.lblCalcMode.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblCalcMode.Location = New System.Drawing.Point(3, 290)
         Me.lblCalcMode.Name = "lblCalcMode"
-        Me.lblCalcMode.Size = New System.Drawing.Size(158, 32)
+        Me.lblCalcMode.Size = New System.Drawing.Size(158, 27)
         Me.lblCalcMode.TabIndex = 20
         Me.lblCalcMode.Text = "Method"
         Me.lblCalcMode.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -446,170 +510,10 @@ Partial Class Form1
         '
         Me.btnCalcModeHint.Location = New System.Drawing.Point(240, 293)
         Me.btnCalcModeHint.Name = "btnCalcModeHint"
-        Me.btnCalcModeHint.Size = New System.Drawing.Size(37, 20)
+        Me.btnCalcModeHint.Size = New System.Drawing.Size(53, 21)
         Me.btnCalcModeHint.TabIndex = 27
         Me.btnCalcModeHint.Text = "hint"
         Me.btnCalcModeHint.UseVisualStyleBackColor = True
-        '
-        'TableLayoutPanel4
-        '
-        Me.TableLayoutPanel4.ColumnCount = 1
-        Me.TableLayoutPanel4.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel4.Controls.Add(Me.DataGridStations, 0, 1)
-        Me.TableLayoutPanel4.Controls.Add(Me.lblStationsLocation, 0, 0)
-        Me.TableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel4.Location = New System.Drawing.Point(324, 0)
-        Me.TableLayoutPanel4.Margin = New System.Windows.Forms.Padding(0)
-        Me.TableLayoutPanel4.Name = "TableLayoutPanel4"
-        Me.TableLayoutPanel4.RowCount = 2
-        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel4.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel4.Size = New System.Drawing.Size(210, 322)
-        Me.TableLayoutPanel4.TabIndex = 7
-        '
-        'DataGridStations
-        '
-        Me.DataGridStations.AllowUserToResizeColumns = False
-        Me.DataGridStations.AllowUserToResizeRows = False
-        Me.DataGridStations.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridStations.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
-        Me.DataGridStations.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridStations.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DataGridStations.Location = New System.Drawing.Point(3, 23)
-        Me.DataGridStations.Name = "DataGridStations"
-        Me.DataGridStations.RowHeadersWidth = 25
-        Me.DataGridStations.ScrollBars = System.Windows.Forms.ScrollBars.None
-        Me.DataGridStations.Size = New System.Drawing.Size(204, 296)
-        Me.DataGridStations.TabIndex = 7
-        '
-        'lblStationsLocation
-        '
-        Me.lblStationsLocation.AutoSize = True
-        Me.lblStationsLocation.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblStationsLocation.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblStationsLocation.Location = New System.Drawing.Point(3, 0)
-        Me.lblStationsLocation.Name = "lblStationsLocation"
-        Me.lblStationsLocation.Size = New System.Drawing.Size(204, 20)
-        Me.lblStationsLocation.TabIndex = 9
-        Me.lblStationsLocation.Text = "Stations Location"
-        Me.lblStationsLocation.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'startButton
-        '
-        Me.startButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.startButton.Location = New System.Drawing.Point(456, 357)
-        Me.startButton.Name = "startButton"
-        Me.startButton.Size = New System.Drawing.Size(75, 23)
-        Me.startButton.TabIndex = 1
-        Me.startButton.Text = "Start"
-        Me.startButton.UseVisualStyleBackColor = True
-        '
-        'ProgressBar1
-        '
-        Me.ProgressBar1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ProgressBar1.Location = New System.Drawing.Point(4, 328)
-        Me.ProgressBar1.MarqueeAnimationSpeed = 1000
-        Me.ProgressBar1.Name = "ProgressBar1"
-        Me.ProgressBar1.Size = New System.Drawing.Size(446, 23)
-        Me.ProgressBar1.TabIndex = 2
-        '
-        'lblProgress
-        '
-        Me.lblProgress.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblProgress.BackColor = System.Drawing.SystemColors.Control
-        Me.lblProgress.Location = New System.Drawing.Point(151, 0)
-        Me.lblProgress.Name = "lblProgress"
-        Me.lblProgress.Size = New System.Drawing.Size(142, 23)
-        Me.lblProgress.TabIndex = 3
-        Me.lblProgress.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'lblStatus
-        '
-        Me.lblStatus.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblStatus.Location = New System.Drawing.Point(3, 0)
-        Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Size = New System.Drawing.Size(142, 23)
-        Me.lblStatus.TabIndex = 4
-        Me.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'lblRemainingTime
-        '
-        Me.lblRemainingTime.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblRemainingTime.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.lblRemainingTime.Location = New System.Drawing.Point(299, 0)
-        Me.lblRemainingTime.Name = "lblRemainingTime"
-        Me.lblRemainingTime.Size = New System.Drawing.Size(144, 23)
-        Me.lblRemainingTime.TabIndex = 5
-        Me.lblRemainingTime.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'TableLayoutPanel1
-        '
-        Me.TableLayoutPanel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TableLayoutPanel1.ColumnCount = 3
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
-        Me.TableLayoutPanel1.Controls.Add(Me.lblRemainingTime, 2, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.lblStatus, 0, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.lblProgress, 1, 0)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(4, 357)
-        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 1
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(446, 23)
-        Me.TableLayoutPanel1.TabIndex = 6
-        '
-        'TabControl1
-        '
-        Me.TabControl1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TabControl1.Controls.Add(Me.Setting)
-        Me.TabControl1.Controls.Add(Me.Result)
-        Me.TabControl1.Controls.Add(Me.TabPage3)
-        Me.TabControl1.Location = New System.Drawing.Point(0, 0)
-        Me.TabControl1.Name = "TabControl1"
-        Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(542, 412)
-        Me.TabControl1.TabIndex = 7
-        '
-        'Setting
-        '
-        Me.Setting.Controls.Add(Me.btnStop)
-        Me.Setting.Controls.Add(Me.Panel1)
-        Me.Setting.Controls.Add(Me.TableLayoutPanel1)
-        Me.Setting.Controls.Add(Me.ProgressBar1)
-        Me.Setting.Controls.Add(Me.startButton)
-        Me.Setting.Location = New System.Drawing.Point(4, 22)
-        Me.Setting.Name = "Setting"
-        Me.Setting.Padding = New System.Windows.Forms.Padding(3)
-        Me.Setting.Size = New System.Drawing.Size(534, 386)
-        Me.Setting.TabIndex = 0
-        Me.Setting.Text = "Setting"
-        Me.Setting.UseVisualStyleBackColor = True
-        '
-        'btnStop
-        '
-        Me.btnStop.Location = New System.Drawing.Point(456, 328)
-        Me.btnStop.Name = "btnStop"
-        Me.btnStop.Size = New System.Drawing.Size(75, 23)
-        Me.btnStop.TabIndex = 7
-        Me.btnStop.Text = "Stop"
-        Me.btnStop.UseVisualStyleBackColor = True
-        Me.btnStop.Visible = False
         '
         'Result
         '
@@ -617,7 +521,7 @@ Partial Class Form1
         Me.Result.Location = New System.Drawing.Point(4, 22)
         Me.Result.Margin = New System.Windows.Forms.Padding(0)
         Me.Result.Name = "Result"
-        Me.Result.Size = New System.Drawing.Size(534, 386)
+        Me.Result.Size = New System.Drawing.Size(528, 325)
         Me.Result.TabIndex = 1
         Me.Result.Text = "Result"
         Me.Result.UseVisualStyleBackColor = True
@@ -633,38 +537,50 @@ Partial Class Form1
         Me.TableLayoutPanel5.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel5.Name = "TableLayoutPanel5"
         Me.TableLayoutPanel5.RowCount = 2
-        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 90.67358!))
-        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.326425!))
-        Me.TableLayoutPanel5.Size = New System.Drawing.Size(534, 386)
+        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 89.53846!))
+        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.46154!))
+        Me.TableLayoutPanel5.Size = New System.Drawing.Size(528, 325)
         Me.TableLayoutPanel5.TabIndex = 2
         '
         'DataGridViewFinalResult
         '
         Me.DataGridViewFinalResult.AllowUserToAddRows = False
         Me.DataGridViewFinalResult.AllowUserToDeleteRows = False
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewFinalResult.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewFinalResult.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
         Me.DataGridViewFinalResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridViewFinalResult.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridViewFinalResult.Location = New System.Drawing.Point(3, 3)
         Me.DataGridViewFinalResult.Name = "DataGridViewFinalResult"
         Me.DataGridViewFinalResult.ReadOnly = True
-        Me.DataGridViewFinalResult.Size = New System.Drawing.Size(528, 344)
+        Me.DataGridViewFinalResult.Size = New System.Drawing.Size(522, 284)
         Me.DataGridViewFinalResult.TabIndex = 1
         '
         'Panel2
         '
+        Me.Panel2.Controls.Add(Me.btnToKmlFile)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel2.Location = New System.Drawing.Point(3, 353)
+        Me.Panel2.Location = New System.Drawing.Point(3, 293)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(528, 30)
+        Me.Panel2.Size = New System.Drawing.Size(522, 29)
         Me.Panel2.TabIndex = 2
+        '
+        'btnToKmlFile
+        '
+        Me.btnToKmlFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnToKmlFile.AutoSize = True
+        Me.btnToKmlFile.Location = New System.Drawing.Point(427, 3)
+        Me.btnToKmlFile.Name = "btnToKmlFile"
+        Me.btnToKmlFile.Size = New System.Drawing.Size(92, 23)
+        Me.btnToKmlFile.TabIndex = 0
+        Me.btnToKmlFile.Text = "Create KML File"
+        Me.btnToKmlFile.UseVisualStyleBackColor = True
         '
         'TabPage3
         '
@@ -672,7 +588,7 @@ Partial Class Form1
         Me.TabPage3.Location = New System.Drawing.Point(4, 22)
         Me.TabPage3.Name = "TabPage3"
         Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(534, 386)
+        Me.TabPage3.Size = New System.Drawing.Size(528, 325)
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "TabPage3"
         Me.TabPage3.UseVisualStyleBackColor = True
@@ -687,7 +603,7 @@ Partial Class Form1
         Me.textBox1.Multiline = True
         Me.textBox1.Name = "textBox1"
         Me.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.textBox1.Size = New System.Drawing.Size(528, 380)
+        Me.textBox1.Size = New System.Drawing.Size(522, 319)
         Me.textBox1.TabIndex = 2
         '
         'DGStationCMS
@@ -714,58 +630,182 @@ Partial Class Form1
         Me.ResetStationsToolStripMenuItem.Size = New System.Drawing.Size(194, 22)
         Me.ResetStationsToolStripMenuItem.Text = "Reset Stations"
         '
+        'TableLayoutPanel6
+        '
+        Me.TableLayoutPanel6.ColumnCount = 1
+        Me.TableLayoutPanel6.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.TableLayoutPanel6.Controls.Add(Me.TabControl1, 0, 0)
+        Me.TableLayoutPanel6.Controls.Add(Me.Panel3, 0, 1)
+        Me.TableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel6.Location = New System.Drawing.Point(0, 0)
+        Me.TableLayoutPanel6.Name = "TableLayoutPanel6"
+        Me.TableLayoutPanel6.RowCount = 2
+        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 84.2723!))
+        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15.7277!))
+        Me.TableLayoutPanel6.Size = New System.Drawing.Size(542, 421)
+        Me.TableLayoutPanel6.TabIndex = 8
+        '
+        'Panel3
+        '
+        Me.Panel3.Controls.Add(Me.btnStop)
+        Me.Panel3.Controls.Add(Me.TableLayoutPanel1)
+        Me.Panel3.Controls.Add(Me.startButton)
+        Me.Panel3.Controls.Add(Me.ProgressBar1)
+        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel3.Location = New System.Drawing.Point(0, 354)
+        Me.Panel3.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(542, 67)
+        Me.Panel3.TabIndex = 8
+        '
+        'btnStop
+        '
+        Me.btnStop.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnStop.Location = New System.Drawing.Point(458, 6)
+        Me.btnStop.Name = "btnStop"
+        Me.btnStop.Size = New System.Drawing.Size(75, 23)
+        Me.btnStop.TabIndex = 7
+        Me.btnStop.Text = "Stop"
+        Me.btnStop.UseVisualStyleBackColor = True
+        Me.btnStop.Visible = False
+        '
+        'TableLayoutPanel1
+        '
+        Me.TableLayoutPanel1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TableLayoutPanel1.ColumnCount = 3
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
+        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333!))
+        Me.TableLayoutPanel1.Controls.Add(Me.lblRemainingTime, 2, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.lblStatus, 0, 0)
+        Me.TableLayoutPanel1.Controls.Add(Me.lblProgress, 1, 0)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(3, 35)
+        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
+        Me.TableLayoutPanel1.RowCount = 1
+        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel1.Size = New System.Drawing.Size(446, 23)
+        Me.TableLayoutPanel1.TabIndex = 6
+        '
+        'lblRemainingTime
+        '
+        Me.lblRemainingTime.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblRemainingTime.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.lblRemainingTime.Location = New System.Drawing.Point(299, 0)
+        Me.lblRemainingTime.Name = "lblRemainingTime"
+        Me.lblRemainingTime.Size = New System.Drawing.Size(144, 23)
+        Me.lblRemainingTime.TabIndex = 5
+        Me.lblRemainingTime.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'lblStatus
+        '
+        Me.lblStatus.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblStatus.Location = New System.Drawing.Point(3, 0)
+        Me.lblStatus.Name = "lblStatus"
+        Me.lblStatus.Size = New System.Drawing.Size(142, 23)
+        Me.lblStatus.TabIndex = 4
+        Me.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'lblProgress
+        '
+        Me.lblProgress.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblProgress.BackColor = System.Drawing.SystemColors.Control
+        Me.lblProgress.Location = New System.Drawing.Point(151, 0)
+        Me.lblProgress.Name = "lblProgress"
+        Me.lblProgress.Size = New System.Drawing.Size(142, 23)
+        Me.lblProgress.TabIndex = 3
+        Me.lblProgress.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'startButton
+        '
+        Me.startButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.startButton.Location = New System.Drawing.Point(458, 35)
+        Me.startButton.Name = "startButton"
+        Me.startButton.Size = New System.Drawing.Size(75, 23)
+        Me.startButton.TabIndex = 1
+        Me.startButton.Text = "Start"
+        Me.startButton.UseVisualStyleBackColor = True
+        '
+        'ProgressBar1
+        '
+        Me.ProgressBar1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ProgressBar1.Location = New System.Drawing.Point(3, 6)
+        Me.ProgressBar1.MarqueeAnimationSpeed = 1000
+        Me.ProgressBar1.Name = "ProgressBar1"
+        Me.ProgressBar1.Size = New System.Drawing.Size(446, 23)
+        Me.ProgressBar1.TabIndex = 2
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(542, 415)
-        Me.Controls.Add(Me.TabControl1)
-        Me.MaximumSize = New System.Drawing.Size(558, 454)
+        Me.ClientSize = New System.Drawing.Size(542, 421)
+        Me.Controls.Add(Me.TableLayoutPanel6)
+        Me.MaximumSize = New System.Drawing.Size(558, 500)
         Me.MinimumSize = New System.Drawing.Size(558, 454)
         Me.Name = "Form1"
         Me.Text = "Lightning Simulation"
-        Me.Panel1.ResumeLayout(False)
+        Me.TabControl1.ResumeLayout(False)
+        Me.Setting.ResumeLayout(False)
         Me.TableLayoutPanel3.ResumeLayout(False)
-        Me.TableLayoutPanel2.ResumeLayout(False)
-        Me.TableLayoutPanel2.PerformLayout()
         Me.TableLayoutPanel4.ResumeLayout(False)
         Me.TableLayoutPanel4.PerformLayout()
         CType(Me.DataGridStations, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.TableLayoutPanel1.ResumeLayout(False)
-        Me.TabControl1.ResumeLayout(False)
-        Me.Setting.ResumeLayout(False)
+        Me.TableLayoutPanel2.ResumeLayout(False)
+        Me.TableLayoutPanel2.PerformLayout()
         Me.Result.ResumeLayout(False)
         Me.TableLayoutPanel5.ResumeLayout(False)
         CType(Me.DataGridViewFinalResult, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel2.ResumeLayout(False)
+        Me.Panel2.PerformLayout()
         Me.TabPage3.ResumeLayout(False)
         Me.TabPage3.PerformLayout()
         CType(Me.stationsDataBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.DGStationCMS.ResumeLayout(False)
         CType(Me.finalResultDataBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TableLayoutPanel6.ResumeLayout(False)
+        Me.Panel3.ResumeLayout(False)
+        Me.TableLayoutPanel1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
-
-    Friend WithEvents Panel1 As Panel
-    Friend WithEvents startButton As Button
-    Friend WithEvents ProgressBar1 As ProgressBar
-    Friend WithEvents lblProgress As Label
-    Friend WithEvents lblStatus As Label
-    Friend WithEvents lblRemainingTime As Label
-    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents Setting As TabPage
     Friend WithEvents Result As TabPage
     Friend WithEvents DataGridViewFinalResult As DataGridView
     Friend WithEvents TabPage3 As TabPage
     Public WithEvents textBox1 As TextBox
-    Friend WithEvents lblR As Label
-    Friend WithEvents lblC As Label
-    Friend WithEvents lblDelta As Label
-    Friend WithEvents lblNIteration As Label
-    Friend WithEvents lblLCoordinate As Label
-    Friend WithEvents lblFCoordinate As Label
+    Friend WithEvents stationsDataBindingSource As BindingSource
+    Friend WithEvents DGStationCMS As ContextMenuStrip
+    Friend WithEvents AddNewStationToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DeleteSelectedStationToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ResetStationsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents finalResultDataBindingSource As BindingSource
+    Friend WithEvents TableLayoutPanel5 As TableLayoutPanel
+    Friend WithEvents Panel2 As Panel
+    Friend WithEvents btnToKmlFile As Button
+    Friend WithEvents TableLayoutPanel6 As TableLayoutPanel
+    Friend WithEvents Panel3 As Panel
+    Friend WithEvents btnStop As Button
+    Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
+    Friend WithEvents lblRemainingTime As Label
+    Friend WithEvents lblStatus As Label
+    Friend WithEvents lblProgress As Label
+    Friend WithEvents startButton As Button
+    Friend WithEvents ProgressBar1 As ProgressBar
+    Friend WithEvents TableLayoutPanel3 As TableLayoutPanel
+    Friend WithEvents TableLayoutPanel4 As TableLayoutPanel
+    Friend WithEvents DataGridStations As DataGridView
+    Friend WithEvents lblStationsLocation As Label
     Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
+    Friend WithEvents lblFCoordinate As Label
+    Friend WithEvents lblC As Label
+    Friend WithEvents lblLCoordinate As Label
+    Friend WithEvents lblR As Label
     Friend WithEvents txtFLat As TextBox
     Friend WithEvents txtFlon As TextBox
     Friend WithEvents txtC As TextBox
@@ -775,6 +815,8 @@ Partial Class Form1
     Friend WithEvents txtLastLat As TextBox
     Friend WithEvents txtLastLon As TextBox
     Friend WithEvents txtDLon As TextBox
+    Friend WithEvents lblNIteration As Label
+    Friend WithEvents lblDelta As Label
     Friend WithEvents lblError As Label
     Friend WithEvents txtErrorMean As TextBox
     Friend WithEvents txtErrorSigma As TextBox
@@ -787,17 +829,4 @@ Partial Class Form1
     Friend WithEvents Label5 As Label
     Friend WithEvents Label6 As Label
     Friend WithEvents btnCalcModeHint As Button
-    Friend WithEvents TableLayoutPanel3 As TableLayoutPanel
-    Friend WithEvents DataGridStations As DataGridView
-    Friend WithEvents btnStop As Button
-    Friend WithEvents TableLayoutPanel4 As TableLayoutPanel
-    Friend WithEvents lblStationsLocation As Label
-    Friend WithEvents stationsDataBindingSource As BindingSource
-    Friend WithEvents DGStationCMS As ContextMenuStrip
-    Friend WithEvents AddNewStationToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents DeleteSelectedStationToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents ResetStationsToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents finalResultDataBindingSource As BindingSource
-    Friend WithEvents TableLayoutPanel5 As TableLayoutPanel
-    Friend WithEvents Panel2 As Panel
 End Class

@@ -1,5 +1,10 @@
-﻿Public Class Calculate
+﻿Imports System.IO
+Imports System.Text
+
+Public Class Calculate
     Dim sim As New Form1.SimData
+    Dim altitudeLimit As Decimal
+
     Private Sub swap(ByRef A, ByRef B)
         Dim temp
         temp = A
@@ -476,4 +481,106 @@
 
         Return Inv
     End Function
+
+    Public Function getContourLine(ByVal altitude As Decimal, ByVal data As List(Of DataFormat.finalResultData), ByVal simulation As Form1.SimData) As List(Of DataFormat.finalResultData)
+        altitudeLimit = altitude
+
+        Dim lineList As New List(Of DataFormat.finalResultData)
+
+        Dim filteredList = data.FindAll(AddressOf findUnderLimit)
+        Dim maxLat = filteredList.Max(Function(FRD As DataFormat.finalResultData) FRD.Latitude)
+        Dim minLat = filteredList.Min(Function(FRD As DataFormat.finalResultData) FRD.Latitude)
+        Dim maxLon = filteredList.Max(Function(FRD As DataFormat.finalResultData) FRD.Longitude)
+        Dim minLon = filteredList.Min(Function(FRD As DataFormat.finalResultData) FRD.Longitude)
+
+        'MsgBox(maxLat & ", " & minLat & vbCrLf & maxLon & ", " & minLon)
+
+        Dim currentPoint = filteredList.FindLast(Function(FRD As DataFormat.finalResultData) FRD.Latitude = maxLat)
+        Dim firstPoint = currentPoint
+        Dim lastDirection As Integer = 1 '0 top, 1 right, 2 bottom, 3 left
+
+        Do
+            lineList.Add(currentPoint)
+            currentPoint = findNextPoint(filteredList, currentPoint, simulation, lastDirection)
+        Loop Until currentPoint Is firstPoint Or IsNothing(currentPoint)
+
+        Return lineList
+    End Function
+
+    Private Function findUnderLimit(ByVal FRD As DataFormat.finalResultData) As Boolean
+        If FRD.Accuracy < altitudeLimit Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Private Function findNextPoint(ByVal Points As List(Of DataFormat.finalResultData), ByVal currentPoint As DataFormat.finalResultData, ByVal simulation As Form1.SimData, ByRef lastDirection As Integer) As DataFormat.finalResultData
+        Dim direction(3)
+        Dim topPoint = Points.Find(Function(FRD As DataFormat.finalResultData) FRD.Latitude = currentPoint.Latitude + simulation.deltaLat And FRD.Longitude = currentPoint.Longitude)
+        Dim rightPoint = Points.Find(Function(FRD As DataFormat.finalResultData) FRD.Latitude = currentPoint.Latitude And FRD.Longitude = currentPoint.Longitude + simulation.deltaLon)
+        Dim bottomPoint = Points.Find(Function(FRD As DataFormat.finalResultData) FRD.Latitude = currentPoint.Latitude - simulation.deltaLat And FRD.Longitude = currentPoint.Longitude)
+        Dim leftPoint = Points.Find(Function(FRD As DataFormat.finalResultData) FRD.Latitude = currentPoint.Latitude And FRD.Longitude = currentPoint.Longitude - simulation.deltaLon)
+
+        direction(0) = topPoint
+        direction(1) = rightPoint
+        direction(2) = bottomPoint
+        direction(3) = leftPoint
+
+        For d = lastDirection + 3 To lastDirection + 5
+            If d >= 4 Then
+                d = d Mod 4
+            End If
+            'MsgBox(d)
+            If Not IsNothing(direction(d)) Then
+                'Select Case d : Case 0 : MsgBox("top") : Case 1 : MsgBox("right") : Case 2 : MsgBox("bottom") : Case 3 : MsgBox("left") : Case Else : MsgBox("error: " & d) : End Select
+                lastDirection = d
+                Return direction(d)
+            End If
+        Next
+        'MsgBox("ga ada temen")
+        Return Nothing
+    End Function
+
+    Public Sub createContourKMLFile(ByVal path As String, ByVal Points As List(Of DataFormat.finalResultData), ByVal limits As Array, ByVal setting As Form1.SimData)
+        Dim kml As New myKML()
+
+        Dim style1 As New myKML.style("style1", 0, "7dff0000")
+        altitudeLimit = 500
+        Dim filteredPoints = Points.FindAll(AddressOf findUnderLimit)
+
+        'MsgBox(filteredPoints(0).Id & ", " & filteredPoints(0).Latitude & ", " & filteredPoints(0).Longitude & ", " & filteredPoints(0).Accuracy)
+
+        Dim kmlText As String = ""
+        kmlText += kml.XMLTag
+        kmlText += kml.kmlTag.header
+        kmlText += kml.document(1).header
+        kmlText += style1.KMLText(2)
+        kmlText += kml.placemark(2).header
+        kmlText += kml.name(3, "try1").oneline
+        kmlText += style1.styleUrl(3)
+        kmlText += kml.MultiGeometry(3).header
+        For Each point In filteredPoints
+            kmlText += kml.plgn(4).header
+            kmlText += kml.Extrude(5)
+            kmlText += kml.altitudeMode(5, "absolute")
+            kmlText += kml.outerBoundaryIs(5).header
+            kmlText += kml.LinearRing(6).header
+            kmlText += kml.coordinates(7, point, setting).text
+            kmlText += kml.LinearRing(6).footer
+            kmlText += kml.outerBoundaryIs(5).footer
+            kmlText += kml.plgn(4).footer
+        Next
+        kmlText += kml.MultiGeometry(3).footer
+        kmlText += kml.placemark(2).footer
+        kmlText += kml.document(1).footer
+        kmlText += kml.kmlTag.footer
+
+        ' Create or overwrite the file.
+        Dim fs As FileStream = File.Create(path)
+        ' Add text to the file.
+        Dim info As Byte() = New UTF8Encoding(True).GetBytes(kmlText)
+        fs.Write(info, 0, info.Length)
+        fs.Close()
+    End Sub
 End Class
