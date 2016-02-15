@@ -111,6 +111,10 @@ Public Class Form1
     End Sub
 
     Private Sub startButton_Click(sender As Object, e As EventArgs) Handles startButton.Click
+        runSimulation()
+    End Sub
+
+    Private Sub runSimulation()
         totalPoint = (Math.Floor((simulation.lastLat - simulation.firstLat) / simulation.deltaLat) + 1) * (Math.Floor((simulation.lastLon - simulation.firstLon) / simulation.deltaLon) + 1)
         If tSimulation Is Nothing Then tSimulation = New Threading.Thread(AddressOf startSimulation)
 
@@ -167,10 +171,6 @@ Public Class Form1
 
             suspended = False
         End If
-    End Sub
-
-    Private Sub runSimulation()
-
     End Sub
 
     Private Sub startSimulation()
