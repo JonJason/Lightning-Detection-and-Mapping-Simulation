@@ -23,8 +23,8 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.Setting = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
@@ -59,6 +59,8 @@ Partial Class Form1
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.btnCalcModeHint = New System.Windows.Forms.Button()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.txtSimMode = New System.Windows.Forms.TextBox()
         Me.Result = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
         Me.DataGridViewFinalResult = New System.Windows.Forms.DataGridView()
@@ -110,7 +112,7 @@ Partial Class Form1
         Me.TabControl1.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(536, 351)
+        Me.TabControl1.Size = New System.Drawing.Size(536, 350)
         Me.TabControl1.TabIndex = 7
         '
         'Setting
@@ -119,7 +121,7 @@ Partial Class Form1
         Me.Setting.Location = New System.Drawing.Point(4, 22)
         Me.Setting.Margin = New System.Windows.Forms.Padding(0)
         Me.Setting.Name = "Setting"
-        Me.Setting.Size = New System.Drawing.Size(528, 325)
+        Me.Setting.Size = New System.Drawing.Size(528, 324)
         Me.Setting.TabIndex = 0
         Me.Setting.Text = "Setting"
         Me.Setting.UseVisualStyleBackColor = True
@@ -137,8 +139,8 @@ Partial Class Form1
         Me.TableLayoutPanel3.Name = "TableLayoutPanel3"
         Me.TableLayoutPanel3.RowCount = 1
         Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 325.0!))
-        Me.TableLayoutPanel3.Size = New System.Drawing.Size(528, 325)
+        Me.TableLayoutPanel3.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 320.0!))
+        Me.TableLayoutPanel3.Size = New System.Drawing.Size(528, 324)
         Me.TableLayoutPanel3.TabIndex = 7
         '
         'TableLayoutPanel4
@@ -162,14 +164,14 @@ Partial Class Form1
         Me.DataGridStations.AllowUserToResizeColumns = False
         Me.DataGridStations.AllowUserToResizeRows = False
         Me.DataGridStations.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridStations.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridStations.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.DataGridStations.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridStations.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridStations.Location = New System.Drawing.Point(3, 23)
@@ -224,7 +226,9 @@ Partial Class Form1
         Me.TableLayoutPanel2.Controls.Add(Me.Label4, 1, 8)
         Me.TableLayoutPanel2.Controls.Add(Me.Label5, 2, 8)
         Me.TableLayoutPanel2.Controls.Add(Me.Label6, 1, 10)
-        Me.TableLayoutPanel2.Controls.Add(Me.btnCalcModeHint, 2, 11)
+        Me.TableLayoutPanel2.Controls.Add(Me.btnCalcModeHint, 0, 10)
+        Me.TableLayoutPanel2.Controls.Add(Me.Label7, 2, 10)
+        Me.TableLayoutPanel2.Controls.Add(Me.txtSimMode, 2, 11)
         Me.TableLayoutPanel2.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanel2.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
@@ -239,9 +243,9 @@ Partial Class Form1
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30.0!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel2.Size = New System.Drawing.Size(311, 317)
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28.0!))
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 12.0!))
+        Me.TableLayoutPanel2.Size = New System.Drawing.Size(321, 324)
         Me.TableLayoutPanel2.TabIndex = 7
         '
         'lblFCoordinate
@@ -303,7 +307,7 @@ Partial Class Form1
         'txtFlon
         '
         Me.txtFlon.Dock = System.Windows.Forms.DockStyle.Left
-        Me.txtFlon.Location = New System.Drawing.Point(240, 23)
+        Me.txtFlon.Location = New System.Drawing.Point(248, 23)
         Me.txtFlon.Name = "txtFlon"
         Me.txtFlon.Size = New System.Drawing.Size(67, 20)
         Me.txtFlon.TabIndex = 7
@@ -351,7 +355,7 @@ Partial Class Form1
         'txtLastLon
         '
         Me.txtLastLon.Dock = System.Windows.Forms.DockStyle.Left
-        Me.txtLastLon.Location = New System.Drawing.Point(240, 53)
+        Me.txtLastLon.Location = New System.Drawing.Point(248, 53)
         Me.txtLastLon.Name = "txtLastLon"
         Me.txtLastLon.Size = New System.Drawing.Size(67, 20)
         Me.txtLastLon.TabIndex = 15
@@ -359,7 +363,7 @@ Partial Class Form1
         'txtDLon
         '
         Me.txtDLon.Dock = System.Windows.Forms.DockStyle.Left
-        Me.txtDLon.Location = New System.Drawing.Point(240, 83)
+        Me.txtDLon.Location = New System.Drawing.Point(248, 83)
         Me.txtDLon.Name = "txtDLon"
         Me.txtDLon.Size = New System.Drawing.Size(67, 20)
         Me.txtDLon.TabIndex = 11
@@ -409,7 +413,7 @@ Partial Class Form1
         '
         'txtErrorSigma
         '
-        Me.txtErrorSigma.Location = New System.Drawing.Point(240, 243)
+        Me.txtErrorSigma.Location = New System.Drawing.Point(248, 243)
         Me.txtErrorSigma.Name = "txtErrorSigma"
         Me.txtErrorSigma.Size = New System.Drawing.Size(67, 20)
         Me.txtErrorSigma.TabIndex = 18
@@ -417,7 +421,7 @@ Partial Class Form1
         'txtCalcMode
         '
         Me.txtCalcMode.Dock = System.Windows.Forms.DockStyle.Left
-        Me.txtCalcMode.Location = New System.Drawing.Point(167, 293)
+        Me.txtCalcMode.Location = New System.Drawing.Point(167, 301)
         Me.txtCalcMode.Name = "txtCalcMode"
         Me.txtCalcMode.Size = New System.Drawing.Size(67, 20)
         Me.txtCalcMode.TabIndex = 19
@@ -427,9 +431,9 @@ Partial Class Form1
         Me.lblCalcMode.AutoSize = True
         Me.lblCalcMode.Dock = System.Windows.Forms.DockStyle.Fill
         Me.lblCalcMode.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblCalcMode.Location = New System.Drawing.Point(3, 290)
+        Me.lblCalcMode.Location = New System.Drawing.Point(3, 298)
         Me.lblCalcMode.Name = "lblCalcMode"
-        Me.lblCalcMode.Size = New System.Drawing.Size(158, 27)
+        Me.lblCalcMode.Size = New System.Drawing.Size(158, 26)
         Me.lblCalcMode.TabIndex = 20
         Me.lblCalcMode.Text = "Method"
         Me.lblCalcMode.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -441,7 +445,7 @@ Partial Class Form1
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(167, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(67, 20)
+        Me.Label1.Size = New System.Drawing.Size(75, 20)
         Me.Label1.TabIndex = 21
         Me.Label1.Text = "Latitude"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -451,9 +455,9 @@ Partial Class Form1
         Me.Label2.AutoSize = True
         Me.Label2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(240, 0)
+        Me.Label2.Location = New System.Drawing.Point(248, 0)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(71, 20)
+        Me.Label2.Size = New System.Drawing.Size(72, 20)
         Me.Label2.TabIndex = 22
         Me.Label2.Text = "Longitude"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -465,7 +469,7 @@ Partial Class Form1
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label3.Location = New System.Drawing.Point(167, 110)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(67, 20)
+        Me.Label3.Size = New System.Drawing.Size(75, 20)
         Me.Label3.TabIndex = 23
         Me.Label3.Text = "Value"
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -477,7 +481,7 @@ Partial Class Form1
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label4.Location = New System.Drawing.Point(167, 220)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(67, 20)
+        Me.Label4.Size = New System.Drawing.Size(75, 20)
         Me.Label4.TabIndex = 24
         Me.Label4.Text = "Mean"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -487,9 +491,9 @@ Partial Class Form1
         Me.Label5.AutoSize = True
         Me.Label5.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(240, 220)
+        Me.Label5.Location = New System.Drawing.Point(248, 220)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(71, 20)
+        Me.Label5.Size = New System.Drawing.Size(72, 20)
         Me.Label5.TabIndex = 25
         Me.Label5.Text = "Sigma"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -501,19 +505,39 @@ Partial Class Form1
         Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label6.Location = New System.Drawing.Point(167, 270)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(67, 20)
+        Me.Label6.Size = New System.Drawing.Size(75, 28)
         Me.Label6.TabIndex = 26
-        Me.Label6.Text = "Mode"
+        Me.Label6.Text = "Calc Mode"
         Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'btnCalcModeHint
         '
-        Me.btnCalcModeHint.Location = New System.Drawing.Point(240, 293)
+        Me.btnCalcModeHint.Location = New System.Drawing.Point(3, 273)
         Me.btnCalcModeHint.Name = "btnCalcModeHint"
-        Me.btnCalcModeHint.Size = New System.Drawing.Size(53, 21)
+        Me.btnCalcModeHint.Size = New System.Drawing.Size(53, 22)
         Me.btnCalcModeHint.TabIndex = 27
         Me.btnCalcModeHint.Text = "hint"
         Me.btnCalcModeHint.UseVisualStyleBackColor = True
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.Label7.Location = New System.Drawing.Point(248, 270)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(72, 28)
+        Me.Label7.TabIndex = 28
+        Me.Label7.Text = "Sim Mode"
+        Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'txtSimMode
+        '
+        Me.txtSimMode.Dock = System.Windows.Forms.DockStyle.Left
+        Me.txtSimMode.Location = New System.Drawing.Point(248, 301)
+        Me.txtSimMode.Name = "txtSimMode"
+        Me.txtSimMode.Size = New System.Drawing.Size(67, 20)
+        Me.txtSimMode.TabIndex = 29
         '
         'Result
         '
@@ -521,7 +545,7 @@ Partial Class Form1
         Me.Result.Location = New System.Drawing.Point(4, 22)
         Me.Result.Margin = New System.Windows.Forms.Padding(0)
         Me.Result.Name = "Result"
-        Me.Result.Size = New System.Drawing.Size(528, 325)
+        Me.Result.Size = New System.Drawing.Size(528, 320)
         Me.Result.TabIndex = 1
         Me.Result.Text = "Result"
         Me.Result.UseVisualStyleBackColor = True
@@ -539,43 +563,43 @@ Partial Class Form1
         Me.TableLayoutPanel5.RowCount = 2
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 89.53846!))
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.46154!))
-        Me.TableLayoutPanel5.Size = New System.Drawing.Size(528, 325)
+        Me.TableLayoutPanel5.Size = New System.Drawing.Size(528, 320)
         Me.TableLayoutPanel5.TabIndex = 2
         '
         'DataGridViewFinalResult
         '
         Me.DataGridViewFinalResult.AllowUserToAddRows = False
         Me.DataGridViewFinalResult.AllowUserToDeleteRows = False
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewFinalResult.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewFinalResult.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.DataGridViewFinalResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridViewFinalResult.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridViewFinalResult.Location = New System.Drawing.Point(3, 3)
         Me.DataGridViewFinalResult.Name = "DataGridViewFinalResult"
         Me.DataGridViewFinalResult.ReadOnly = True
-        Me.DataGridViewFinalResult.Size = New System.Drawing.Size(522, 284)
+        Me.DataGridViewFinalResult.Size = New System.Drawing.Size(522, 280)
         Me.DataGridViewFinalResult.TabIndex = 1
         '
         'Panel2
         '
         Me.Panel2.Controls.Add(Me.btnToKmlFile)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel2.Location = New System.Drawing.Point(3, 293)
+        Me.Panel2.Location = New System.Drawing.Point(3, 289)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(522, 29)
+        Me.Panel2.Size = New System.Drawing.Size(522, 28)
         Me.Panel2.TabIndex = 2
         '
         'btnToKmlFile
         '
         Me.btnToKmlFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnToKmlFile.AutoSize = True
-        Me.btnToKmlFile.Location = New System.Drawing.Point(427, 3)
+        Me.btnToKmlFile.Location = New System.Drawing.Point(427, 2)
         Me.btnToKmlFile.Name = "btnToKmlFile"
         Me.btnToKmlFile.Size = New System.Drawing.Size(92, 23)
         Me.btnToKmlFile.TabIndex = 0
@@ -588,7 +612,7 @@ Partial Class Form1
         Me.TabPage3.Location = New System.Drawing.Point(4, 22)
         Me.TabPage3.Name = "TabPage3"
         Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage3.Size = New System.Drawing.Size(528, 325)
+        Me.TabPage3.Size = New System.Drawing.Size(528, 320)
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "TabPage3"
         Me.TabPage3.UseVisualStyleBackColor = True
@@ -603,7 +627,7 @@ Partial Class Form1
         Me.textBox1.Multiline = True
         Me.textBox1.Name = "textBox1"
         Me.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.textBox1.Size = New System.Drawing.Size(522, 319)
+        Me.textBox1.Size = New System.Drawing.Size(522, 314)
         Me.textBox1.TabIndex = 2
         '
         'DGStationCMS
@@ -642,7 +666,7 @@ Partial Class Form1
         Me.TableLayoutPanel6.RowCount = 2
         Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 84.2723!))
         Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15.7277!))
-        Me.TableLayoutPanel6.Size = New System.Drawing.Size(542, 421)
+        Me.TableLayoutPanel6.Size = New System.Drawing.Size(542, 419)
         Me.TableLayoutPanel6.TabIndex = 8
         '
         'Panel3
@@ -652,16 +676,16 @@ Partial Class Form1
         Me.Panel3.Controls.Add(Me.startButton)
         Me.Panel3.Controls.Add(Me.ProgressBar1)
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel3.Location = New System.Drawing.Point(0, 354)
+        Me.Panel3.Location = New System.Drawing.Point(0, 353)
         Me.Panel3.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(542, 67)
+        Me.Panel3.Size = New System.Drawing.Size(542, 66)
         Me.Panel3.TabIndex = 8
         '
         'btnStop
         '
         Me.btnStop.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnStop.Location = New System.Drawing.Point(458, 6)
+        Me.btnStop.Location = New System.Drawing.Point(458, 5)
         Me.btnStop.Name = "btnStop"
         Me.btnStop.Size = New System.Drawing.Size(75, 23)
         Me.btnStop.TabIndex = 7
@@ -680,7 +704,7 @@ Partial Class Form1
         Me.TableLayoutPanel1.Controls.Add(Me.lblRemainingTime, 2, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.lblStatus, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.lblProgress, 1, 0)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(3, 35)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(3, 34)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
@@ -722,7 +746,7 @@ Partial Class Form1
         'startButton
         '
         Me.startButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.startButton.Location = New System.Drawing.Point(458, 35)
+        Me.startButton.Location = New System.Drawing.Point(458, 34)
         Me.startButton.Name = "startButton"
         Me.startButton.Size = New System.Drawing.Size(75, 23)
         Me.startButton.TabIndex = 1
@@ -733,7 +757,7 @@ Partial Class Form1
         '
         Me.ProgressBar1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ProgressBar1.Location = New System.Drawing.Point(3, 6)
+        Me.ProgressBar1.Location = New System.Drawing.Point(3, 5)
         Me.ProgressBar1.MarqueeAnimationSpeed = 1000
         Me.ProgressBar1.Name = "ProgressBar1"
         Me.ProgressBar1.Size = New System.Drawing.Size(446, 23)
@@ -743,10 +767,10 @@ Partial Class Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(542, 421)
+        Me.ClientSize = New System.Drawing.Size(542, 419)
         Me.Controls.Add(Me.TableLayoutPanel6)
-        Me.MaximumSize = New System.Drawing.Size(558, 500)
-        Me.MinimumSize = New System.Drawing.Size(558, 454)
+        Me.MaximumSize = New System.Drawing.Size(558, 458)
+        Me.MinimumSize = New System.Drawing.Size(558, 458)
         Me.Name = "Form1"
         Me.Text = "Lightning Simulation"
         Me.TabControl1.ResumeLayout(False)
@@ -829,4 +853,6 @@ Partial Class Form1
     Friend WithEvents Label5 As Label
     Friend WithEvents Label6 As Label
     Friend WithEvents btnCalcModeHint As Button
+    Friend WithEvents Label7 As Label
+    Friend WithEvents txtSimMode As TextBox
 End Class

@@ -3,7 +3,8 @@ Imports System.Text
 
 Public Class Calculate
     Dim sim As New Form1.SimData
-    Dim altitudeLimit As Decimal
+    Dim altitudeTopLimit As Decimal
+    Dim altitudeBottomLimit As Decimal
 
     Private Sub swap(ByRef A, ByRef B)
         Dim temp
@@ -483,7 +484,7 @@ Public Class Calculate
     End Function
 
     Public Function getContourLine(ByVal altitude As Decimal, ByVal data As List(Of DataFormat.finalResultData), ByVal simulation As Form1.SimData) As List(Of DataFormat.finalResultData)
-        altitudeLimit = altitude
+        altitudeTopLimit = altitude
 
         Dim lineList As New List(Of DataFormat.finalResultData)
 
@@ -507,8 +508,24 @@ Public Class Calculate
         Return lineList
     End Function
 
+    Private Function findBetweenLimit(ByVal FRD As DataFormat.finalResultData) As Boolean
+        If FRD.Accuracy <= altitudeTopLimit And FRD.Accuracy > altitudeBottomLimit Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Private Function findAboveLimit(ByVal FRD As DataFormat.finalResultData) As Boolean
+        If FRD.Accuracy > altitudeTopLimit Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
     Private Function findUnderLimit(ByVal FRD As DataFormat.finalResultData) As Boolean
-        If FRD.Accuracy < altitudeLimit Then
+        If FRD.Accuracy < altitudeTopLimit Then
             Return True
         Else
             Return False
@@ -542,12 +559,17 @@ Public Class Calculate
         Return Nothing
     End Function
 
-    Public Sub createContourKMLFile(ByVal path As String, ByVal Points As List(Of DataFormat.finalResultData), ByVal limits As Array, ByVal setting As Form1.SimData)
+    Public Sub createContourKMLFile(ByVal path As String, ByVal Points As List(Of DataFormat.finalResultData), ByVal limits As Array, ByVal setting As Form1.SimData, ByVal stationsData As List(Of DataFormat.StationsData))
+        altitudeTopLimit = 0
         Dim kml As New myKML()
-
-        Dim style1 As New myKML.style("style1", 0, "7dff0000")
-        altitudeLimit = 500
-        Dim filteredPoints = Points.FindAll(AddressOf findUnderLimit)
+        'MsgBox(stationsData.Count)
+        Dim styles(5)
+        styles(0) = New myKML.style("style" & limits(0), 0, "99ff0000")
+        styles(1) = New myKML.style("style" & limits(1), 0, "99ffff00")
+        styles(2) = New myKML.style("style" & limits(2), 0, "9900ff00")
+        styles(3) = New myKML.style("style" & limits(3), 0, "9900ffff")
+        styles(4) = New myKML.style("style" & limits(4), 0, "990000ff")
+        styles(5) = New myKML.style("style > " & limits(4), 0, "99ff00ff")
 
         'MsgBox(filteredPoints(0).Id & ", " & filteredPoints(0).Latitude & ", " & filteredPoints(0).Longitude & ", " & filteredPoints(0).Accuracy)
 
@@ -555,27 +577,61 @@ Public Class Calculate
         kmlText += kml.XMLTag
         kmlText += kml.kmlTag.header
         kmlText += kml.document(1).header
-        kmlText += style1.KMLText(2)
-        kmlText += kml.placemark(2).header
-        kmlText += kml.name(3, "try1").oneline
-        kmlText += style1.styleUrl(3)
-        kmlText += kml.MultiGeometry(3).header
-        For Each point In filteredPoints
-            kmlText += kml.plgn(4).header
-            kmlText += kml.Extrude(5)
-            kmlText += kml.altitudeMode(5, "absolute")
-            kmlText += kml.outerBoundaryIs(5).header
-            kmlText += kml.LinearRing(6).header
-            kmlText += kml.coordinates(7, point, setting).text
-            kmlText += kml.LinearRing(6).footer
-            kmlText += kml.outerBoundaryIs(5).footer
-            kmlText += kml.plgn(4).footer
+        For index = 0 To limits.Length - 1
+            kmlText += styles(index).KMLText(2)
         Next
-        kmlText += kml.MultiGeometry(3).footer
-        kmlText += kml.placemark(2).footer
-        kmlText += kml.document(1).footer
-        kmlText += kml.kmlTag.footer
+        kmlText += styles(5).KMLText(2)
+        For index = 0 To stationsData.Count - 1
+            kmlText += kml.point(2, "Station " & stationsData(index).Id, stationsData(index).Latitude, stationsData(index).Longitude, 2000, Nothing, Nothing)
+        Next
+        For index = 0 To limits.Length - 1
+            altitudeBottomLimit = altitudeTopLimit
+            altitudeTopLimit = limits(index)
+            Dim filteredPoints = Points.FindAll(AddressOf findBetweenLimit)
+            If filteredPoints IsNot Nothing Then
+                kmlText += kml.placemark(2).header
+                kmlText += kml.name(3, "Under " & limits(index)).oneline
+                kmlText += styles(index).styleUrl(3)
+                kmlText += kml.MultiGeometry(3).header
 
+                For Each point In filteredPoints
+                    kmlText += kml.plgn(4).header
+                    kmlText += kml.Extrude(5)
+                    kmlText += kml.altitudeMode(5, "absolute")
+                    kmlText += kml.outerBoundaryIs(5).header
+                    kmlText += kml.LinearRing(6).header
+                    kmlText += kml.coordinates(7, point, setting).text
+                    kmlText += kml.LinearRing(6).footer
+                    kmlText += kml.outerBoundaryIs(5).footer
+                    kmlText += kml.plgn(4).footer
+                Next
+                kmlText += kml.MultiGeometry(3).footer
+                kmlText += kml.placemark(2).footer
+            End If
+        Next
+        Dim BadPoints = Points.FindAll(AddressOf findAboveLimit)
+        If BadPoints IsNot Nothing Then
+            kmlText += kml.placemark(2).header
+            kmlText += kml.name(3, "Above " & limits(4)).oneline
+            kmlText += styles(5).styleUrl(3)
+            kmlText += kml.MultiGeometry(3).header
+
+            For Each point In BadPoints
+                kmlText += kml.plgn(4).header
+                kmlText += kml.Extrude(5)
+                kmlText += kml.altitudeMode(5, "absolute")
+                kmlText += kml.outerBoundaryIs(5).header
+                kmlText += kml.LinearRing(6).header
+                kmlText += kml.coordinates(7, point, setting).text
+                kmlText += kml.LinearRing(6).footer
+                kmlText += kml.outerBoundaryIs(5).footer
+                kmlText += kml.plgn(4).footer
+            Next
+            kmlText += kml.MultiGeometry(3).footer
+            kmlText += kml.placemark(2).footer
+            kmlText += kml.document(1).footer
+            kmlText += kml.kmlTag.footer
+        End If
         ' Create or overwrite the file.
         Dim fs As FileStream = File.Create(path)
         ' Add text to the file.

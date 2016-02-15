@@ -44,6 +44,18 @@
         End Get
     End Property
 
+    Dim _description As New tag()
+    Public ReadOnly Property description(ByVal level As Integer, ByVal text As String) As tag
+        Get
+            Dim tab = ""
+            addTabTo(tab, level)
+            _name.header = vbCrLf & tab & "<description>"
+            _name.footer = vbCrLf & tab & "</description>"
+            _name.oneline = vbCrLf & tab & "<description>" & text & "</description>"
+            Return _name
+        End Get
+    End Property
+
     Dim _MultiGeometry As New tag()
     Public ReadOnly Property MultiGeometry(ByVal level As Integer) As tag
         Get
@@ -56,7 +68,6 @@
     End Property
 
     Dim _coordinates As New crdnt()
-
     Public ReadOnly Property coordinates(ByVal level As Integer, ByVal point As DataFormat.finalResultData, ByVal setting As Form1.SimData) As crdnt
         Get
             Dim tagTab = ""
@@ -75,7 +86,6 @@
     End Property
 
     Dim _LinearRing As New tag()
-
     Public ReadOnly Property LinearRing(ByVal level As Integer) As tag
         Get
             Dim tab = ""
@@ -88,7 +98,6 @@
     End Property
 
     Dim _outerBoundaryIs As New OBI()
-
     Public ReadOnly Property outerBoundaryIs(ByVal level As Integer) As OBI
         Get
             Dim tab = ""
@@ -119,7 +128,6 @@
     End Property
 
     Dim _plgn As New polygon()
-
     Public ReadOnly Property plgn(ByVal level As Integer) As polygon
         Get
             Dim tab = ""
@@ -128,6 +136,36 @@
             _plgn.footer = vbCrLf & tab & "</Polygon>"
 
             Return _plgn
+        End Get
+    End Property
+
+    Public ReadOnly Property point(ByVal level As Integer, ByVal name As String, ByVal latitude As Decimal, ByVal longitude As Decimal, ByVal altitude As Decimal, ByVal description As String, style As style) As String
+        Get
+            Dim pointTab = ""
+            addTabTo(pointTab, level + 1)
+            Dim coordTab = ""
+            addTabTo(coordTab, level + 2)
+            Dim locTab = ""
+            addTabTo(locTab, level + 3)
+
+            Dim header = "<Point>"
+            Dim footer = "</Point>"
+            Dim kmlTag = ""
+            kmlTag += Me.placemark(level).header
+            kmlTag += Me.name(level + 1, name).oneline
+            If description IsNot Nothing Then
+                kmlTag += Me.description(level + 1, description).oneline
+            End If
+            If style IsNot Nothing Then
+                kmlTag += style.styleUrl(level + 1)
+            End If
+            kmlTag += vbCrLf & pointTab & header
+            kmlTag += vbCrLf & coordTab & "<coordinates>"
+            kmlTag += vbCrLf & locTab & longitude & "," & latitude & "," & altitude
+            kmlTag += vbCrLf & coordTab & "</coordinates>"
+            kmlTag += vbCrLf & pointTab & footer
+            kmlTag += Me.placemark(level).footer
+            Return kmlTag
         End Get
     End Property
 
@@ -209,6 +247,16 @@
                 Return styleUrlText
             End Get
         End Property
+    End Class
+
+    Public Class points
+        Public header As String = "<Point>"
+        Public footer As String = "</Point>"
+        Public name As String
+        Public latitude As Decimal
+        Public longitude As Decimal
+        Public description As String
+        Public style As String
     End Class
 
     Shared Sub addTabTo(ByRef text As String, ByVal count As Integer)

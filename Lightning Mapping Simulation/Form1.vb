@@ -8,6 +8,7 @@ Public Class Form1
     Dim finalResultData = New List(Of DataFormat.finalResultData)
 
     Class SimData
+        Public Property SimMode As Integer = 1
         Public Property CalcMode As Integer = 1
         Public Property firstLat As Decimal = -7.5
         Public Property firstLon As Decimal = 105.5
@@ -49,6 +50,7 @@ Public Class Form1
         txtErrorMean.DataBindings.Add("Text", simulation, "errorTOAMean")
         txtErrorSigma.DataBindings.Add("Text", simulation, "errorTOASigma")
         txtCalcMode.DataBindings.Add("Text", simulation, "CalcMode")
+        txtSimMode.DataBindings.Add("Text", simulation, "SimMode")
 
         stationsData.Add(New DataFormat.StationsData(1, -6.9867, 106.5558))
         stationsData.Add(New DataFormat.StationsData(2, -7.3259, 107.7953))
@@ -167,6 +169,10 @@ Public Class Form1
         End If
     End Sub
 
+    Private Sub runSimulation()
+
+    End Sub
+
     Private Sub startSimulation()
         finalResultData.Clear()
         Me.Invoke(New MethodInvoker(Sub() Me.finalResultDataBindingSource.ResetBindings(False)))
@@ -226,7 +232,7 @@ Public Class Form1
             Next simLon
             simLat += simulation.deltaLat - 1
         Next simLat
-        MsgBox("Simulation Done")
+        'MsgBox("Simulation Done")
         Me.Invoke(New MethodInvoker(Sub() Me.startButton.Text = "Start"))
         Me.Invoke(New MethodInvoker(Sub() Me.ProgressBar1.Visible = False))
         Me.Invoke(New MethodInvoker(Sub() Me.lblProgress.Visible = False))
@@ -368,7 +374,7 @@ Public Class Form1
     End Sub
 
     Private Sub btnToKmlFile_Click(sender As Object, e As EventArgs) Handles btnToKmlFile.Click
-        Dim limits = {}
+        Dim limits = {100, 1000, 2000, 5000, 10000}
         'MsgBox(finalResultData.Count)
         If finalResultData.Count > 0 Then
             'MsgBox("masuk")
@@ -379,7 +385,7 @@ Public Class Form1
             Next
         End If
         Dim filePath = "E:\Kuliah\Semester 8\TA 2\Google Earth\MyTest.kml"
-        calc.createContourKMLFile(filePath, finalResultData, limits, simulation)
+        calc.createContourKMLFile(filePath, finalResultData, limits, simulation, stationsData)
     End Sub
 
     Public Sub printInTextbox1(ByVal text)
@@ -387,6 +393,6 @@ Public Class Form1
     End Sub
 
     Private Sub btnCalcModeHint_Click_1(sender As Object, e As EventArgs) Handles btnCalcModeHint.Click
-        MsgBox("1. Lightning Spherical Method" & vbCrLf & "2. Quadratic Planar Method")
+        MsgBox("Calc Mode:" & vbCrLf & "1. Lightning Spherical Method" & vbCrLf & "2. Quadratic Planar Method")
     End Sub
 End Class
