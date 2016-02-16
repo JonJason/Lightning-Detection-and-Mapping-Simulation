@@ -8,7 +8,6 @@ Public Class Form1
     Dim finalResultData = New List(Of DataFormat.finalResultData)
 
     Class SimData
-        Public Property SimMode As Integer = 1
         Public Property CalcMode As Integer = 1
         Public Property firstLat As Decimal = -7.5
         Public Property firstLon As Decimal = 105.5
@@ -50,7 +49,6 @@ Public Class Form1
         txtErrorMean.DataBindings.Add("Text", simulation, "errorTOAMean")
         txtErrorSigma.DataBindings.Add("Text", simulation, "errorTOASigma")
         txtCalcMode.DataBindings.Add("Text", simulation, "CalcMode")
-        txtSimMode.DataBindings.Add("Text", simulation, "SimMode")
 
         stationsData.Add(New DataFormat.StationsData(1, -6.9867, 106.5558))
         stationsData.Add(New DataFormat.StationsData(2, -7.3259, 107.7953))
@@ -111,10 +109,6 @@ Public Class Form1
     End Sub
 
     Private Sub startButton_Click(sender As Object, e As EventArgs) Handles startButton.Click
-        runSimulation()
-    End Sub
-
-    Private Sub runSimulation()
         totalPoint = (Math.Floor((simulation.lastLat - simulation.firstLat) / simulation.deltaLat) + 1) * (Math.Floor((simulation.lastLon - simulation.firstLon) / simulation.deltaLon) + 1)
         If tSimulation Is Nothing Then tSimulation = New Threading.Thread(AddressOf startSimulation)
 
@@ -175,6 +169,7 @@ Public Class Form1
 
     Private Sub startSimulation()
         finalResultData.Clear()
+
         Me.Invoke(New MethodInvoker(Sub() Me.finalResultDataBindingSource.ResetBindings(False)))
         Dim dataSet As Array
         Dim arcDistance As Decimal
@@ -232,7 +227,8 @@ Public Class Form1
             Next simLon
             simLat += simulation.deltaLat - 1
         Next simLat
-        'MsgBox("Simulation Done")
+        drawData()
+
         Me.Invoke(New MethodInvoker(Sub() Me.startButton.Text = "Start"))
         Me.Invoke(New MethodInvoker(Sub() Me.ProgressBar1.Visible = False))
         Me.Invoke(New MethodInvoker(Sub() Me.lblProgress.Visible = False))
@@ -240,7 +236,6 @@ Public Class Form1
         Me.Invoke(New MethodInvoker(Sub() Me.lblStatus.Visible = False))
         Me.Invoke(New MethodInvoker(Sub() Me.btnToKmlFile.Enabled = True))
         suspended = True
-        'MsgBox("Done")
     End Sub
 
     Private Sub TextBox_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs)
@@ -374,17 +369,21 @@ Public Class Form1
     End Sub
 
     Private Sub btnToKmlFile_Click(sender As Object, e As EventArgs) Handles btnToKmlFile.Click
+        drawData()
+    End Sub
+
+    Public Sub drawData()
         Dim limits = {100, 1000, 2000, 5000, 10000}
-        'MsgBox(finalResultData.Count)
-        If finalResultData.Count > 0 Then
-            'MsgBox("masuk")
-            Dim line = calc.getContourLine(500, finalResultData, simulation)
-            textBox1.Text = ""
-            For Each point In line
-                textBox1.Text += point.Longitude & "," & point.Latitude & vbCrLf & "," & point.Accuracy
-            Next
-        End If
-        Dim filePath = "E:\Kuliah\Semester 8\TA 2\Google Earth\MyTest.kml"
+        Dim fileName = ""
+        Select Case simulation.CalcMode
+            Case 1
+                fileName = "LSM.kml"
+            Case 2
+                fileName = "QPM.kml"
+            Case Else
+
+        End Select
+        Dim filePath = "E:\Kuliah\Semester 8\TA 2\Google Earth\" & fileName
         calc.createContourKMLFile(filePath, finalResultData, limits, simulation, stationsData)
     End Sub
 

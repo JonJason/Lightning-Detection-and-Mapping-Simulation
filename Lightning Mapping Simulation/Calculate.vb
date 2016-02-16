@@ -560,7 +560,7 @@ Public Class Calculate
     End Function
 
     Public Sub createContourKMLFile(ByVal path As String, ByVal Points As List(Of DataFormat.finalResultData), ByVal limits As Array, ByVal setting As Form1.SimData, ByVal stationsData As List(Of DataFormat.StationsData))
-        altitudeTopLimit = 0
+        altitudeTopLimit = -1
         Dim kml As New myKML()
         'MsgBox(stationsData.Count)
         Dim styles(5)

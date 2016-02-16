@@ -23,8 +23,8 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.Setting = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel3 = New System.Windows.Forms.TableLayoutPanel()
@@ -59,8 +59,6 @@ Partial Class Form1
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.btnCalcModeHint = New System.Windows.Forms.Button()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.txtSimMode = New System.Windows.Forms.TextBox()
         Me.Result = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
         Me.DataGridViewFinalResult = New System.Windows.Forms.DataGridView()
@@ -164,14 +162,14 @@ Partial Class Form1
         Me.DataGridStations.AllowUserToResizeColumns = False
         Me.DataGridStations.AllowUserToResizeRows = False
         Me.DataGridStations.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridStations.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridStations.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle5
         Me.DataGridStations.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridStations.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridStations.Location = New System.Drawing.Point(3, 23)
@@ -226,9 +224,7 @@ Partial Class Form1
         Me.TableLayoutPanel2.Controls.Add(Me.Label4, 1, 8)
         Me.TableLayoutPanel2.Controls.Add(Me.Label5, 2, 8)
         Me.TableLayoutPanel2.Controls.Add(Me.Label6, 1, 10)
-        Me.TableLayoutPanel2.Controls.Add(Me.btnCalcModeHint, 0, 10)
-        Me.TableLayoutPanel2.Controls.Add(Me.Label7, 2, 10)
-        Me.TableLayoutPanel2.Controls.Add(Me.txtSimMode, 2, 11)
+        Me.TableLayoutPanel2.Controls.Add(Me.btnCalcModeHint, 2, 11)
         Me.TableLayoutPanel2.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanel2.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
@@ -457,7 +453,7 @@ Partial Class Form1
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.Location = New System.Drawing.Point(248, 0)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(72, 20)
+        Me.Label2.Size = New System.Drawing.Size(71, 20)
         Me.Label2.TabIndex = 22
         Me.Label2.Text = "Longitude"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -493,7 +489,7 @@ Partial Class Form1
         Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label5.Location = New System.Drawing.Point(248, 220)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(72, 20)
+        Me.Label5.Size = New System.Drawing.Size(71, 20)
         Me.Label5.TabIndex = 25
         Me.Label5.Text = "Sigma"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -512,32 +508,12 @@ Partial Class Form1
         '
         'btnCalcModeHint
         '
-        Me.btnCalcModeHint.Location = New System.Drawing.Point(3, 273)
+        Me.btnCalcModeHint.Location = New System.Drawing.Point(248, 301)
         Me.btnCalcModeHint.Name = "btnCalcModeHint"
-        Me.btnCalcModeHint.Size = New System.Drawing.Size(53, 22)
+        Me.btnCalcModeHint.Size = New System.Drawing.Size(53, 20)
         Me.btnCalcModeHint.TabIndex = 27
         Me.btnCalcModeHint.Text = "hint"
         Me.btnCalcModeHint.UseVisualStyleBackColor = True
-        '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.Label7.Location = New System.Drawing.Point(248, 270)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(72, 28)
-        Me.Label7.TabIndex = 28
-        Me.Label7.Text = "Sim Mode"
-        Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'txtSimMode
-        '
-        Me.txtSimMode.Dock = System.Windows.Forms.DockStyle.Left
-        Me.txtSimMode.Location = New System.Drawing.Point(248, 301)
-        Me.txtSimMode.Name = "txtSimMode"
-        Me.txtSimMode.Size = New System.Drawing.Size(67, 20)
-        Me.txtSimMode.TabIndex = 29
         '
         'Result
         '
@@ -570,14 +546,14 @@ Partial Class Form1
         '
         Me.DataGridViewFinalResult.AllowUserToAddRows = False
         Me.DataGridViewFinalResult.AllowUserToDeleteRows = False
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewFinalResult.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewFinalResult.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle6
         Me.DataGridViewFinalResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridViewFinalResult.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridViewFinalResult.Location = New System.Drawing.Point(3, 3)
@@ -853,6 +829,4 @@ Partial Class Form1
     Friend WithEvents Label5 As Label
     Friend WithEvents Label6 As Label
     Friend WithEvents btnCalcModeHint As Button
-    Friend WithEvents Label7 As Label
-    Friend WithEvents txtSimMode As TextBox
 End Class
