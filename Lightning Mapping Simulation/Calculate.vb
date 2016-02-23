@@ -560,37 +560,50 @@ Public Class Calculate
     End Function
 
     Public Sub createContourKMLFile(ByVal path As String, ByVal Points As List(Of DataFormat.finalResultData), ByVal limits As Array, ByVal setting As Form1.SimData, ByVal stationsData As List(Of DataFormat.StationsData))
+        Console.WriteLine("[TRACE] Creating Kml Text")
         altitudeTopLimit = -1
         Dim kml As New myKML()
-        'MsgBox(stationsData.Count)
-        Dim styles(5)
-        styles(0) = New myKML.style("style" & limits(0), 0, "99ff0000")
-        styles(1) = New myKML.style("style" & limits(1), 0, "99ffff00")
-        styles(2) = New myKML.style("style" & limits(2), 0, "9900ff00")
-        styles(3) = New myKML.style("style" & limits(3), 0, "9900ffff")
-        styles(4) = New myKML.style("style" & limits(4), 0, "990000ff")
-        styles(5) = New myKML.style("style > " & limits(4), 0, "99ff00ff")
+        Dim cameraLat = (setting.firstLat + setting.lastLat) / 2
+        Dim cameraLon = (setting.firstLon + setting.lastLon) / 2
+        Dim cameraAlt = Math.Max((setting.lastLat - setting.firstLat) * 2, setting.lastLon - setting.firstLon) * 150000
 
-        'MsgBox(filteredPoints(0).Id & ", " & filteredPoints(0).Latitude & ", " & filteredPoints(0).Longitude & ", " & filteredPoints(0).Accuracy)
+        Dim styles(5)
+        styles(0) = New myKML.style("style" & limits(0), 0, "77ff0000")
+        styles(1) = New myKML.style("style" & limits(1), 0, "77ffff00")
+        styles(2) = New myKML.style("style" & limits(2), 0, "7700ff00")
+        styles(3) = New myKML.style("style" & limits(3), 0, "7700ffff")
+        styles(4) = New myKML.style("style" & limits(4), 0, "770000ff")
+        styles(5) = New myKML.style("style > " & limits(4), 0, "77ff00ff")
 
         Dim kmlText As String = ""
         kmlText += kml.XMLTag
         kmlText += kml.kmlTag.header
         kmlText += kml.document(1).header
-        For index = 0 To limits.Length - 1
+        For index = 0 To limits.Length
             kmlText += styles(index).KMLText(2)
         Next
-        kmlText += styles(5).KMLText(2)
+
+        Console.WriteLine("[TRACE] Wrote Styles")
+
         For index = 0 To stationsData.Count - 1
             kmlText += kml.point(2, "Station " & stationsData(index).Id, stationsData(index).Latitude, stationsData(index).Longitude, 2000, Nothing, Nothing)
         Next
+
+        Console.WriteLine("[TRACE] Wrote Stations Coordinates")
+
+        kmlText += kml.camera(2, cameraLat, cameraLon, cameraAlt, 0, 0, 0)
+
+        Console.WriteLine("[TRACE] Wrote Camera Position")
+
         For index = 0 To limits.Length - 1
+            Console.WriteLine("[TRACE] data limit " & index + 1)
             altitudeBottomLimit = altitudeTopLimit
             altitudeTopLimit = limits(index)
             Dim filteredPoints = Points.FindAll(AddressOf findBetweenLimit)
             If filteredPoints IsNot Nothing Then
+                Console.WriteLine("[TRACE] points count: " & filteredPoints.Count)
                 kmlText += kml.placemark(2).header
-                kmlText += kml.name(3, "Under " & limits(index)).oneline
+                kmlText += kml.name(3, index + 1 & ". Under " & limits(index)).oneline
                 kmlText += styles(index).styleUrl(3)
                 kmlText += kml.MultiGeometry(3).header
 
@@ -600,7 +613,7 @@ Public Class Calculate
                     kmlText += kml.altitudeMode(5, "absolute")
                     kmlText += kml.outerBoundaryIs(5).header
                     kmlText += kml.LinearRing(6).header
-                    kmlText += kml.coordinates(7, point, setting).text
+                    kmlText += kml.coordinates(7, point, 3000, setting).text
                     kmlText += kml.LinearRing(6).footer
                     kmlText += kml.outerBoundaryIs(5).footer
                     kmlText += kml.plgn(4).footer
@@ -608,11 +621,12 @@ Public Class Calculate
                 kmlText += kml.MultiGeometry(3).footer
                 kmlText += kml.placemark(2).footer
             End If
+            Console.WriteLine("[TRACE] finish data limit " & index + 1)
         Next
         Dim BadPoints = Points.FindAll(AddressOf findAboveLimit)
         If BadPoints IsNot Nothing Then
             kmlText += kml.placemark(2).header
-            kmlText += kml.name(3, "Above " & limits(4)).oneline
+            kmlText += kml.name(3, limits.Length + 1 & ". Above " & limits(4)).oneline
             kmlText += styles(5).styleUrl(3)
             kmlText += kml.MultiGeometry(3).header
 
@@ -622,7 +636,7 @@ Public Class Calculate
                 kmlText += kml.altitudeMode(5, "absolute")
                 kmlText += kml.outerBoundaryIs(5).header
                 kmlText += kml.LinearRing(6).header
-                kmlText += kml.coordinates(7, point, setting).text
+                kmlText += kml.coordinates(7, point, 3000, setting).text
                 kmlText += kml.LinearRing(6).footer
                 kmlText += kml.outerBoundaryIs(5).footer
                 kmlText += kml.plgn(4).footer
@@ -632,11 +646,13 @@ Public Class Calculate
             kmlText += kml.document(1).footer
             kmlText += kml.kmlTag.footer
         End If
-        ' Create or overwrite the file.
+        Console.WriteLine("[TRACE] Kml Text is Ready")
         Dim fs As FileStream = File.Create(path)
-        ' Add text to the file.
+        Console.WriteLine("[TRACE] Created or overwrited the file: " & path)
         Dim info As Byte() = New UTF8Encoding(True).GetBytes(kmlText)
         fs.Write(info, 0, info.Length)
+        Console.WriteLine("[TRACE] Copying Kml Text as byte to the file: " & path)
         fs.Close()
+        Console.WriteLine("[TRACE] Closed file: " & path)
     End Sub
 End Class

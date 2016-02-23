@@ -6,16 +6,17 @@ Public Class Form1
     Private suspended As Boolean = True
     Dim stationsData = New List(Of DataFormat.StationsData)
     Dim finalResultData = New List(Of DataFormat.finalResultData)
+    Dim event_1 As New Threading.AutoResetEvent(False)
 
     Class SimData
         Public Property CalcMode As Integer = 1
-        Public Property firstLat As Decimal = -7.5
-        Public Property firstLon As Decimal = 105.5
-        Public Property lastLat As Decimal = -6
+        Public Property firstLat As Decimal = -7.8
+        Public Property firstLon As Decimal = 105.15
+        Public Property lastLat As Decimal = -5.9
         Public Property lastLon As Decimal = 108.5
         Public Property nIteration As Integer = 1000
-        Public Property deltaLat As Decimal = 0.05
-        Public Property deltaLon As Decimal = 0.05
+        Public Property deltaLat As Decimal = 0.01
+        Public Property deltaLon As Decimal = 0.01
         Public Property errorTOAMean As Decimal = 0
         Public Property errorTOASigma As Decimal = 0.00000025
         Public Property c As Decimal = 300000000
@@ -36,6 +37,12 @@ Public Class Form1
 
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        simulation.firstLat = -7
+        simulation.lastLat = -6
+        simulation.firstLon = 107
+        simulation.lastLon = 108
+        simulation.nIteration = 1
+
         'set binding
         txtFLat.DataBindings.Add("Text", simulation, "firstLat")
         txtFlon.DataBindings.Add("Text", simulation, "firstLon")
@@ -109,7 +116,7 @@ Public Class Form1
     End Sub
 
     Private Sub startButton_Click(sender As Object, e As EventArgs) Handles startButton.Click
-        totalPoint = (Math.Floor((simulation.lastLat - simulation.firstLat) / simulation.deltaLat) + 1) * (Math.Floor((simulation.lastLon - simulation.firstLon) / simulation.deltaLon) + 1)
+
         If tSimulation Is Nothing Then tSimulation = New Threading.Thread(AddressOf startSimulation)
 
         If tSimulation.IsAlive Then
@@ -131,26 +138,6 @@ Public Class Form1
             End If
 
         Else
-            With ProgressBar1
-                .Style = ProgressBarStyle.Blocks
-                .Step = 1
-                .Minimum = 0
-                .Maximum = simulation.nIteration * totalPoint
-                .Value = 0
-                .Visible = True
-            End With
-            With lblProgress
-                .Text = "0/" & ProgressBar1.Maximum
-                .Visible = True
-            End With
-            With lblStatus
-                .Text = "Status: Starting. . ."
-                .Visible = True
-            End With
-            With lblRemainingTime
-                .Text = "Unknown. . ."
-                .Visible = True
-            End With
 
             tSimulation = New Threading.Thread(AddressOf startSimulation)
             tSimulation.IsBackground = True
@@ -160,17 +147,35 @@ Public Class Form1
             tSimulation.Start()
             tRemainingTime.Start()
 
-            btnToKmlFile.Enabled = False
-            startButton.Text = "Pause"
-
             suspended = False
         End If
     End Sub
 
     Private Sub startSimulation()
         finalResultData.Clear()
+        totalPoint = (Math.Floor((simulation.lastLat - simulation.firstLat) / simulation.deltaLat) + 1) * (Math.Floor((simulation.lastLon - simulation.firstLon) / simulation.deltaLon) + 1)
+        Me.Invoke(New MethodInvoker(Sub()
+                                        Me.finalResultDataBindingSource.ResetBindings(False)
+                                        With ProgressBar1
+                                            .Style = ProgressBarStyle.Blocks
+                                            .Step = 1
+                                            .Minimum = 0
+                                            .Maximum = simulation.nIteration * totalPoint
+                                            .Value = 0
+                                            .Visible = True
+                                        End With
+                                        With lblProgress
+                                            .Text = "0/" & ProgressBar1.Maximum
+                                            .Visible = True
+                                        End With
+                                        With lblStatus
+                                            .Text = "Status: Starting. . ."
+                                            .Visible = True
+                                        End With
 
-        Me.Invoke(New MethodInvoker(Sub() Me.finalResultDataBindingSource.ResetBindings(False)))
+                                        btnToKmlFile.Enabled = False
+                                        startButton.Text = "Pause"
+                                    End Sub))
         Dim dataSet As Array
         Dim arcDistance As Decimal
         Dim result As DataFormat.result
@@ -178,6 +183,7 @@ Public Class Form1
         Dim arrayAccuracy(totalPoint - 1, 2) As Decimal 'lat, lon, accuracy
         Dim resultId As Integer = 0
 
+        'setting up stations array
         Dim stations(stationsData.count - 1)
         For i = 0 To stations.Length - 1
             stations(i) = New DataFormat.Station()
@@ -186,6 +192,7 @@ Public Class Form1
             stations(i).Longitude = stationsData(i).Longitude
             stations(i).TOA = vbNull
         Next
+        event_1.Set()
         For simLat = simulation.firstLat To simulation.lastLat
             For simLon = simulation.firstLon To simulation.lastLon
                 arrayAccuracy(resultId, 2) = 0
@@ -227,14 +234,18 @@ Public Class Form1
             Next simLon
             simLat += simulation.deltaLat - 1
         Next simLat
+        Me.Invoke(New MethodInvoker(Sub() Me.lblStatus.Text = "Status: Creating kml File"))
+
+        Me.Invoke(New MethodInvoker(Sub() Me.startButton.Enabled = False))
+
         drawData()
 
         Me.Invoke(New MethodInvoker(Sub() Me.startButton.Text = "Start"))
         Me.Invoke(New MethodInvoker(Sub() Me.ProgressBar1.Visible = False))
         Me.Invoke(New MethodInvoker(Sub() Me.lblProgress.Visible = False))
-        Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Visible = False))
         Me.Invoke(New MethodInvoker(Sub() Me.lblStatus.Visible = False))
         Me.Invoke(New MethodInvoker(Sub() Me.btnToKmlFile.Enabled = True))
+        Me.Invoke(New MethodInvoker(Sub() Me.startButton.Enabled = True))
         suspended = True
     End Sub
 
@@ -246,7 +257,14 @@ Public Class Form1
     End Sub
 
     Private Sub startPredictTime()
-        Threading.Thread.Sleep(200)
+        event_1.WaitOne()
+        Me.Invoke(New MethodInvoker(Sub()
+                                        With Me.lblRemainingTime
+                                            .Text = "Unknown. . ."
+                                            .Visible = True
+                                        End With
+                                    End Sub))
+
         Dim remainingTime As Integer = 0
         Dim progress As Double = 0
         Dim lastProgress As Double = progress
@@ -257,14 +275,16 @@ Public Class Form1
             progress = ProgressBar1.Value
             speed = (progress - lastProgress) / tick * 1000
             If speed = 0 Then
-                Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Text = "Remaining Time: Infinity..."))
+                Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Text = "Time Left: Infinity..."))
             Else
                 remainingTime = (finish - progress) / speed
-                Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Text = "Remaining Time: " & StoHMS(remainingTime)))
+                Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Text = "Time Left: " & StoHMS(remainingTime)))
             End If
             lastProgress = progress
             Threading.Thread.Sleep(tick)
         Loop Until ProgressBar_at_Max()
+        Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Visible = False))
+        event_1.Reset()
     End Sub
 
     Private Function ProgressBar_at_Max() As Boolean
@@ -377,13 +397,14 @@ Public Class Form1
         Dim fileName = ""
         Select Case simulation.CalcMode
             Case 1
-                fileName = "LSM.kml"
+                fileName = "LSM"
             Case 2
-                fileName = "QPM.kml"
+                fileName = "QPM"
             Case Else
 
         End Select
-        Dim filePath = "E:\Kuliah\Semester 8\TA 2\Google Earth\" & fileName
+        Dim filePath = "E:\Kuliah\Semester 8\TA 2\Google Earth\" & fileName & " (" & Format(Now, "d-MMM-yyyy H.mm.ss") & ").kml"
+        'MsgBox(filePath)
         calc.createContourKMLFile(filePath, finalResultData, limits, simulation, stationsData)
     End Sub
 

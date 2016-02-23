@@ -21,12 +21,36 @@
         End Get
     End Property
 
+    Public ReadOnly Property camera(ByVal level As Integer, ByVal latitude As Decimal, ByVal longitude As Decimal, ByVal altitude As Double, ByVal heading As Double, ByVal tilt As Double, ByVal roll As Double) As String
+        Get
+            Dim tab As String = ""
+            addTabTo(tab, level)
+            Dim childTab As String = ""
+            addTabTo(childTab, level + 1)
+
+            Dim header = "<Camera>"
+            Dim footer = "</Camera>"
+            Dim kmlTag = ""
+
+            kmlTag += vbCrLf & tab & header
+            kmlTag += vbCrLf & childTab & "<longitude>" & longitude & "</longitude>"
+            kmlTag += vbCrLf & childTab & "<latitude>" & latitude & "</latitude>"
+            kmlTag += vbCrLf & childTab & "<altitude>" & altitude & "</altitude>"
+            kmlTag += vbCrLf & childTab & "<heading>" & heading & "</heading>"
+            kmlTag += vbCrLf & childTab & "<tilt>" & tilt & "</tilt>"
+            kmlTag += vbCrLf & childTab & "<roll>" & roll & "</roll>"
+            kmlTag += Me.altitudeMode(level + 1, "absolute")
+            kmlTag += vbCrLf & tab & footer
+            Return kmlTag
+        End Get
+    End Property
+
     Dim _placemark As New tag()
     Public ReadOnly Property placemark(ByVal level As Integer) As tag
         Get
             Dim tab = ""
             addTabTo(tab, level)
-            _placemark.header = vbCrLf & tab & "<Placemark>"
+            _placemark.header = vbCrLf & tab & " <Placemark> "
             _placemark.footer = vbCrLf & tab & "</Placemark>"
             Return _placemark
         End Get
@@ -68,7 +92,7 @@
     End Property
 
     Dim _coordinates As New crdnt()
-    Public ReadOnly Property coordinates(ByVal level As Integer, ByVal point As DataFormat.finalResultData, ByVal setting As Form1.SimData) As crdnt
+    Public ReadOnly Property coordinates(ByVal level As Integer, ByVal point As DataFormat.finalResultData, ByVal altitude As Double, ByVal setting As Form1.SimData) As crdnt
         Get
             Dim tagTab = ""
             addTabTo(tagTab, level)
@@ -76,10 +100,10 @@
             addTabTo(crdntTab, level + 1)
 
             _coordinates.text = vbCrLf & tagTab & _coordinates.header
-            _coordinates.text += vbCrLf & crdntTab & point.Longitude - setting.deltaLon / 2 & "," & point.Latitude + setting.deltaLat / 2 & ",2000"
-            _coordinates.text += vbCrLf & crdntTab & point.Longitude + setting.deltaLon / 2 & "," & point.Latitude + setting.deltaLat / 2 & ",2000"
-            _coordinates.text += vbCrLf & crdntTab & point.Longitude + setting.deltaLon / 2 & "," & point.Latitude - setting.deltaLat / 2 & ",2000"
-            _coordinates.text += vbCrLf & crdntTab & point.Longitude - setting.deltaLon / 2 & "," & point.Latitude - setting.deltaLat / 2 & ",2000"
+            _coordinates.text += vbCrLf & crdntTab & point.Longitude - setting.deltaLon / 2 & "," & point.Latitude + setting.deltaLat / 2 & "," & altitude
+            _coordinates.text += vbCrLf & crdntTab & point.Longitude + setting.deltaLon / 2 & "," & point.Latitude + setting.deltaLat / 2 & "," & altitude
+            _coordinates.text += vbCrLf & crdntTab & point.Longitude + setting.deltaLon / 2 & "," & point.Latitude - setting.deltaLat / 2 & "," & altitude
+            _coordinates.text += vbCrLf & crdntTab & point.Longitude - setting.deltaLon / 2 & "," & point.Latitude - setting.deltaLat / 2 & "," & altitude
             _coordinates.text += vbCrLf & tagTab & _coordinates.footer
             Return _coordinates
         End Get
