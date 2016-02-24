@@ -7,6 +7,7 @@ Public Class Form1
     Dim stationsData = New List(Of DataFormat.StationsData)
     Dim finalResultData = New List(Of DataFormat.finalResultData)
     Dim event_1 As New Threading.AutoResetEvent(False)
+    Dim textTemp As String = ""
 
     Class SimData
         Public Property CalcMode As Integer = 1
@@ -26,6 +27,7 @@ Public Class Form1
     Dim simulation As New SimData
     Dim calc As New Calculate
     Dim totalPoint As Integer
+    Dim simLat, simLon
 
     Private Function BoxMullerRandom(ByVal mean, ByVal sigma) As Decimal
         Randomize()
@@ -42,6 +44,8 @@ Public Class Form1
         simulation.firstLon = 107
         simulation.lastLon = 108
         simulation.nIteration = 1
+        'simulation.deltaLat = 1
+        'simulation.deltaLon = 1
 
         'set binding
         txtFLat.DataBindings.Add("Text", simulation, "firstLat")
@@ -202,11 +206,19 @@ Public Class Form1
                         arcDistance = calc.Busur(stations(iStation).Latitude, stations(iStation).Longitude, simLat, simLon)
                         stations(iStation).TOA = arcDistance / simulation.c + BoxMullerRandom(simulation.errorTOAMean, simulation.errorTOASigma)
                     Next
-                    Me.Invoke(New MethodInvoker(Sub() Me.ProgressBar1.Increment(1)))
-                    Me.Invoke(New MethodInvoker(Sub() Me.lblProgress.Text = "Process: " & Me.ProgressBar1.Value & "/" & Me.ProgressBar1.Maximum))
+                    Me.Invoke(New MethodInvoker(Sub()
+                                                    Me.ProgressBar1.Increment(1)
+                                                    Me.lblProgress.Text = "Process: " & Me.ProgressBar1.Value & "/" & Me.ProgressBar1.Maximum
+                                                End Sub))
                     dataSet = calc.DTOAFilter(stations, simulation.CalcMode)
-                    'calc.printStation(dataSet)
+
+                    'Me.Invoke(New MethodInvoker(Sub()
+                    'textBox1.Text += vbCrLf & "---------------------------------------------------------------"
+                    'textBox1.Text += vbCrLf & simLat & ", " & simLon
+                    'printStationtoTextbox(dataSet)
+                    'End Sub))
                     result = calc.Locate(dataSet, simulation.CalcMode, stations)
+
                     If result.Latitude = 0 And result.Longitude = 0 And result.TimeOfOccurence = 0 Then
                         'Console.WriteLine(result.Latitude & ", " & result.Longitude & ", " & result.TimeOfOccurence)
                         result = calc.anotherCombination(dataSet, stations)
@@ -217,14 +229,18 @@ Public Class Form1
                     result.Accuracy = calc.Busur(result.Latitude, result.Longitude, simLat, simLon)
                     arrayResult(iIteration - 1) = result
                     arrayAccuracy(resultId, 2) += arrayResult(iIteration - 1).Accuracy
+                    If result.Accuracy > 5000 Then
+                        textTemp += simLat & ", " & simLon
+                        textTemp += vbCrLf & arrayAccuracy(resultId, 2)
+                        For i = 0 To dataSet.Length - 1
+                            textTemp += vbCrLf & dataSet(i).id & vbTab & dataSet(i).Latitude & vbTab & dataSet(i).Longitude & vbTab & vbTab & dataSet(i).TOA
+                        Next
+                        textTemp += vbCrLf & vbCrLf
+                    End If
                 Next
                 arrayAccuracy(resultId, 0) = simLat
                 arrayAccuracy(resultId, 1) = simLon
                 arrayAccuracy(resultId, 2) /= simulation.nIteration
-                'Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "-------------------------------------------------------" & vbCrLf))
-                'Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "Lightning Simulation  : " & arrayAccuracy(resultId, 0) & ", " & arrayAccuracy(resultId, 1) & vbCrLf))
-                'Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += "Accuracy  : " & arrayAccuracy(resultId, 2) & vbCrLf))
-                'Me.Invoke(New MethodInvoker(Sub() Me.textBox1.Text += arrayAccuracy(resultId, 1) & "," & arrayAccuracy(resultId, 0) & "," & Decimal.Round(arrayAccuracy(resultId, 2), 2) & vbCrLf))
 
                 finalResultData.add(New DataFormat.finalResultData(resultId + 1, arrayAccuracy(resultId, 0), arrayAccuracy(resultId, 1), Decimal.Round(arrayAccuracy(resultId, 2), 2)))
                 Me.Invoke(New MethodInvoker(Sub() Me.finalResultDataBindingSource.ResetBindings(False)))
@@ -234,18 +250,22 @@ Public Class Form1
             Next simLon
             simLat += simulation.deltaLat - 1
         Next simLat
-        Me.Invoke(New MethodInvoker(Sub() Me.lblStatus.Text = "Status: Creating kml File"))
-
-        Me.Invoke(New MethodInvoker(Sub() Me.startButton.Enabled = False))
+        Me.Invoke(New MethodInvoker(Sub()
+                                        Me.lblStatus.Text = "Status: Creating kml File"
+                                        Me.startButton.Enabled = False
+                                    End Sub))
 
         drawData()
 
-        Me.Invoke(New MethodInvoker(Sub() Me.startButton.Text = "Start"))
-        Me.Invoke(New MethodInvoker(Sub() Me.ProgressBar1.Visible = False))
-        Me.Invoke(New MethodInvoker(Sub() Me.lblProgress.Visible = False))
-        Me.Invoke(New MethodInvoker(Sub() Me.lblStatus.Visible = False))
-        Me.Invoke(New MethodInvoker(Sub() Me.btnToKmlFile.Enabled = True))
-        Me.Invoke(New MethodInvoker(Sub() Me.startButton.Enabled = True))
+        Me.Invoke(New MethodInvoker(Sub()
+                                        Me.startButton.Text = "Start"
+                                        Me.ProgressBar1.Visible = False
+                                        Me.lblProgress.Visible = False
+                                        Me.lblStatus.Visible = False
+                                        Me.btnToKmlFile.Enabled = True
+                                        Me.startButton.Enabled = True
+                                        Me.textBox1.Text += textTemp
+                                    End Sub))
         suspended = True
     End Sub
 
@@ -414,5 +434,12 @@ Public Class Form1
 
     Private Sub btnCalcModeHint_Click_1(sender As Object, e As EventArgs) Handles btnCalcModeHint.Click
         MsgBox("Calc Mode:" & vbCrLf & "1. Lightning Spherical Method" & vbCrLf & "2. Quadratic Planar Method")
+    End Sub
+
+    Private Sub printStationtoTextbox(ByVal array)
+        textBox1.Text += vbCrLf & "---------------------------------------------------------------"
+        For i = 0 To array.Length - 1
+            textBox1.Text += vbCrLf & array(i).id & vbTab & array(i).Latitude & vbTab & array(i).Longitude & vbTab & vbTab & array(i).TOA
+        Next
     End Sub
 End Class
