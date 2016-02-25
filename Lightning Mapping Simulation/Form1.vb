@@ -29,7 +29,7 @@ Public Class Form1
         Public Property deltaLat As Decimal = 0.01
         Public Property deltaLon As Decimal = 0.01
         Public Property errorTOAMean As Decimal = 0
-        Public Property errorTOASigma As Decimal = 0 '0.00000025
+        Public Property errorTOASigma As Decimal = 0.00000025
         Public Property c As Decimal = 300000000
         Public Property R As Decimal = 6367000
     End Class
@@ -213,7 +213,7 @@ Public Class Form1
                 For iIteration = 1 To simulation.nIteration
                     For iStation = 0 To stations.Length - 1
                         arcDistance = calc.Busur(stations(iStation).Latitude, stations(iStation).Longitude, simLat, simLon)
-                        stations(iStation).TOA = Decimal.Round(arcDistance / simulation.c, 7) '+ BoxMullerRandom(simulation.errorTOAMean, simulation.errorTOASigma), 7)
+                        stations(iStation).TOA = arcDistance / simulation.c + BoxMullerRandom(simulation.errorTOAMean, simulation.errorTOASigma)
                     Next
                     Me.Invoke(New MethodInvoker(Sub()
                                                     Me.ProgressBar1.Increment(1)
