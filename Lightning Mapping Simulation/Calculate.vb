@@ -1,10 +1,7 @@
 ﻿Imports System.IO
-Imports System.Text
 
 Public Class Calculate
     Dim sim As New Form1.SimData
-    Dim altitudeTopLimit As Decimal
-    Dim altitudeBottomLimit As Decimal
 
     Private Sub swap(ByRef A, ByRef B)
         Dim temp
@@ -34,7 +31,7 @@ Public Class Calculate
 
     Public Sub print2D(ByVal array)
         Dim text As String = ""
-        Console.WriteLine("---------")
+        'Console.WriteLine("-----")
         For i = 0 To array.GetLength(0) - 1
             For j = 0 To array.GetLength(1) - 1
                 text += array(i, j) & "|"
@@ -308,8 +305,12 @@ Public Class Calculate
             Ri(i, 1) = K(i, 1)
             Ri(i, 2) = K(i, 2)
         Next
+        Console.WriteLine("K")
+        print2D(K)
         Dim rotatedMatrix = Rotate(Ri, -dataSet(0).Longitude, 3)
         rotatedMatrix = Rotate(rotatedMatrix, dataSet(0).Latitude, 2)
+        Console.WriteLine("RM")
+        print2D(rotatedMatrix)
         Dim L(rotatedMatrix.getLength(0) - 2, rotatedMatrix.getLength(1) - 1) As Decimal
         Dim a(rotatedMatrix.getLength(0) - 2, 0) As Decimal
         For i = 0 To L.GetLength(0) - 1
@@ -321,7 +322,14 @@ Public Class Calculate
                 End If
             Next
         Next
+
+        Console.WriteLine("L")
+        print2D(L)
+        Console.WriteLine("a")
+        print2D(a)
         Dim inversedL = inverseMatrix(L)
+        Console.WriteLine("iL")
+        print2D(inversedL)
         Dim h = multiplyMatrix(inversedL, a)
         Dim lo_ = Math.Atan2(h(1, 0), h(0, 0))
         Dim la_ = Math.Atan2(h(2, 0) * Math.Cos(lo_), h(0, 0))
@@ -334,12 +342,14 @@ Public Class Calculate
 
         result.Latitude = Decimal.Round(result.Latitude, 3)
         result.Longitude = Decimal.Round(result.Longitude, 3)
+        Console.WriteLine("result:")
+        Console.WriteLine(result.Latitude & ", " & result.Longitude & ", " & result.TimeOfOccurence)
         Return result
     End Function
 
     Public Function anotherCombination(ByVal dataSet As Array, ByVal dataStation As Array) As DataFormat.result
         Dim result As New DataFormat.result()
-        'Console.WriteLine("Another try")
+        Console.WriteLine("Another try")
 
         Dim newDataSet(dataSet.Length - 1)
         Select Case dataSet.Length
@@ -482,177 +492,4 @@ Public Class Calculate
 
         Return Inv
     End Function
-
-    Public Function getContourLine(ByVal altitude As Decimal, ByVal data As List(Of DataFormat.finalResultData), ByVal simulation As Form1.SimData) As List(Of DataFormat.finalResultData)
-        altitudeTopLimit = altitude
-
-        Dim lineList As New List(Of DataFormat.finalResultData)
-
-        Dim filteredList = data.FindAll(AddressOf findUnderLimit)
-        Dim maxLat = filteredList.Max(Function(FRD As DataFormat.finalResultData) FRD.Latitude)
-        Dim minLat = filteredList.Min(Function(FRD As DataFormat.finalResultData) FRD.Latitude)
-        Dim maxLon = filteredList.Max(Function(FRD As DataFormat.finalResultData) FRD.Longitude)
-        Dim minLon = filteredList.Min(Function(FRD As DataFormat.finalResultData) FRD.Longitude)
-
-        'MsgBox(maxLat & ", " & minLat & vbCrLf & maxLon & ", " & minLon)
-
-        Dim currentPoint = filteredList.FindLast(Function(FRD As DataFormat.finalResultData) FRD.Latitude = maxLat)
-        Dim firstPoint = currentPoint
-        Dim lastDirection As Integer = 1 '0 top, 1 right, 2 bottom, 3 left
-
-        Do
-            lineList.Add(currentPoint)
-            currentPoint = findNextPoint(filteredList, currentPoint, simulation, lastDirection)
-        Loop Until currentPoint Is firstPoint Or IsNothing(currentPoint)
-
-        Return lineList
-    End Function
-
-    Private Function findBetweenLimit(ByVal FRD As DataFormat.finalResultData) As Boolean
-        If FRD.Accuracy <= altitudeTopLimit And FRD.Accuracy > altitudeBottomLimit Then
-            Return True
-        Else
-            Return False
-        End If
-    End Function
-
-    Private Function findAboveLimit(ByVal FRD As DataFormat.finalResultData) As Boolean
-        If FRD.Accuracy > altitudeTopLimit Then
-            Return True
-        Else
-            Return False
-        End If
-    End Function
-
-    Private Function findUnderLimit(ByVal FRD As DataFormat.finalResultData) As Boolean
-        If FRD.Accuracy < altitudeTopLimit Then
-            Return True
-        Else
-            Return False
-        End If
-    End Function
-
-    Private Function findNextPoint(ByVal Points As List(Of DataFormat.finalResultData), ByVal currentPoint As DataFormat.finalResultData, ByVal simulation As Form1.SimData, ByRef lastDirection As Integer) As DataFormat.finalResultData
-        Dim direction(3)
-        Dim topPoint = Points.Find(Function(FRD As DataFormat.finalResultData) FRD.Latitude = currentPoint.Latitude + simulation.deltaLat And FRD.Longitude = currentPoint.Longitude)
-        Dim rightPoint = Points.Find(Function(FRD As DataFormat.finalResultData) FRD.Latitude = currentPoint.Latitude And FRD.Longitude = currentPoint.Longitude + simulation.deltaLon)
-        Dim bottomPoint = Points.Find(Function(FRD As DataFormat.finalResultData) FRD.Latitude = currentPoint.Latitude - simulation.deltaLat And FRD.Longitude = currentPoint.Longitude)
-        Dim leftPoint = Points.Find(Function(FRD As DataFormat.finalResultData) FRD.Latitude = currentPoint.Latitude And FRD.Longitude = currentPoint.Longitude - simulation.deltaLon)
-
-        direction(0) = topPoint
-        direction(1) = rightPoint
-        direction(2) = bottomPoint
-        direction(3) = leftPoint
-
-        For d = lastDirection + 3 To lastDirection + 5
-            If d >= 4 Then
-                d = d Mod 4
-            End If
-            'MsgBox(d)
-            If Not IsNothing(direction(d)) Then
-                'Select Case d : Case 0 : MsgBox("top") : Case 1 : MsgBox("right") : Case 2 : MsgBox("bottom") : Case 3 : MsgBox("left") : Case Else : MsgBox("error: " & d) : End Select
-                lastDirection = d
-                Return direction(d)
-            End If
-        Next
-        'MsgBox("ga ada temen")
-        Return Nothing
-    End Function
-
-    Public Sub createContourKMLFile(ByVal path As String, ByVal Points As List(Of DataFormat.finalResultData), ByVal limits As Array, ByVal setting As Form1.SimData, ByVal stationsData As List(Of DataFormat.StationsData))
-        Console.WriteLine("[TRACE] Creating Kml Text")
-        altitudeTopLimit = -1
-        Dim kml As New myKML()
-        Dim cameraLat = (setting.firstLat + setting.lastLat) / 2
-        Dim cameraLon = (setting.firstLon + setting.lastLon) / 2
-        Dim cameraAlt = Math.Max((setting.lastLat - setting.firstLat) * 2, setting.lastLon - setting.firstLon) * 150000
-
-        Dim styles(5)
-        styles(0) = New myKML.style("style" & limits(0), 0, "77ff0000")
-        styles(1) = New myKML.style("style" & limits(1), 0, "77ffff00")
-        styles(2) = New myKML.style("style" & limits(2), 0, "7700ff00")
-        styles(3) = New myKML.style("style" & limits(3), 0, "7700ffff")
-        styles(4) = New myKML.style("style" & limits(4), 0, "770000ff")
-        styles(5) = New myKML.style("style > " & limits(4), 0, "77ff00ff")
-
-        Dim kmlText As String = ""
-        kmlText += kml.XMLTag
-        kmlText += kml.kmlTag.header
-        kmlText += kml.document(1).header
-        For index = 0 To limits.Length
-            kmlText += styles(index).KMLText(2)
-        Next
-
-        Console.WriteLine("[TRACE] Wrote Styles")
-
-        For index = 0 To stationsData.Count - 1
-            kmlText += kml.point(2, "Station " & stationsData(index).Id, stationsData(index).Latitude, stationsData(index).Longitude, 2000, Nothing, Nothing)
-        Next
-
-        Console.WriteLine("[TRACE] Wrote Stations Coordinates")
-
-        kmlText += kml.camera(2, cameraLat, cameraLon, cameraAlt, 0, 0, 0)
-
-        Console.WriteLine("[TRACE] Wrote Camera Position")
-
-        For index = 0 To limits.Length - 1
-            Console.WriteLine("[TRACE] data limit " & index + 1)
-            altitudeBottomLimit = altitudeTopLimit
-            altitudeTopLimit = limits(index)
-            Dim filteredPoints = Points.FindAll(AddressOf findBetweenLimit)
-            If filteredPoints IsNot Nothing Then
-                Console.WriteLine("[TRACE] points count: " & filteredPoints.Count)
-                kmlText += kml.placemark(2).header
-                kmlText += kml.name(3, index + 1 & ". Under " & limits(index)).oneline
-                kmlText += styles(index).styleUrl(3)
-                kmlText += kml.MultiGeometry(3).header
-
-                For Each point In filteredPoints
-                    kmlText += kml.plgn(4).header
-                    kmlText += kml.Extrude(5)
-                    kmlText += kml.altitudeMode(5, "absolute")
-                    kmlText += kml.outerBoundaryIs(5).header
-                    kmlText += kml.LinearRing(6).header
-                    kmlText += kml.coordinates(7, point, 3000, setting).text
-                    kmlText += kml.LinearRing(6).footer
-                    kmlText += kml.outerBoundaryIs(5).footer
-                    kmlText += kml.plgn(4).footer
-                Next
-                kmlText += kml.MultiGeometry(3).footer
-                kmlText += kml.placemark(2).footer
-            End If
-            Console.WriteLine("[TRACE] finish data limit " & index + 1)
-        Next
-        Dim BadPoints = Points.FindAll(AddressOf findAboveLimit)
-        If BadPoints IsNot Nothing Then
-            kmlText += kml.placemark(2).header
-            kmlText += kml.name(3, limits.Length + 1 & ". Above " & limits(4)).oneline
-            kmlText += styles(5).styleUrl(3)
-            kmlText += kml.MultiGeometry(3).header
-
-            For Each point In BadPoints
-                kmlText += kml.plgn(4).header
-                kmlText += kml.Extrude(5)
-                kmlText += kml.altitudeMode(5, "absolute")
-                kmlText += kml.outerBoundaryIs(5).header
-                kmlText += kml.LinearRing(6).header
-                kmlText += kml.coordinates(7, point, 3000, setting).text
-                kmlText += kml.LinearRing(6).footer
-                kmlText += kml.outerBoundaryIs(5).footer
-                kmlText += kml.plgn(4).footer
-            Next
-            kmlText += kml.MultiGeometry(3).footer
-            kmlText += kml.placemark(2).footer
-            kmlText += kml.document(1).footer
-            kmlText += kml.kmlTag.footer
-        End If
-        Console.WriteLine("[TRACE] Kml Text is Ready")
-        Dim fs As FileStream = File.Create(path)
-        Console.WriteLine("[TRACE] Created or overwrited the file: " & path)
-        Dim info As Byte() = New UTF8Encoding(True).GetBytes(kmlText)
-        fs.Write(info, 0, info.Length)
-        Console.WriteLine("[TRACE] Copying Kml Text as byte to the file: " & path)
-        fs.Close()
-        Console.WriteLine("[TRACE] Closed file: " & path)
-    End Sub
 End Class

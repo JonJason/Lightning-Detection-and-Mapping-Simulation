@@ -1,0 +1,13 @@
+C:\Users\Asus PC\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Release\Interop.GEPlugin.dll
+C:\Users\Asus PC\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Release\Lightning Mapping Simulation.vbproj.ResolveComReference.cache
+C:\Users\Asus PC\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\bin\Release\Lightning Mapping Simulation.exe
+C:\Users\Asus PC\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\bin\Release\Lightning Mapping Simulation.pdb
+C:\Users\Asus PC\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\bin\Release\Lightning Mapping Simulation.xml
+C:\Users\Asus PC\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\bin\Release\Interop.GEPlugin.dll
+C:\Users\Asus PC\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Release\Lightning Mapping Simulation.vbprojResolveAssemblyReference.cache
+C:\Users\Asus PC\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Release\Lightning_Mapping_Simulation.Form1.resources
+C:\Users\Asus PC\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Release\Lightning_Mapping_Simulation.Resources.resources
+C:\Users\Asus PC\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Release\Lightning Mapping Simulation.vbproj.GenerateResource.Cache
+C:\Users\Asus PC\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Release\Lightning Mapping Simulation.exe
+C:\Users\Asus PC\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Release\Lightning Mapping Simulation.xml
+C:\Users\Asus PC\documents\visual studio 2015\Projects\Lightning Mapping Simulation\Lightning Mapping Simulation\obj\Release\Lightning Mapping Simulation.pdb

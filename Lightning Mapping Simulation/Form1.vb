@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports System.Text
 
 Public Class Form1
     Private tSimulation As Threading.Thread
@@ -7,7 +8,16 @@ Public Class Form1
     Dim stationsData = New List(Of DataFormat.StationsData)
     Dim finalResultData = New List(Of DataFormat.finalResultData)
     Dim event_1 As New Threading.AutoResetEvent(False)
+    Dim event_2 As New Threading.AutoResetEvent(False)
     Dim textTemp As String = ""
+    Dim altitudeTopLimit As Decimal
+    Dim altitudeBottomLimit As Decimal
+    Dim simulation As New SimData
+    Dim calc As New Calculate
+    Dim totalPoint As Integer
+    Dim simLat, simLon
+    Private Delegate Sub createContourKMLFileDelegate(ByVal path As String, ByVal Points As List(Of DataFormat.finalResultData), ByVal limits As Array, ByVal setting As Form1.SimData, ByVal stationsData As List(Of DataFormat.StationsData))
+    Private Delegate Sub drawDataDelegate()
 
     Class SimData
         Public Property CalcMode As Integer = 1
@@ -19,15 +29,11 @@ Public Class Form1
         Public Property deltaLat As Decimal = 0.01
         Public Property deltaLon As Decimal = 0.01
         Public Property errorTOAMean As Decimal = 0
-        Public Property errorTOASigma As Decimal = 0.00000025
+        Public Property errorTOASigma As Decimal = 0 '0.00000025
         Public Property c As Decimal = 300000000
         Public Property R As Decimal = 6367000
     End Class
 
-    Dim simulation As New SimData
-    Dim calc As New Calculate
-    Dim totalPoint As Integer
-    Dim simLat, simLon
 
     Private Function BoxMullerRandom(ByVal mean, ByVal sigma) As Decimal
         Randomize()
@@ -39,13 +45,13 @@ Public Class Form1
 
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        simulation.firstLat = -7
-        simulation.lastLat = -6
-        simulation.firstLon = 107
-        simulation.lastLon = 108
-        simulation.nIteration = 1
-        'simulation.deltaLat = 1
-        'simulation.deltaLon = 1
+        'simulation.firstLat = -6.5
+        'simulation.lastLat = -6.3
+        'simulation.firstLon = 107.4
+        'simulation.lastLon = 107.6
+        simulation.nIteration = 4
+        simulation.deltaLat = 0.05
+        simulation.deltaLon = 0.05
 
         'set binding
         txtFLat.DataBindings.Add("Text", simulation, "firstLat")
@@ -117,6 +123,8 @@ Public Class Form1
         lblRemainingTime.Visible = False
         lblStatus.Visible = False
         lblProgress.BackColor = Color.Transparent
+        txtC.ReadOnly = True
+        txtR.ReadOnly = True
     End Sub
 
     Private Sub startButton_Click(sender As Object, e As EventArgs) Handles startButton.Click
@@ -148,6 +156,7 @@ Public Class Form1
 
             tRemainingTime = New Threading.Thread(AddressOf startPredictTime)
             tRemainingTime.IsBackground = True
+
             tSimulation.Start()
             tRemainingTime.Start()
 
@@ -204,7 +213,7 @@ Public Class Form1
                 For iIteration = 1 To simulation.nIteration
                     For iStation = 0 To stations.Length - 1
                         arcDistance = calc.Busur(stations(iStation).Latitude, stations(iStation).Longitude, simLat, simLon)
-                        stations(iStation).TOA = arcDistance / simulation.c + BoxMullerRandom(simulation.errorTOAMean, simulation.errorTOASigma)
+                        stations(iStation).TOA = Decimal.Round(arcDistance / simulation.c, 7) '+ BoxMullerRandom(simulation.errorTOAMean, simulation.errorTOASigma), 7)
                     Next
                     Me.Invoke(New MethodInvoker(Sub()
                                                     Me.ProgressBar1.Increment(1)
@@ -212,11 +221,6 @@ Public Class Form1
                                                 End Sub))
                     dataSet = calc.DTOAFilter(stations, simulation.CalcMode)
 
-                    'Me.Invoke(New MethodInvoker(Sub()
-                    'textBox1.Text += vbCrLf & "---------------------------------------------------------------"
-                    'textBox1.Text += vbCrLf & simLat & ", " & simLon
-                    'printStationtoTextbox(dataSet)
-                    'End Sub))
                     result = calc.Locate(dataSet, simulation.CalcMode, stations)
 
                     If result.Latitude = 0 And result.Longitude = 0 And result.TimeOfOccurence = 0 Then
@@ -229,14 +233,19 @@ Public Class Form1
                     result.Accuracy = calc.Busur(result.Latitude, result.Longitude, simLat, simLon)
                     arrayResult(iIteration - 1) = result
                     arrayAccuracy(resultId, 2) += arrayResult(iIteration - 1).Accuracy
-                    If result.Accuracy > 5000 Then
-                        textTemp += simLat & ", " & simLon
-                        textTemp += vbCrLf & arrayAccuracy(resultId, 2)
-                        For i = 0 To dataSet.Length - 1
-                            textTemp += vbCrLf & dataSet(i).id & vbTab & dataSet(i).Latitude & vbTab & dataSet(i).Longitude & vbTab & vbTab & dataSet(i).TOA
-                        Next
-                        textTemp += vbCrLf & vbCrLf
-                    End If
+                    Console.WriteLine(simLat & ", " & simLon)
+                    Console.WriteLine(arrayAccuracy(resultId, 2))
+                    For i = 0 To dataSet.Length - 1
+                        Console.WriteLine(dataSet(i).id & vbTab & dataSet(i).Latitude & vbTab & dataSet(i).Longitude & vbTab & vbTab & dataSet(i).TOA)
+                    Next
+                    'If result.Accuracy > 5000 Then
+                    'textTemp += simLat & ", " & simLon
+                    'textTemp += vbCrLf & arrayAccuracy(resultId, 2)
+                    'For i = 0 To dataSet.Length - 1
+                    'textTemp += vbCrLf & dataSet(i).id & vbTab & dataSet(i).Latitude & vbTab & dataSet(i).Longitude & vbTab & vbTab & dataSet(i).TOA
+                    'Next
+                    'textTemp += vbCrLf & vbCrLf
+                    'End If
                 Next
                 arrayAccuracy(resultId, 0) = simLat
                 arrayAccuracy(resultId, 1) = simLon
@@ -250,23 +259,29 @@ Public Class Form1
             Next simLon
             simLat += simulation.deltaLat - 1
         Next simLat
+        event_2.WaitOne()
+        event_2.Reset()
         Me.Invoke(New MethodInvoker(Sub()
                                         Me.lblStatus.Text = "Status: Creating kml File"
                                         Me.startButton.Enabled = False
+                                        Me.lblProgress.Visible = False
+                                        Me.ProgressBar1.Visible = False
+                                        Me.textBox1.Text = ""
+                                        Me.textBox1.Text += textTemp
+                                        event_2.Set()
                                     End Sub))
-
+        event_2.WaitOne()
         drawData()
 
         Me.Invoke(New MethodInvoker(Sub()
                                         Me.startButton.Text = "Start"
-                                        Me.ProgressBar1.Visible = False
-                                        Me.lblProgress.Visible = False
                                         Me.lblStatus.Visible = False
                                         Me.btnToKmlFile.Enabled = True
                                         Me.startButton.Enabled = True
-                                        Me.textBox1.Text += textTemp
                                     End Sub))
         suspended = True
+        event_2.Reset()
+        MsgBox("kml File Created")
     End Sub
 
     Private Sub TextBox_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs)
@@ -287,24 +302,25 @@ Public Class Form1
 
         Dim remainingTime As Integer = 0
         Dim progress As Double = 0
-        Dim lastProgress As Double = progress
         Dim speed As Double
         Dim finish As Double = ProgressBar1.Maximum
-        Dim tick As Integer = 1000
+        Dim stopWatch As New Stopwatch()
+        stopWatch.Start()
         Do
             progress = ProgressBar1.Value
-            speed = (progress - lastProgress) / tick * 1000
-            If speed = 0 Then
+            speed = progress / stopWatch.ElapsedMilliseconds * 1000
+            Console.WriteLine("speed: " & progress & ", " & stopWatch.ElapsedMilliseconds & ", " & speed)
+            If speed = 0 Or Double.IsNaN(speed) Then
                 Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Text = "Time Left: Infinity..."))
             Else
                 remainingTime = (finish - progress) / speed
                 Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Text = "Time Left: " & StoHMS(remainingTime)))
             End If
-            lastProgress = progress
-            Threading.Thread.Sleep(tick)
+            Threading.Thread.Sleep(1000)
         Loop Until ProgressBar_at_Max()
         Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Visible = False))
         event_1.Reset()
+        event_2.Set()
     End Sub
 
     Private Function ProgressBar_at_Max() As Boolean
@@ -412,20 +428,24 @@ Public Class Form1
         drawData()
     End Sub
 
-    Public Sub drawData()
-        Dim limits = {100, 1000, 2000, 5000, 10000}
-        Dim fileName = ""
-        Select Case simulation.CalcMode
-            Case 1
-                fileName = "LSM"
-            Case 2
-                fileName = "QPM"
-            Case Else
+    Private Sub drawData()
+        If Me.InvokeRequired Then
+            Me.Invoke(New drawDataDelegate(AddressOf drawData))
+        Else
+            Dim limits = {100, 1000, 2000, 5000, 10000}
+            Dim fileName = ""
+            Select Case simulation.CalcMode
+                Case 1
+                    fileName = "LSM"
+                Case 2
+                    fileName = "QPM"
+                Case Else
 
-        End Select
-        Dim filePath = "E:\Kuliah\Semester 8\TA 2\Google Earth\" & fileName & " (" & Format(Now, "d-MMM-yyyy H.mm.ss") & ").kml"
-        'MsgBox(filePath)
-        calc.createContourKMLFile(filePath, finalResultData, limits, simulation, stationsData)
+            End Select
+            Dim filePath = "E:\Kuliah\Semester 8\TA 2\Google Earth\" & fileName & " (" & Format(Now, "d-MMM-yyyy H.mm.ss") & ").kml"
+            'MsgBox(filePath)
+            createContourKMLFile(filePath, finalResultData, limits, simulation, stationsData)
+        End If
     End Sub
 
     Public Sub printInTextbox1(ByVal text)
@@ -442,4 +462,184 @@ Public Class Form1
             textBox1.Text += vbCrLf & array(i).id & vbTab & array(i).Latitude & vbTab & array(i).Longitude & vbTab & vbTab & array(i).TOA
         Next
     End Sub
+
+    Public Function getContourLine(ByVal altitude As Decimal, ByVal data As List(Of DataFormat.finalResultData), ByVal simulation As Form1.SimData) As List(Of DataFormat.finalResultData)
+        altitudeTopLimit = altitude
+
+        Dim lineList As New List(Of DataFormat.finalResultData)
+
+        Dim filteredList = data.FindAll(AddressOf findUnderLimit)
+        Dim maxLat = filteredList.Max(Function(FRD As DataFormat.finalResultData) FRD.Latitude)
+        Dim minLat = filteredList.Min(Function(FRD As DataFormat.finalResultData) FRD.Latitude)
+        Dim maxLon = filteredList.Max(Function(FRD As DataFormat.finalResultData) FRD.Longitude)
+        Dim minLon = filteredList.Min(Function(FRD As DataFormat.finalResultData) FRD.Longitude)
+
+        'MsgBox(maxLat & ", " & minLat & vbCrLf & maxLon & ", " & minLon)
+
+        Dim currentPoint = filteredList.FindLast(Function(FRD As DataFormat.finalResultData) FRD.Latitude = maxLat)
+        Dim firstPoint = currentPoint
+        Dim lastDirection As Integer = 1 '0 top, 1 right, 2 bottom, 3 left
+
+        Do
+            lineList.Add(currentPoint)
+            currentPoint = findNextPoint(filteredList, currentPoint, simulation, lastDirection)
+        Loop Until currentPoint Is firstPoint Or IsNothing(currentPoint)
+
+        Return lineList
+    End Function
+
+    Private Function findBetweenLimit(ByVal FRD As DataFormat.finalResultData) As Boolean
+        If FRD.Accuracy <= altitudeTopLimit And FRD.Accuracy > altitudeBottomLimit Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Private Function findAboveLimit(ByVal FRD As DataFormat.finalResultData) As Boolean
+        If FRD.Accuracy > altitudeTopLimit Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Private Function findUnderLimit(ByVal FRD As DataFormat.finalResultData) As Boolean
+        If FRD.Accuracy < altitudeTopLimit Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Private Function findNextPoint(ByVal Points As List(Of DataFormat.finalResultData), ByVal currentPoint As DataFormat.finalResultData, ByVal simulation As Form1.SimData, ByRef lastDirection As Integer) As DataFormat.finalResultData
+        Dim direction(3)
+        Dim topPoint = Points.Find(Function(FRD As DataFormat.finalResultData) FRD.Latitude = currentPoint.Latitude + simulation.deltaLat And FRD.Longitude = currentPoint.Longitude)
+        Dim rightPoint = Points.Find(Function(FRD As DataFormat.finalResultData) FRD.Latitude = currentPoint.Latitude And FRD.Longitude = currentPoint.Longitude + simulation.deltaLon)
+        Dim bottomPoint = Points.Find(Function(FRD As DataFormat.finalResultData) FRD.Latitude = currentPoint.Latitude - simulation.deltaLat And FRD.Longitude = currentPoint.Longitude)
+        Dim leftPoint = Points.Find(Function(FRD As DataFormat.finalResultData) FRD.Latitude = currentPoint.Latitude And FRD.Longitude = currentPoint.Longitude - simulation.deltaLon)
+
+        direction(0) = topPoint
+        direction(1) = rightPoint
+        direction(2) = bottomPoint
+        direction(3) = leftPoint
+
+        For d = lastDirection + 3 To lastDirection + 5
+            If d >= 4 Then
+                d = d Mod 4
+            End If
+            'MsgBox(d)
+            If Not IsNothing(direction(d)) Then
+                'Select Case d : Case 0 : MsgBox("top") : Case 1 : MsgBox("right") : Case 2 : MsgBox("bottom") : Case 3 : MsgBox("left") : Case Else : MsgBox("error: " & d) : End Select
+                lastDirection = d
+                Return direction(d)
+            End If
+        Next
+        'MsgBox("ga ada temen")
+        Return Nothing
+    End Function
+
+    Private Sub createContourKMLFile(ByVal path As String, ByVal Points As List(Of DataFormat.finalResultData), ByVal limits As Array, ByVal setting As Form1.SimData, ByVal stationsData As List(Of DataFormat.StationsData))
+        If Me.InvokeRequired Then
+            Me.Invoke(New createContourKMLFileDelegate(AddressOf createContourKMLFile), New Object() {path, Points, limits, setting, stationsData})
+        Else
+            Console.WriteLine("[TRACE] Creating Kml Text")
+            altitudeTopLimit = -1
+            Dim kml As New myKML()
+            Dim cameraLat = (setting.firstLat + setting.lastLat) / 2
+            Dim cameraLon = (setting.firstLon + setting.lastLon) / 2
+            Dim cameraAlt = Math.Max((setting.lastLat - setting.firstLat) * 2, setting.lastLon - setting.firstLon) * 150000
+
+            Dim styles(5)
+            styles(0) = New myKML.style("style" & limits(0), 0, "77ff0000")
+            styles(1) = New myKML.style("style" & limits(1), 0, "77ffff00")
+            styles(2) = New myKML.style("style" & limits(2), 0, "7700ff00")
+            styles(3) = New myKML.style("style" & limits(3), 0, "7700ffff")
+            styles(4) = New myKML.style("style" & limits(4), 0, "770000ff")
+            styles(5) = New myKML.style("style > " & limits(4), 0, "77ff00ff")
+
+            Dim kmlText As String = ""
+            kmlText += kml.XMLTag
+            kmlText += kml.kmlTag.header
+            kmlText += kml.document(1).header
+            For index = 0 To limits.Length
+                kmlText += styles(index).KMLText(2)
+            Next
+
+            Console.WriteLine("[TRACE] Wrote Styles")
+
+            For index = 0 To stationsData.Count - 1
+                kmlText += kml.point(2, "Station " & stationsData(index).Id, stationsData(index).Latitude, stationsData(index).Longitude, 2000, Nothing, Nothing)
+            Next
+
+            Console.WriteLine("[TRACE] Wrote Stations Coordinates")
+
+            kmlText += kml.camera(2, cameraLat, cameraLon, cameraAlt, 0, 0, 0)
+
+            Console.WriteLine("[TRACE] Wrote Camera Position")
+            For index = 0 To limits.Length - 1
+                Console.WriteLine("[TRACE] data limit " & index + 1)
+                altitudeBottomLimit = altitudeTopLimit
+                altitudeTopLimit = limits(index)
+                Dim filteredPoints = Points.FindAll(AddressOf findBetweenLimit)
+                If filteredPoints IsNot Nothing Then
+                    Console.WriteLine("[TRACE] points count: " & filteredPoints.Count)
+                    kmlText += kml.placemark(2).header
+                    kmlText += kml.name(3, index + 1 & ". Under " & limits(index)).oneline
+                    kmlText += styles(index).styleUrl(3)
+                    kmlText += kml.MultiGeometry(3).header
+
+                    For Each point In filteredPoints
+                        kmlText += kml.plgn(4).header
+                        kmlText += kml.Extrude(5)
+                        kmlText += kml.altitudeMode(5, "absolute")
+                        kmlText += kml.outerBoundaryIs(5).header
+                        kmlText += kml.LinearRing(6).header
+                        kmlText += kml.coordinates(7, point, 3000, setting).text
+                        kmlText += kml.LinearRing(6).footer
+                        kmlText += kml.outerBoundaryIs(5).footer
+                        kmlText += kml.plgn(4).footer
+                    Next
+                    kmlText += kml.MultiGeometry(3).footer
+                    kmlText += kml.placemark(2).footer
+                End If
+                Console.WriteLine("[TRACE] finish data limit " & index + 1)
+            Next
+            Dim BadPoints = Points.FindAll(AddressOf findAboveLimit)
+            If BadPoints IsNot Nothing Then
+                Console.WriteLine("[TRACE] data limit " & limits.Length+1)
+                Console.WriteLine("[TRACE] points count: " & BadPoints.Count)
+                kmlText += kml.placemark(2).header
+                kmlText += kml.name(3, limits.Length + 1 & ". Above " & limits(4)).oneline
+                kmlText += styles(5).styleUrl(3)
+                kmlText += kml.MultiGeometry(3).header
+
+                For Each point In BadPoints
+                    kmlText += kml.plgn(4).header
+                    kmlText += kml.Extrude(5)
+                    kmlText += kml.altitudeMode(5, "absolute")
+                    kmlText += kml.outerBoundaryIs(5).header
+                    kmlText += kml.LinearRing(6).header
+                    kmlText += kml.coordinates(7, point, 3000, setting).text
+                    kmlText += kml.LinearRing(6).footer
+                    kmlText += kml.outerBoundaryIs(5).footer
+                    kmlText += kml.plgn(4).footer
+                Next
+                kmlText += kml.MultiGeometry(3).footer
+                kmlText += kml.placemark(2).footer
+                kmlText += kml.document(1).footer
+                kmlText += kml.kmlTag.footer
+                Console.WriteLine("[TRACE] finish data limit " & limits.Length + 1)
+            End If
+            Console.WriteLine("[TRACE] Kml Text is Ready")
+            Dim fs As FileStream = File.Create(path)
+            Console.WriteLine("[TRACE] Created or overwrited the file: " & path)
+            Dim info As Byte() = New UTF8Encoding(True).GetBytes(kmlText)
+            fs.Write(info, 0, info.Length)
+            Console.WriteLine("[TRACE] Copying Kml Text as byte to the file: " & path)
+            fs.Close()
+            Console.WriteLine("[TRACE] Closed file: " & path)
+        End If
+    End Sub
+
 End Class
