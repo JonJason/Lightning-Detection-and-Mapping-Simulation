@@ -305,12 +305,12 @@ Public Class Calculate
             Ri(i, 1) = K(i, 1)
             Ri(i, 2) = K(i, 2)
         Next
-        Console.WriteLine("K")
-        print2D(K)
+        'Console.WriteLine("K")
+        'print2D(K)
         Dim rotatedMatrix = Rotate(Ri, -dataSet(0).Longitude, 3)
         rotatedMatrix = Rotate(rotatedMatrix, dataSet(0).Latitude, 2)
-        Console.WriteLine("RM")
-        print2D(rotatedMatrix)
+        'Console.WriteLine("RM")
+        'print2D(rotatedMatrix)
         Dim L(rotatedMatrix.getLength(0) - 2, rotatedMatrix.getLength(1) - 1) As Decimal
         Dim a(rotatedMatrix.getLength(0) - 2, 0) As Decimal
         For i = 0 To L.GetLength(0) - 1
@@ -323,13 +323,13 @@ Public Class Calculate
             Next
         Next
 
-        Console.WriteLine("L")
-        print2D(L)
-        Console.WriteLine("a")
-        print2D(a)
+        'Console.WriteLine("L")
+        'print2D(L)
+        'Console.WriteLine("a")
+        'print2D(a)
         Dim inversedL = inverseMatrix(L)
-        Console.WriteLine("iL")
-        print2D(inversedL)
+        'Console.WriteLine("iL")
+        'print2D(inversedL)
         Dim h = multiplyMatrix(inversedL, a)
         Dim lo_ = Math.Atan2(h(1, 0), h(0, 0))
         Dim la_ = Math.Atan2(h(2, 0) * Math.Cos(lo_), h(0, 0))
@@ -342,8 +342,8 @@ Public Class Calculate
 
         result.Latitude = Decimal.Round(result.Latitude, 3)
         result.Longitude = Decimal.Round(result.Longitude, 3)
-        Console.WriteLine("result:")
-        Console.WriteLine(result.Latitude & ", " & result.Longitude & ", " & result.TimeOfOccurence)
+        'Console.WriteLine("result:")
+        'Console.WriteLine(result.Latitude & ", " & result.Longitude & ", " & result.TimeOfOccurence)
         Return result
     End Function
 
