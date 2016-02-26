@@ -233,11 +233,11 @@ Public Class Form1
                     result.Accuracy = calc.Busur(result.Latitude, result.Longitude, simLat, simLon)
                     arrayResult(iIteration - 1) = result
                     arrayAccuracy(resultId, 2) += arrayResult(iIteration - 1).Accuracy
-                    'Console.WriteLine(simLat & ", " & simLon)
-                    'Console.WriteLine(arrayAccuracy(resultId, 2))
-                    'For i = 0 To dataSet.Length - 1
-                    'Console.WriteLine(dataSet(i).id & vbTab & dataSet(i).Latitude & vbTab & dataSet(i).Longitude & vbTab & vbTab & dataSet(i).TOA)
-                    'Next
+                    Console.WriteLine(simLat & ", " & simLon)
+                    Console.WriteLine(arrayAccuracy(resultId, 2))
+                    For i = 0 To dataSet.Length - 1
+                        Console.WriteLine(dataSet(i).id & vbTab & dataSet(i).Latitude & vbTab & dataSet(i).Longitude & vbTab & vbTab & dataSet(i).TOA)
+                    Next
                     'If result.Accuracy > 5000 Then
                     'textTemp += simLat & ", " & simLon
                     'textTemp += vbCrLf & arrayAccuracy(resultId, 2)
@@ -247,7 +247,7 @@ Public Class Form1
                     'textTemp += vbCrLf & vbCrLf
                     'End If
                 Next
-                arrayAccuracy(resultId, 0) = simLat
+                    arrayAccuracy(resultId, 0) = simLat
                 arrayAccuracy(resultId, 1) = simLon
                 arrayAccuracy(resultId, 2) /= simulation.nIteration
 
