@@ -69,17 +69,29 @@ Public Class Calculate
                         End If
                     Next
                 End While
+            Case 4
+                While (Not sorted)
+                    sorted = True
+                    For i = 1 To array.Length - 1
+                        If array(i).rFromCenter < array(i - 1).rFromCenter Then
+                            swap(array(i), array(i - 1))
+                            sorted = False
+                        End If
+                    Next
+                End While
             Case Else
 
         End Select
     End Sub
 
-    Public Function DTOAFilter(ByVal dataStation As Array, ByVal calcMode As Integer) As Array
+    Public Function middleCombination(ByVal dataStation As Array, ByVal calcMode As Integer) As Array
         'printStation(dataStation)
         bubbleSort(dataStation, 3)
         'printStation(dataStation)
         Dim dataCount As Integer
         Select Case calcMode
+            Case 0
+                dataCount = 2
             Case 1
                 dataCount = 4
             Case 2
@@ -116,6 +128,10 @@ Public Class Calculate
                     Next
                     'printArray(iData)
                 Else
+                    If dataCount = 2 Then
+                        iData(0) = i
+                        iData(1) = i - 1
+                    End If
                     If dataCount = 3 Then
                         If dataStation(i + 1).TOA - dataStation(i).TOA > dataStation(i - 1).TOA - dataStation(i - 2).TOA Then          ' 1 2 3 4-> 4-3 > 2-1
                             'Console.WriteLine("Y>Z")
@@ -174,6 +190,101 @@ Public Class Calculate
             FilteredArray(i) = dataStation(iData(i))
         Next
         'Console.WriteLine(iData(0) & "," & iData(1) & "," & iData(2) & "," & iData(3))
+        bubbleSort(dataStation, 0)
+        'printStation(dataStation)
+        Return FilteredArray
+    End Function
+
+    Public Function nearestCombination1(ByVal dataStation As Array, ByVal calcMode As Integer) As Array
+        'printStation(dataStation)
+        bubbleSort(dataStation, 3)
+        'printStation(dataStation)
+        Dim dataCount As Integer
+        Select Case calcMode
+            Case 1
+                dataCount = 4
+            Case 2
+                dataCount = 3
+            Case Else
+                Return {}
+        End Select
+
+        Dim FilteredArray(dataCount - 1)
+        For i = 0 To FilteredArray.Length - 1
+            FilteredArray(i) = dataStation(i)
+        Next
+        'printStation(FilteredArray)
+        bubbleSort(dataStation, 0)
+        'printStation(dataStation)
+        Return FilteredArray
+    End Function
+
+    Public Function nearestCombination2(ByVal dataStation As Array, ByVal calcMode As Integer) As Array
+        'printStation(dataStation)
+        bubbleSort(dataStation, 3)
+        'printStation(dataStation)
+        Dim dataCount As Integer
+        Select Case calcMode
+            Case 1
+                dataCount = 4
+            Case 2
+                dataCount = 3
+            Case Else
+                Return {}
+        End Select
+
+        For index = 0 To dataStation.Length - 1
+            dataStation(index).rFromCenter = Busur(dataStation(0).Latitude, dataStation(0).Longitude, dataStation(index).Latitude, dataStation(index).Longitude)
+        Next
+
+        bubbleSort(dataStation, 4)
+
+        Dim FilteredArray(dataCount - 1)
+        For i = 0 To FilteredArray.Length - 1
+            FilteredArray(i) = dataStation(i)
+        Next
+        'printStation(FilteredArray)
+        bubbleSort(dataStation, 0)
+        'printStation(dataStation)
+        Return FilteredArray
+    End Function
+
+    Public Function nearestCombination3(ByVal dataStation As Array, ByVal calcMode As Integer) As Array
+        'printStation(dataStation)
+        bubbleSort(dataStation, 3)
+        'printStation(dataStation)
+        Dim dataCount As Integer
+        Select Case calcMode
+            Case 1
+                dataCount = 4
+            Case 2
+                dataCount = 3
+            Case Else
+                Return {}
+        End Select
+
+        Dim iData(dataCount - 1) As Integer
+        Dim temporary(dataStation.Length - 2)
+        For index = 1 To dataStation.Length - 1
+            temporary(index - 1) = dataStation(index)
+        Next
+        Dim secondaryStation(dataCount - 2)
+        Select Case dataCount
+            Case 3
+                secondaryStation = middleCombination(temporary, 0)
+            Case 4
+                secondaryStation = middleCombination(temporary, 2)
+            Case Else
+                Return Nothing
+        End Select
+
+        Dim FilteredArray(iData.Length - 1)
+        FilteredArray(0) = dataStation(0)
+        For index = 1 To dataCount - 1
+            FilteredArray(index) = secondaryStation(index - 1)
+        Next
+
+        'printStation(FilteredArray)
         bubbleSort(dataStation, 0)
         'printStation(dataStation)
         Return FilteredArray
@@ -305,6 +416,62 @@ Public Class Calculate
             Ri(i, 1) = K(i, 1)
             Ri(i, 2) = K(i, 2)
         Next
+        'Console.WriteLine("K")
+        'print2D(K)
+        Dim rotatedMatrix = Rotate(Ri, -dataSet(0).Longitude, 3)
+        rotatedMatrix = Rotate(rotatedMatrix, dataSet(0).Latitude, 2)
+        'Console.WriteLine("RM")
+        'print2D(rotatedMatrix)
+        Dim L(rotatedMatrix.getLength(0) - 2, rotatedMatrix.getLength(1) - 1) As Decimal
+        Dim a(rotatedMatrix.getLength(0) - 2, 0) As Decimal
+        For i = 0 To L.GetLength(0) - 1
+            a(i, 0) = Math.Sin(c * (dataSet(i + 1).TOA - dataSet(0).TOA) / R)
+            For j = 0 To L.GetLength(1) - 1
+                L(i, j) = rotatedMatrix(i + 1, j)
+                If j = 0 Then
+                    L(i, j) += -Math.Cos(c * (dataSet(i + 1).TOA - dataSet(0).TOA) / R)
+                End If
+            Next
+        Next
+
+        'Console.WriteLine("L")
+        'print2D(L)
+        'Console.WriteLine("a")
+        'print2D(a)
+        Dim inversedL = inverseMatrix(L)
+        'Console.WriteLine("iL")
+        'print2D(inversedL)
+        Dim h = multiplyMatrix(inversedL, a)
+        Dim lo_ = Math.Atan2(h(1, 0), h(0, 0))
+        Dim la_ = Math.Atan2(h(2, 0) * Math.Cos(lo_), h(0, 0))
+        result.TimeOfOccurence = dataSet(0).TOA - R / c * Math.Acos(Math.Cos(la_) * Math.Cos(lo_))
+
+        result.Latitude = Math.Asin(K(0, 2) * Math.Cos(la_) * Math.Cos(lo_) + Math.Cos(dataSet(0).Latitude * Math.PI / 180) * Math.Sin(la_)) * 180 / Math.PI
+        Dim LonY = K(0, 1) * Math.Cos(la_) * Math.Cos(lo_) + Math.Cos(dataSet(0).Longitude * Math.PI / 180) * Math.Cos(la_) * Math.Sin(lo_) - K(0, 2) * Math.Sin(dataSet(0).Longitude * Math.PI / 180) * Math.Sin(la_)
+        Dim LonX = K(0, 0) * Math.Cos(la_) * Math.Cos(lo_) - Math.Sin(dataSet(0).Longitude * Math.PI / 180) * Math.Cos(la_) * Math.Sin(lo_) - K(0, 2) * Math.Cos(dataSet(0).Longitude * Math.PI / 180) * Math.Sin(la_)
+        result.Longitude = Math.Atan2(LonY, LonX) * 180 / Math.PI
+
+        result.Latitude = Decimal.Round(result.Latitude, 3)
+        result.Longitude = Decimal.Round(result.Longitude, 3)
+        'Console.WriteLine("result: " & result.Latitude & ", " & result.Longitude & ", " & result.TimeOfOccurence)
+        Return result
+    End Function
+
+    Private Function LinearSphericalTrace(ByVal dataSet As Array) As DataFormat.result
+        Dim c As Decimal = sim.c
+        Dim R As Decimal = sim.R
+        Dim K(dataSet.Length - 1, 3) As Decimal
+        Dim Ri(dataSet.Length - 1, 2) As Decimal
+        Dim result As New DataFormat.result()
+        For i = 0 To K.GetLength(0) - 1
+            K(i, 0) = (Math.Cos(dataSet(i).Latitude * Math.PI / 180) * Math.Cos(dataSet(i).Longitude * Math.PI / 180))
+            K(i, 1) = (Math.Cos(dataSet(i).Latitude * Math.PI / 180) * Math.Sin(dataSet(i).Longitude * Math.PI / 180))
+            K(i, 2) = (Math.Sin(dataSet(i).Latitude * Math.PI / 180))
+            K(i, 3) = (-Math.Cos((c * dataSet(i).TOA) / R))
+            Ri(i, 0) = K(i, 0)
+            Ri(i, 1) = K(i, 1)
+            Ri(i, 2) = K(i, 2)
+        Next
         Console.WriteLine("K")
         print2D(K)
         Dim rotatedMatrix = Rotate(Ri, -dataSet(0).Longitude, 3)
@@ -348,7 +515,6 @@ Public Class Calculate
 
     Public Function anotherCombination(ByVal dataSet As Array, ByVal dataStation As Array) As DataFormat.result
         Dim result As New DataFormat.result()
-        Console.WriteLine("Another try")
 
         Dim newDataSet(dataSet.Length - 1)
         Select Case dataSet.Length

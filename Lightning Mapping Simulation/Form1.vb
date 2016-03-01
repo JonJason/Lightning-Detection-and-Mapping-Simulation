@@ -21,6 +21,7 @@ Public Class Form1
 
     Class SimData
         Public Property CalcMode As Integer = 1
+        Public Property filterMode As Integer = 1
         Public Property firstLat As Decimal = -7.8
         Public Property firstLon As Decimal = 105.15
         Public Property lastLat As Decimal = -5.9
@@ -45,13 +46,13 @@ Public Class Form1
 
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        'simulation.firstLat = -6.5
-        'simulation.lastLat = -6.3
-        'simulation.firstLon = 107.4
-        'simulation.lastLon = 107.6
-        simulation.nIteration = 4
-        simulation.deltaLat = 0.05
-        simulation.deltaLon = 0.05
+        'simulation.firstLat = -10
+        'simulation.lastLat = -3
+        'simulation.firstLon = 103
+        'simulation.lastLon = 112
+        'simulation.nIteration = 100
+        'simulation.deltaLat = 0.1
+        'simulation.deltaLon = 0.1
 
         'set binding
         txtFLat.DataBindings.Add("Text", simulation, "firstLat")
@@ -66,12 +67,26 @@ Public Class Form1
         txtErrorMean.DataBindings.Add("Text", simulation, "errorTOAMean")
         txtErrorSigma.DataBindings.Add("Text", simulation, "errorTOASigma")
         txtCalcMode.DataBindings.Add("Text", simulation, "CalcMode")
+        txtFilterMode.DataBindings.Add("Text", simulation, "filterMode")
 
         stationsData.Add(New DataFormat.StationsData(1, -6.9867, 106.5558))
-        stationsData.Add(New DataFormat.StationsData(2, -7.3259, 107.7953))
-        stationsData.Add(New DataFormat.StationsData(3, -6.1647, 107.2979))
-        stationsData.Add(New DataFormat.StationsData(4, -6.7588, 108.4802))
+        stationsData.Add(New DataFormat.StationsData(2, -6.7047, 108.506))
+        stationsData.Add(New DataFormat.StationsData(3, -6.8895, 107.6113))
+        stationsData.Add(New DataFormat.StationsData(4, -6.1646, 107.298))
         stationsData.Add(New DataFormat.StationsData(5, -6.127, 106.2472))
+        stationsData.Add(New DataFormat.StationsData(6, -7.3259, 107.7953))
+        'stationsData.Add(New DataFormat.StationsData(7, -6.5508, 106.745))
+        'stationsData.Add(New DataFormat.StationsData(8, -6.5274, 106.8304))
+
+        'stationsData.Add(New DataFormat.StationsData(1, -6.7924, 107.6045))
+        'stationsData.Add(New DataFormat.StationsData(2, -6.1646, 107.298))
+        'stationsData.Add(New DataFormat.StationsData(3, -6.7047, 108.506))
+        'stationsData.Add(New DataFormat.StationsData(4, -7.4641, 107.3392))
+
+        'stationsData.Add(New DataFormat.StationsData(1, -6.8154, 106.5499))
+        'stationsData.Add(New DataFormat.StationsData(2, -6.1646, 107.298))
+        'stationsData.Add(New DataFormat.StationsData(3, -6.7047, 108.506))
+        'stationsData.Add(New DataFormat.StationsData(4, -7.4641, 107.3392))
 
         'setup stationsData gridView
         stationsDataBindingSource.DataSource = stationsData
@@ -204,6 +219,7 @@ Public Class Form1
             stations(i).Latitude = stationsData(i).Latitude
             stations(i).Longitude = stationsData(i).Longitude
             stations(i).TOA = vbNull
+            stations(i).rFromCenter = vbNull
         Next
         event_1.Set()
         For simLat = simulation.firstLat To simulation.lastLat
@@ -219,11 +235,27 @@ Public Class Form1
                                                     Me.ProgressBar1.Increment(1)
                                                     Me.lblProgress.Text = "Process: " & Me.ProgressBar1.Value & "/" & Me.ProgressBar1.Maximum
                                                 End Sub))
-                    dataSet = calc.DTOAFilter(stations, simulation.CalcMode)
+
+                    Select Case simulation.filterMode
+                        Case 1
+                            dataSet = calc.middleCombination(stations, simulation.CalcMode)
+                        Case 2
+                            dataSet = calc.nearestCombination1(stations, simulation.CalcMode)
+                        Case 3
+                            dataSet = calc.nearestCombination2(stations, simulation.CalcMode)
+                        Case 4
+                            dataSet = calc.nearestCombination3(stations, simulation.CalcMode)
+                        Case 5
+                            dataSet = stations
+                        Case Else
+                            dataSet = Nothing
+                    End Select
 
                     result = calc.Locate(dataSet, simulation.CalcMode, stations)
 
                     If result.Latitude = 0 And result.Longitude = 0 And result.TimeOfOccurence = 0 Then
+                        'Console.WriteLine("Another try")
+
                         'Console.WriteLine(result.Latitude & ", " & result.Longitude & ", " & result.TimeOfOccurence)
                         result = calc.anotherCombination(dataSet, stations)
                     End If
@@ -233,11 +265,11 @@ Public Class Form1
                     result.Accuracy = calc.Busur(result.Latitude, result.Longitude, simLat, simLon)
                     arrayResult(iIteration - 1) = result
                     arrayAccuracy(resultId, 2) += arrayResult(iIteration - 1).Accuracy
-                    Console.WriteLine(simLat & ", " & simLon)
-                    Console.WriteLine(arrayAccuracy(resultId, 2))
-                    For i = 0 To dataSet.Length - 1
-                        Console.WriteLine(dataSet(i).id & vbTab & dataSet(i).Latitude & vbTab & dataSet(i).Longitude & vbTab & vbTab & dataSet(i).TOA)
-                    Next
+                    'Console.WriteLine(simLat & ", " & simLon)
+                    'Console.WriteLine(arrayAccuracy(resultId, 2))
+                    'For i = 0 To dataSet.Length - 1
+                    'Console.WriteLine(dataSet(i).id & vbTab & dataSet(i).Latitude & vbTab & dataSet(i).Longitude & vbTab & vbTab & dataSet(i).TOA)
+                    'Next
                     'If result.Accuracy > 5000 Then
                     'textTemp += simLat & ", " & simLon
                     'textTemp += vbCrLf & arrayAccuracy(resultId, 2)
@@ -381,7 +413,7 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DataGridStations_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs)
+    Private Sub DataGridStations_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DataGridStations.CellMouseUp
         Select Case e.Button
             Case MouseButtons.Right
                 If e.RowIndex > -1 Then
@@ -414,10 +446,11 @@ Public Class Form1
                 'Next
                 stationsData.clear()
                 stationsData.Add(New DataFormat.StationsData(1, -6.9867, 106.5558))
-                stationsData.Add(New DataFormat.StationsData(2, -7.3259, 107.7953))
-                stationsData.Add(New DataFormat.StationsData(3, -6.1647, 107.2979))
-                stationsData.Add(New DataFormat.StationsData(4, -6.7588, 108.4802))
+                stationsData.Add(New DataFormat.StationsData(2, -6.7047, 108.506))
+                stationsData.Add(New DataFormat.StationsData(3, -6.8895, 107.6113))
+                stationsData.Add(New DataFormat.StationsData(4, -6.1646, 107.298))
                 stationsData.Add(New DataFormat.StationsData(5, -6.127, 106.2472))
+                stationsData.Add(New DataFormat.StationsData(6, -7.3259, 107.7953))
                 stationsDataBindingSource.ResetBindings(False)
             Case Else
 
@@ -434,6 +467,7 @@ Public Class Form1
         Else
             Dim limits = {100, 1000, 2000, 5000, 10000}
             Dim fileName = ""
+            Dim filtMethod = ""
             Select Case simulation.CalcMode
                 Case 1
                     fileName = "LSM"
@@ -442,7 +476,12 @@ Public Class Form1
                 Case Else
 
             End Select
-            Dim filePath = "E:\Kuliah\Semester 8\TA 2\Google Earth\" & fileName & " (" & Format(Now, "d-MMM-yyyy H.mm.ss") & ").kml"
+            Dim _now = Now
+            Dim folderPath = "E:\Kuliah\Semester 8\TA 2\Hasil Simulasi\" & Format(_now, "d-MMM-yyyy")
+            If (Not Directory.Exists(folderPath)) Then
+                Directory.CreateDirectory(folderPath)
+            End If
+            Dim filePath = folderPath & "\" & fileName & " (" & Format(_now, "d-MMM-yyyy H.mm.ss") & ")" & " M" & simulation.filterMode & ".kml"
             'MsgBox(filePath)
             createContourKMLFile(filePath, finalResultData, limits, simulation, stationsData)
         End If
@@ -453,11 +492,18 @@ Public Class Form1
     End Sub
 
     Private Sub btnCalcModeHint_Click_1(sender As Object, e As EventArgs) Handles btnCalcModeHint.Click
-        MsgBox("Calc Mode:" & vbCrLf & "1. Lightning Spherical Method" & vbCrLf & "2. Quadratic Planar Method")
+        MsgBox("Calc Mode:" & vbCrLf &
+               "1. Lightning Spherical Method" & vbCrLf &
+               "2. Quadratic Planar Method" &
+               vbCrLf & vbCrLf & "Filter Mode:" &
+               vbCrLf & "1. Lightning in the Middle" &
+               vbCrLf & "2. nearest Station to the lightning" &
+               vbCrLf & "3. nearest as the center, secondaries are nearest to the center" &
+               vbCrLf & "4. nearest as the center, secondaries picked by method 1.")
     End Sub
 
     Private Sub printStationtoTextbox(ByVal array)
-        textBox1.Text += vbCrLf & "---------------------------------------------------------------"
+        textBox1.Text += vbCrLf & " - --------------------------------------------------------------"
         For i = 0 To array.Length - 1
             textBox1.Text += vbCrLf & array(i).id & vbTab & array(i).Latitude & vbTab & array(i).Longitude & vbTab & vbTab & array(i).TOA
         Next
@@ -530,7 +576,7 @@ Public Class Form1
             End If
             'MsgBox(d)
             If Not IsNothing(direction(d)) Then
-                'Select Case d : Case 0 : MsgBox("top") : Case 1 : MsgBox("right") : Case 2 : MsgBox("bottom") : Case 3 : MsgBox("left") : Case Else : MsgBox("error: " & d) : End Select
+                'Select Case d : Case 0 : MsgBox("top") : Case 1 : MsgBox("right") : Case 2 : MsgBox("bottom") : Case 3 : MsgBox("left") : Case Else : MsgBox("error:   " & d) : End Select
                 lastDirection = d
                 Return direction(d)
             End If
@@ -557,6 +603,7 @@ Public Class Form1
             styles(3) = New myKML.style("style" & limits(3), 0, "7700ffff")
             styles(4) = New myKML.style("style" & limits(4), 0, "770000ff")
             styles(5) = New myKML.style("style > " & limits(4), 0, "77ff00ff")
+            Dim StationStyle = New myKML.iconStyle("stationStyle", "http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png", "aaffffff")
 
             Dim kmlText As String = ""
             kmlText += kml.XMLTag
@@ -565,11 +612,11 @@ Public Class Form1
             For index = 0 To limits.Length
                 kmlText += styles(index).KMLText(2)
             Next
-
+            kmlText += StationStyle.KMLText(2)
             Console.WriteLine("[TRACE] Wrote Styles")
 
             For index = 0 To stationsData.Count - 1
-                kmlText += kml.point(2, "Station " & stationsData(index).Id, stationsData(index).Latitude, stationsData(index).Longitude, 2000, Nothing, Nothing)
+                kmlText += kml.point(2, "Station " & stationsData(index).Id, stationsData(index).Latitude, stationsData(index).Longitude, 2000, style:=StationStyle)
             Next
 
             Console.WriteLine("[TRACE] Wrote Stations Coordinates")
@@ -607,7 +654,7 @@ Public Class Form1
             Next
             Dim BadPoints = Points.FindAll(AddressOf findAboveLimit)
             If BadPoints IsNot Nothing Then
-                Console.WriteLine("[TRACE] data limit " & limits.Length+1)
+                Console.WriteLine("[TRACE] data limit " & limits.Length + 1)
                 Console.WriteLine("[TRACE] points count: " & BadPoints.Count)
                 kmlText += kml.placemark(2).header
                 kmlText += kml.name(3, limits.Length + 1 & ". Above " & limits(4)).oneline

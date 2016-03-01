@@ -50,7 +50,6 @@ Partial Class Form1
         Me.lblError = New System.Windows.Forms.Label()
         Me.txtErrorMean = New System.Windows.Forms.TextBox()
         Me.txtErrorSigma = New System.Windows.Forms.TextBox()
-        Me.txtCalcMode = New System.Windows.Forms.TextBox()
         Me.lblCalcMode = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -58,7 +57,10 @@ Partial Class Form1
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
+        Me.txtCalcMode = New System.Windows.Forms.TextBox()
         Me.btnCalcModeHint = New System.Windows.Forms.Button()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.txtFilterMode = New System.Windows.Forms.TextBox()
         Me.Result = New System.Windows.Forms.TabPage()
         Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
         Me.DataGridViewFinalResult = New System.Windows.Forms.DataGridView()
@@ -216,7 +218,6 @@ Partial Class Form1
         Me.TableLayoutPanel2.Controls.Add(Me.lblError, 0, 9)
         Me.TableLayoutPanel2.Controls.Add(Me.txtErrorMean, 1, 9)
         Me.TableLayoutPanel2.Controls.Add(Me.txtErrorSigma, 2, 9)
-        Me.TableLayoutPanel2.Controls.Add(Me.txtCalcMode, 1, 11)
         Me.TableLayoutPanel2.Controls.Add(Me.lblCalcMode, 0, 11)
         Me.TableLayoutPanel2.Controls.Add(Me.Label1, 1, 0)
         Me.TableLayoutPanel2.Controls.Add(Me.Label2, 2, 0)
@@ -224,7 +225,10 @@ Partial Class Form1
         Me.TableLayoutPanel2.Controls.Add(Me.Label4, 1, 8)
         Me.TableLayoutPanel2.Controls.Add(Me.Label5, 2, 8)
         Me.TableLayoutPanel2.Controls.Add(Me.Label6, 1, 10)
-        Me.TableLayoutPanel2.Controls.Add(Me.btnCalcModeHint, 2, 11)
+        Me.TableLayoutPanel2.Controls.Add(Me.txtCalcMode, 1, 11)
+        Me.TableLayoutPanel2.Controls.Add(Me.btnCalcModeHint, 0, 10)
+        Me.TableLayoutPanel2.Controls.Add(Me.Label7, 2, 10)
+        Me.TableLayoutPanel2.Controls.Add(Me.txtFilterMode, 2, 11)
         Me.TableLayoutPanel2.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanel2.Margin = New System.Windows.Forms.Padding(0)
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
@@ -414,14 +418,6 @@ Partial Class Form1
         Me.txtErrorSigma.Size = New System.Drawing.Size(67, 20)
         Me.txtErrorSigma.TabIndex = 18
         '
-        'txtCalcMode
-        '
-        Me.txtCalcMode.Dock = System.Windows.Forms.DockStyle.Left
-        Me.txtCalcMode.Location = New System.Drawing.Point(167, 301)
-        Me.txtCalcMode.Name = "txtCalcMode"
-        Me.txtCalcMode.Size = New System.Drawing.Size(67, 20)
-        Me.txtCalcMode.TabIndex = 19
-        '
         'lblCalcMode
         '
         Me.lblCalcMode.AutoSize = True
@@ -453,7 +449,7 @@ Partial Class Form1
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.Location = New System.Drawing.Point(248, 0)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(71, 20)
+        Me.Label2.Size = New System.Drawing.Size(80, 20)
         Me.Label2.TabIndex = 22
         Me.Label2.Text = "Longitude"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -489,7 +485,7 @@ Partial Class Form1
         Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label5.Location = New System.Drawing.Point(248, 220)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(71, 20)
+        Me.Label5.Size = New System.Drawing.Size(80, 20)
         Me.Label5.TabIndex = 25
         Me.Label5.Text = "Sigma"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -506,14 +502,41 @@ Partial Class Form1
         Me.Label6.Text = "Calc Mode"
         Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'txtCalcMode
+        '
+        Me.txtCalcMode.Dock = System.Windows.Forms.DockStyle.Left
+        Me.txtCalcMode.Location = New System.Drawing.Point(167, 301)
+        Me.txtCalcMode.Name = "txtCalcMode"
+        Me.txtCalcMode.Size = New System.Drawing.Size(67, 20)
+        Me.txtCalcMode.TabIndex = 19
+        '
         'btnCalcModeHint
         '
-        Me.btnCalcModeHint.Location = New System.Drawing.Point(248, 301)
+        Me.btnCalcModeHint.Location = New System.Drawing.Point(3, 273)
         Me.btnCalcModeHint.Name = "btnCalcModeHint"
         Me.btnCalcModeHint.Size = New System.Drawing.Size(53, 20)
         Me.btnCalcModeHint.TabIndex = 27
         Me.btnCalcModeHint.Text = "hint"
         Me.btnCalcModeHint.UseVisualStyleBackColor = True
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.Label7.Location = New System.Drawing.Point(248, 270)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(80, 28)
+        Me.Label7.TabIndex = 28
+        Me.Label7.Text = "Filter Mode"
+        Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'txtFilterMode
+        '
+        Me.txtFilterMode.Location = New System.Drawing.Point(248, 301)
+        Me.txtFilterMode.Name = "txtFilterMode"
+        Me.txtFilterMode.Size = New System.Drawing.Size(67, 20)
+        Me.txtFilterMode.TabIndex = 29
         '
         'Result
         '
@@ -829,4 +852,6 @@ Partial Class Form1
     Friend WithEvents Label5 As Label
     Friend WithEvents Label6 As Label
     Friend WithEvents btnCalcModeHint As Button
+    Friend WithEvents Label7 As Label
+    Friend WithEvents txtFilterMode As TextBox
 End Class

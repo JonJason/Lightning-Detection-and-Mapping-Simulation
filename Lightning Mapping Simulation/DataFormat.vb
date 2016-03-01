@@ -11,6 +11,7 @@
         Public Property Latitude As Decimal
         Public Property Longitude As Decimal
         Public Property TOA As Decimal
+        Public Property rFromCenter As Decimal
     End Class
 
     Public Class StationsData

@@ -163,7 +163,7 @@
         End Get
     End Property
 
-    Public ReadOnly Property point(ByVal level As Integer, ByVal name As String, ByVal latitude As Decimal, ByVal longitude As Decimal, ByVal altitude As Decimal, ByVal description As String, style As style) As String
+    Public ReadOnly Property point(ByVal level As Integer, ByVal name As String, ByVal latitude As Decimal, ByVal longitude As Decimal, ByVal altitude As Decimal, Optional ByVal description As String = "", Optional ByVal style As iconStyle = Nothing) As String
         Get
             Dim pointTab = ""
             addTabTo(pointTab, level + 1)
@@ -213,6 +213,63 @@
     Public Class polygon
         Public header = "<Polygon>"
         Public footer = "</Polygon>"
+    End Class
+
+    Public Class iconStyle
+        Public Sub New(ByVal id As String, ByVal iconUrl As String, Optional ByVal color As String = "99ffffff")
+            _id = id
+            _iconUrl = iconUrl
+            _color = color
+        End Sub
+        Dim _id, _iconUrl, _color
+        Dim kml As String
+        Dim header As String = "<Style>"
+        Dim footer As String = "</Style>"
+
+        Public ReadOnly Property KMLText(ByVal level As Integer) As String
+            Get
+                kml = vbCrLf
+                addTabTo(kml, level)
+                kml += header
+                If Not IsNothing(_id) Then
+                    kml = kml.Substring(0, kml.IndexOf(">"))
+                    kml += " id=""" & _id & """>" & vbCrLf
+                End If
+                addTabTo(kml, level + 1)
+                kml += "<LabelStyle>" & vbCrLf
+                addTabTo(kml, level + 2)
+                kml += "<color>" & _color & "</color>" & vbCrLf
+                addTabTo(kml, level + 2)
+                kml += "<colorMode>normal</colorMode>" & vbCrLf
+                addTabTo(kml, level + 2)
+                kml += "<scale>0.75</scale>" & vbCrLf
+                addTabTo(kml, level + 1)
+                kml += "</LabelStyle>" & vbCrLf
+                addTabTo(kml, level + 1)
+                kml += "<IconStyle>" & vbCrLf
+                addTabTo(kml, level + 2)
+                kml += "<color>" & _color & "</color>" & vbCrLf
+                addTabTo(kml, level + 2)
+                kml += "<Icon>" & vbCrLf
+                addTabTo(kml, level + 3)
+                kml += "<href>" & _iconUrl & "</href>" & vbCrLf
+                addTabTo(kml, level + 2)
+                kml += "</Icon>" & vbCrLf
+                addTabTo(kml, level + 1)
+                kml += "</IconStyle>" & vbCrLf
+                addTabTo(kml, level)
+                kml += footer
+                Return kml
+            End Get
+        End Property
+        Public ReadOnly Property styleUrl(ByVal level As String) As String
+            Get
+                Dim styleUrlText = vbCrLf
+                addTabTo(styleUrlText, level)
+                styleUrlText += "<styleUrl>#" & _id & "</styleUrl>"
+                Return styleUrlText
+            End Get
+        End Property
     End Class
 
     Public Class style
