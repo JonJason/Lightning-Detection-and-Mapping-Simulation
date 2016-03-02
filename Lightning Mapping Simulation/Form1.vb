@@ -499,7 +499,10 @@ Public Class Form1
                vbCrLf & "1. Lightning in the Middle" &
                vbCrLf & "2. nearest Station to the lightning" &
                vbCrLf & "3. nearest as the center, secondaries are nearest to the center" &
-               vbCrLf & "4. nearest as the center, secondaries picked by method 1.")
+               vbCrLf & "4. nearest as the center, secondaries picked by method 1." &
+               vbCrLf & vbCrLf & "Latitude Longitude" &
+               vbCrLf & "First:-7.8, 105.15" &
+               vbCrLf & "Last : -5.9, 108.5")
     End Sub
 
     Private Sub printStationtoTextbox(ByVal array)
