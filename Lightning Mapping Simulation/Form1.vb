@@ -18,6 +18,7 @@ Public Class Form1
     Dim simLat, simLon
     Private Delegate Sub createContourKMLFileDelegate(ByVal path As String, ByVal Points As List(Of DataFormat.finalResultData), ByVal limits As Array, ByVal setting As Form1.SimData, ByVal stationsData As List(Of DataFormat.StationsData))
     Private Delegate Sub drawDataDelegate()
+    Private Delegate Sub createTxtKMLFileDelegate(ByVal path As String, ByVal Points As List(Of DataFormat.finalResultData))
 
     Class SimData
         Public Property CalcMode As Integer = 1
@@ -373,12 +374,12 @@ Public Class Form1
             hms = second & " s"
         Else
             If second < 3600 Then
-                minute = second / 60
+                minute = Math.Floor(second / 60)
                 second = second Mod 60
                 hms = minute & " m " & second & " s"
             Else
-                hour = second / 3600
-                minute = (second Mod 3600) / 60
+                hour = Math.Floor(second / 3600)
+                minute = Math.Floor((second Mod 3600) / 60)
                 second = second Mod 60
                 hms = hour & " h " & minute & " m " '& second & " s "
             End If
@@ -481,9 +482,10 @@ Public Class Form1
             If (Not Directory.Exists(folderPath)) Then
                 Directory.CreateDirectory(folderPath)
             End If
-            Dim filePath = folderPath & "\" & fileName & " (" & Format(_now, "d-MMM-yyyy H.mm.ss") & ")" & " M" & simulation.filterMode & ".kml"
+            Dim filePath = folderPath & "\" & fileName & " (" & Format(_now, "d-MMM-yyyy H.mm.ss") & ")" & " M" & simulation.filterMode
             'MsgBox(filePath)
-            createContourKMLFile(filePath, finalResultData, limits, simulation, stationsData)
+            createTxtFile(filePath & ".txt", finalResultData)
+            createContourKMLFile(filePath & ".kml", finalResultData, limits, simulation, stationsData)
         End If
     End Sub
 
@@ -592,6 +594,9 @@ Public Class Form1
         If Me.InvokeRequired Then
             Me.Invoke(New createContourKMLFileDelegate(AddressOf createContourKMLFile), New Object() {path, Points, limits, setting, stationsData})
         Else
+            Dim fs As FileStream = File.Create(path)
+            Dim info As Byte()
+
             Console.WriteLine("[TRACE] Creating Kml Text")
             altitudeTopLimit = -1
             Dim kml As New myKML()
@@ -608,23 +613,21 @@ Public Class Form1
             styles(5) = New myKML.style("style > " & limits(4), 0, "77ff00ff")
             Dim StationStyle = New myKML.iconStyle("stationStyle", "http://maps.google.com/mapfiles/kml/shapes/placemark_circle.png", "aaffffff")
 
-            Dim kmlText As String = ""
-            kmlText += kml.XMLTag
-            kmlText += kml.kmlTag.header
-            kmlText += kml.document(1).header
+            info = New UTF8Encoding(True).GetBytes(kml.XMLTag) : fs.Write(info, 0, info.Length)
+            info = New UTF8Encoding(True).GetBytes(kml.kmlTag.header) : fs.Write(info, 0, info.Length)
+            info = New UTF8Encoding(True).GetBytes(kml.document(1).header) : fs.Write(info, 0, info.Length)
             For index = 0 To limits.Length
-                kmlText += styles(index).KMLText(2)
+                info = New UTF8Encoding(True).GetBytes(styles(index).KMLText(2)) : fs.Write(info, 0, info.Length)
             Next
-            kmlText += StationStyle.KMLText(2)
+            info = New UTF8Encoding(True).GetBytes(StationStyle.KMLText(2)) : fs.Write(info, 0, info.Length)
             Console.WriteLine("[TRACE] Wrote Styles")
 
             For index = 0 To stationsData.Count - 1
-                kmlText += kml.point(2, "Station " & stationsData(index).Id, stationsData(index).Latitude, stationsData(index).Longitude, 2000, style:=StationStyle)
+                info = New UTF8Encoding(True).GetBytes(kml.point(2, "Station " & stationsData(index).Id, stationsData(index).Latitude, stationsData(index).Longitude, 2000, style:=StationStyle)) : fs.Write(info, 0, info.Length)
             Next
 
             Console.WriteLine("[TRACE] Wrote Stations Coordinates")
-
-            kmlText += kml.camera(2, cameraLat, cameraLon, cameraAlt, 0, 0, 0)
+            info = New UTF8Encoding(True).GetBytes(kml.camera(2, cameraLat, cameraLon, cameraAlt, 0, 0, 0)) : fs.Write(info, 0, info.Length)
 
             Console.WriteLine("[TRACE] Wrote Camera Position")
             For index = 0 To limits.Length - 1
@@ -634,24 +637,25 @@ Public Class Form1
                 Dim filteredPoints = Points.FindAll(AddressOf findBetweenLimit)
                 If filteredPoints IsNot Nothing Then
                     Console.WriteLine("[TRACE] points count: " & filteredPoints.Count)
-                    kmlText += kml.placemark(2).header
-                    kmlText += kml.name(3, index + 1 & ". Under " & limits(index)).oneline
-                    kmlText += styles(index).styleUrl(3)
-                    kmlText += kml.MultiGeometry(3).header
+                    info = New UTF8Encoding(True).GetBytes(kml.placemark(2).header) : fs.Write(info, 0, info.Length)
+                    info = New UTF8Encoding(True).GetBytes(kml.name(3, index + 1 & ". Under " & limits(index)).oneline) : fs.Write(info, 0, info.Length)
+                    info = New UTF8Encoding(True).GetBytes(styles(index).styleUrl(3)) : fs.Write(info, 0, info.Length)
+                    info = New UTF8Encoding(True).GetBytes(kml.MultiGeometry(3).header) : fs.Write(info, 0, info.Length)
 
                     For Each point In filteredPoints
-                        kmlText += kml.plgn(4).header
-                        kmlText += kml.Extrude(5)
-                        kmlText += kml.altitudeMode(5, "absolute")
-                        kmlText += kml.outerBoundaryIs(5).header
-                        kmlText += kml.LinearRing(6).header
-                        kmlText += kml.coordinates(7, point, 3000, setting).text
-                        kmlText += kml.LinearRing(6).footer
-                        kmlText += kml.outerBoundaryIs(5).footer
-                        kmlText += kml.plgn(4).footer
+                        info = New UTF8Encoding(True).GetBytes(kml.plgn(4).header) : fs.Write(info, 0, info.Length)
+                        info = New UTF8Encoding(True).GetBytes(kml.Extrude(5)) : fs.Write(info, 0, info.Length)
+                        info = New UTF8Encoding(True).GetBytes(kml.altitudeMode(5, "absolute")) : fs.Write(info, 0, info.Length)
+                        info = New UTF8Encoding(True).GetBytes(kml.outerBoundaryIs(5).header) : fs.Write(info, 0, info.Length)
+                        info = New UTF8Encoding(True).GetBytes(kml.LinearRing(6).header) : fs.Write(info, 0, info.Length)
+                        info = New UTF8Encoding(True).GetBytes(kml.coordinates(7, point, 3000, setting).text) : fs.Write(info, 0, info.Length)
+                        info = New UTF8Encoding(True).GetBytes(kml.LinearRing(6).footer) : fs.Write(info, 0, info.Length)
+                        info = New UTF8Encoding(True).GetBytes(kml.outerBoundaryIs(5).footer) : fs.Write(info, 0, info.Length)
+                        info = New UTF8Encoding(True).GetBytes(kml.plgn(4).footer) : fs.Write(info, 0, info.Length)
                     Next
-                    kmlText += kml.MultiGeometry(3).footer
-                    kmlText += kml.placemark(2).footer
+
+                    info = New UTF8Encoding(True).GetBytes(kml.MultiGeometry(3).footer) : fs.Write(info, 0, info.Length)
+                    info = New UTF8Encoding(True).GetBytes(kml.placemark(2).footer) : fs.Write(info, 0, info.Length)
                 End If
                 Console.WriteLine("[TRACE] finish data limit " & index + 1)
             Next
@@ -659,36 +663,43 @@ Public Class Form1
             If BadPoints IsNot Nothing Then
                 Console.WriteLine("[TRACE] data limit " & limits.Length + 1)
                 Console.WriteLine("[TRACE] points count: " & BadPoints.Count)
-                kmlText += kml.placemark(2).header
-                kmlText += kml.name(3, limits.Length + 1 & ". Above " & limits(4)).oneline
-                kmlText += styles(5).styleUrl(3)
-                kmlText += kml.MultiGeometry(3).header
+                info = New UTF8Encoding(True).GetBytes(kml.placemark(2).header) : fs.Write(info, 0, info.Length)
+                info = New UTF8Encoding(True).GetBytes(kml.name(3, limits.Length + 1 & ". Above " & limits(4)).oneline) : fs.Write(info, 0, info.Length)
+                info = New UTF8Encoding(True).GetBytes(styles(5).styleUrl(3)) : fs.Write(info, 0, info.Length)
+                info = New UTF8Encoding(True).GetBytes(kml.MultiGeometry(3).header) : fs.Write(info, 0, info.Length)
 
                 For Each point In BadPoints
-                    kmlText += kml.plgn(4).header
-                    kmlText += kml.Extrude(5)
-                    kmlText += kml.altitudeMode(5, "absolute")
-                    kmlText += kml.outerBoundaryIs(5).header
-                    kmlText += kml.LinearRing(6).header
-                    kmlText += kml.coordinates(7, point, 3000, setting).text
-                    kmlText += kml.LinearRing(6).footer
-                    kmlText += kml.outerBoundaryIs(5).footer
-                    kmlText += kml.plgn(4).footer
+                    info = New UTF8Encoding(True).GetBytes(kml.plgn(4).header) : fs.Write(info, 0, info.Length)
+                    info = New UTF8Encoding(True).GetBytes(kml.Extrude(5)) : fs.Write(info, 0, info.Length)
+                    info = New UTF8Encoding(True).GetBytes(kml.altitudeMode(5, "absolute")) : fs.Write(info, 0, info.Length)
+                    info = New UTF8Encoding(True).GetBytes(kml.outerBoundaryIs(5).header) : fs.Write(info, 0, info.Length)
+                    info = New UTF8Encoding(True).GetBytes(kml.LinearRing(6).header) : fs.Write(info, 0, info.Length)
+                    info = New UTF8Encoding(True).GetBytes(kml.coordinates(7, point, 3000, setting).text) : fs.Write(info, 0, info.Length)
+                    info = New UTF8Encoding(True).GetBytes(kml.LinearRing(6).footer) : fs.Write(info, 0, info.Length)
+                    info = New UTF8Encoding(True).GetBytes(kml.outerBoundaryIs(5).footer) : fs.Write(info, 0, info.Length)
+                    info = New UTF8Encoding(True).GetBytes(kml.plgn(4).footer) : fs.Write(info, 0, info.Length)
                 Next
-                kmlText += kml.MultiGeometry(3).footer
-                kmlText += kml.placemark(2).footer
-                kmlText += kml.document(1).footer
-                kmlText += kml.kmlTag.footer
+                info = New UTF8Encoding(True).GetBytes(kml.MultiGeometry(3).footer) : fs.Write(info, 0, info.Length)
+                info = New UTF8Encoding(True).GetBytes(kml.placemark(2).footer) : fs.Write(info, 0, info.Length)
+                info = New UTF8Encoding(True).GetBytes(kml.document(1).footer) : fs.Write(info, 0, info.Length)
+                info = New UTF8Encoding(True).GetBytes(kml.kmlTag.footer) : fs.Write(info, 0, info.Length)
                 Console.WriteLine("[TRACE] finish data limit " & limits.Length + 1)
             End If
-            Console.WriteLine("[TRACE] Kml Text is Ready")
-            Dim fs As FileStream = File.Create(path)
-            Console.WriteLine("[TRACE] Created or overwrited the file: " & path)
-            Dim info As Byte() = New UTF8Encoding(True).GetBytes(kmlText)
-            fs.Write(info, 0, info.Length)
-            Console.WriteLine("[TRACE] Copying Kml Text as byte to the file: " & path)
             fs.Close()
             Console.WriteLine("[TRACE] Closed file: " & path)
+        End If
+    End Sub
+
+    Private Sub createTxtFile(ByVal path As String, ByVal Points As List(Of DataFormat.finalResultData))
+        If Me.InvokeRequired Then
+            Me.Invoke(New createTxtKMLFileDelegate(AddressOf createTxtFile), New Object() {path, Points})
+        Else
+            Dim fs As FileStream = File.Create(path)
+            For Each item In Points
+                Dim info As Byte() = New UTF8Encoding(True).GetBytes(item.Id & vbTab & item.Latitude & vbTab & item.Longitude & vbTab & item.Accuracy & vbCrLf)
+                fs.Write(info, 0, info.Length)
+            Next
+            fs.Close()
         End If
     End Sub
 
