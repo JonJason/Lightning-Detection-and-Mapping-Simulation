@@ -15,8 +15,26 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_760AF3D2A13D4F0889FB405388CEB133"
+        "MsmKey" = "8:_2281FBA69E02A213E0ECCC2C1E7558BA"
+        "OwnerKey" = "8:_23E5FDC23B254617AF605AF63B6E303D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_23E5FDC23B254617AF605AF63B6E303D"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_5EE9087D48A41620B67F64587CDDC705"
+        "OwnerKey" = "8:_2281FBA69E02A213E0ECCC2C1E7558BA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_8F6C84A3243550D8C0B99B0D690F9C22"
+        "OwnerKey" = "8:_9D5F379CFE08F70E456084E03A37436E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -27,8 +45,32 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_9D5F379CFE08F70E456084E03A37436E"
+        "OwnerKey" = "8:_23E5FDC23B254617AF605AF63B6E303D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_760AF3D2A13D4F0889FB405388CEB133"
+        "OwnerKey" = "8:_23E5FDC23B254617AF605AF63B6E303D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_2281FBA69E02A213E0ECCC2C1E7558BA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_5EE9087D48A41620B67F64587CDDC705"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_9D5F379CFE08F70E456084E03A37436E"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -56,6 +98,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    }
+                }
             }
         }
         "Release"
@@ -80,6 +130,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    }
+                }
             }
         }
     }
@@ -110,6 +168,88 @@
         }
         "File"
         {
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2281FBA69E02A213E0ECCC2C1E7558BA"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:TRUE"
+            "AssemblyAsmDisplayName" = "8:office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_2281FBA69E02A213E0ECCC2C1E7558BA"
+                    {
+                    "Name" = "8:Office.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Office.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_6CD2F6F35FC04DA3A3C8A524FBDC304C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5EE9087D48A41620B67F64587CDDC705"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:TRUE"
+            "AssemblyAsmDisplayName" = "8:stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+                "ScatterAssemblies"
+                {
+                    "_5EE9087D48A41620B67F64587CDDC705"
+                    {
+                    "Name" = "8:stdole.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:stdole.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_6CD2F6F35FC04DA3A3C8A524FBDC304C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8F6C84A3243550D8C0B99B0D690F9C22"
+            {
+            "SourcePath" = "8:plugin_ax.dll"
+            "TargetName" = "8:plugin_ax.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_6CD2F6F35FC04DA3A3C8A524FBDC304C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8F79A0A0D1A34626AABD94B00A04F205"
             {
             "SourcePath" = "8:..\\orbz_lightning.ico"
@@ -128,6 +268,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9D5F379CFE08F70E456084E03A37436E"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Interop.GEPlugin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_9D5F379CFE08F70E456084E03A37436E"
+                    {
+                    "Name" = "8:Interop.GEPlugin.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Interop.GEPlugin.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_6CD2F6F35FC04DA3A3C8A524FBDC304C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
         }
@@ -196,9 +367,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:LMS Setup"
+        "ProductName" = "8:Lightning Mapping Simulation"
         "ProductCode" = "8:{8E30EF7F-2AC8-49C2-B014-943B6A50FE19}"
-        "PackageCode" = "8:{35FD3A17-5597-46C5-8585-5103D3929DA9}"
+        "PackageCode" = "8:{B92B946B-46CB-499C-940C-423F318D1D03}"
         "UpgradeCode" = "8:{0709E03B-F701-42EE-84DC-19693D7CF576}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -318,7 +489,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_0E44DF9BF1AE44E0B45D57BE8C840A0E"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_FEB49800569E4D60AE3E8F54B8B87D83"
             {
             "Name" = "8:Lightning Mapping Simulation"
             "Arguments" = "8:"
@@ -326,10 +497,10 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_760AF3D2A13D4F0889FB405388CEB133"
+            "Target" = "8:_23E5FDC23B254617AF605AF63B6E303D"
             "Folder" = "8:_B1D44BBD24844DE586D9B07559F1E27C"
             "WorkingFolder" = "8:_6CD2F6F35FC04DA3A3C8A524FBDC304C"
-            "Icon" = "8:_8F79A0A0D1A34626AABD94B00A04F205"
+            "Icon" = "8:"
             "Feature" = "8:"
             }
         }
@@ -731,7 +902,7 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_760AF3D2A13D4F0889FB405388CEB133"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_23E5FDC23B254617AF605AF63B6E303D"
             {
             "SourcePath" = "8:..\\Lightning Mapping Simulation\\obj\\Debug\\Lightning Mapping Simulation.exe"
             "TargetName" = "8:"
