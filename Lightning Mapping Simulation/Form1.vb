@@ -16,6 +16,8 @@ Public Class Form1
     Dim calc As New Calculate
     Dim totalPoint As Integer
     Dim simLat, simLon
+
+    Dim stopWatch As New Stopwatch()
     Private Delegate Sub createContourKMLFileDelegate(ByVal path As String, ByVal Points As List(Of DataFormat.finalResultData), ByVal limits As Array, ByVal setting As Form1.SimData, ByVal stationsData As List(Of DataFormat.StationsData))
     Private Delegate Sub drawDataDelegate()
     Private Delegate Sub createTxtKMLFileDelegate(ByVal path As String, ByVal Points As List(Of DataFormat.finalResultData))
@@ -152,6 +154,7 @@ Public Class Form1
                 suspended = Not suspended
                 tRemainingTime.Resume()
                 tSimulation.Resume()
+                stopWatch.Start()
                 btnStop.Visible = False
                 btnToKmlFile.Enabled = False
                 startButton.Text = "Pause"
@@ -160,6 +163,7 @@ Public Class Form1
                 suspended = Not suspended
                 tRemainingTime.Suspend()
                 tSimulation.Suspend()
+                stopWatch.Stop()
                 btnStop.Visible = True
                 startButton.Text = "Resume"
                 lblStatus.Text = "Status: Paused. . ."
@@ -337,8 +341,9 @@ Public Class Form1
         Dim progress As Double = 0
         Dim speed As Double
         Dim finish As Double = ProgressBar1.Maximum
-        Dim stopWatch As New Stopwatch()
+        stopWatch.Reset()
         stopWatch.Start()
+
         Do
             progress = ProgressBar1.Value
             speed = progress / stopWatch.ElapsedMilliseconds * 1000
@@ -354,6 +359,7 @@ Public Class Form1
         Me.Invoke(New MethodInvoker(Sub() Me.lblRemainingTime.Visible = False))
         event_1.Reset()
         event_2.Set()
+        stopWatch.Stop()
     End Sub
 
     Private Function ProgressBar_at_Max() As Boolean
