@@ -99,6 +99,9 @@ Public Class Calculate
             Case Else
                 Return {}
         End Select
+        If dataStation.GetLength(0) < dataCount Then
+            Return Nothing
+        End If
         Dim minDiff As Decimal = dataStation(1).TOA - dataStation(0).TOA
         Dim iData(dataCount - 1) As Integer
         iData(0) = 1
@@ -208,6 +211,9 @@ Public Class Calculate
             Case Else
                 Return {}
         End Select
+        If dataStation.GetLength(0) < dataCount Then
+            Return Nothing
+        End If
 
         Dim FilteredArray(dataCount - 1)
         For i = 0 To FilteredArray.Length - 1
@@ -232,6 +238,9 @@ Public Class Calculate
             Case Else
                 Return {}
         End Select
+        If dataStation.GetLength(0) < dataCount Then
+            Return Nothing
+        End If
 
         For index = 0 To dataStation.Length - 1
             dataStation(index).rFromCenter = Busur(dataStation(0).Latitude, dataStation(0).Longitude, dataStation(index).Latitude, dataStation(index).Longitude)
@@ -262,6 +271,9 @@ Public Class Calculate
             Case Else
                 Return {}
         End Select
+        If dataStation.GetLength(0) < dataCount Then
+            Return Nothing
+        End If
 
         Dim iData(dataCount - 1) As Integer
         Dim temporary(dataStation.Length - 2)
@@ -321,7 +333,7 @@ Public Class Calculate
         Dim Result As New DataFormat.result
         'printStation(dataSet)
         bubbleSort(dataStation, 3)
-        'printStation(wholeStationData)
+        'printStation(dataStation)
         Select Case locateMode
             Case 1
                 Result = LinearSpherical(dataSet)

@@ -66,6 +66,7 @@ Partial Class Form1
         Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
         Me.DataGridViewFinalResult = New System.Windows.Forms.DataGridView()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.txtKMLPath = New System.Windows.Forms.TextBox()
         Me.btnToKmlFile = New System.Windows.Forms.Button()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.textBox1 = New System.Windows.Forms.TextBox()
@@ -588,12 +589,21 @@ Partial Class Form1
         '
         'Panel2
         '
+        Me.Panel2.Controls.Add(Me.txtKMLPath)
         Me.Panel2.Controls.Add(Me.btnToKmlFile)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel2.Location = New System.Drawing.Point(3, 293)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(522, 28)
         Me.Panel2.TabIndex = 2
+        '
+        'txtKMLPath
+        '
+        Me.txtKMLPath.Location = New System.Drawing.Point(3, 4)
+        Me.txtKMLPath.Name = "txtKMLPath"
+        Me.txtKMLPath.Size = New System.Drawing.Size(418, 20)
+        Me.txtKMLPath.TabIndex = 1
+        Me.txtKMLPath.Text = "E:\Kuliah\S1 ITB Electrical Engineering\Semester 8\TA 2\Hasil Simulasi\"
         '
         'btnToKmlFile
         '
@@ -856,4 +866,5 @@ Partial Class Form1
     Friend WithEvents btnCalcModeHint As Button
     Friend WithEvents Label7 As Label
     Friend WithEvents txtFilterMode As TextBox
+    Friend WithEvents txtKMLPath As TextBox
 End Class

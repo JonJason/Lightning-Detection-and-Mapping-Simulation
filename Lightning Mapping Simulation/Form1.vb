@@ -13,9 +13,8 @@ Public Class Form1
     Dim altitudeTopLimit As Decimal
     Dim altitudeBottomLimit As Decimal
     Dim simulation As New SimData
-    Dim calc As New Calculate
     Dim totalPoint As Integer
-    Dim simLat, simLon
+    Dim simLat, simLon, nPencilan
 
     Dim stopWatch As New Stopwatch()
     Private Delegate Sub createContourKMLFileDelegate(ByVal path As String, ByVal Points As List(Of DataFormat.finalResultData), ByVal limits As Array, ByVal setting As Form1.SimData, ByVal stationsData As List(Of DataFormat.StationsData))
@@ -26,12 +25,14 @@ Public Class Form1
         Public Property CalcMode As Integer = 1
         Public Property filterMode As Integer = 1
         Public Property firstLat As Decimal = -7.8
+        'Public Property firstLat As Decimal = -9.05
         Public Property firstLon As Decimal = 105.15
-        Public Property lastLat As Decimal = -5.9
-        Public Property lastLon As Decimal = 108.5
-        Public Property nIteration As Integer = 1000
-        Public Property deltaLat As Decimal = 0.01
-        Public Property deltaLon As Decimal = 0.01
+        Public Property lastLat As Decimal = -5.9 '-6.7549
+        Public Property lastLon As Decimal = 108.5 '107.4192
+        'Public Property lastLon As Decimal = 115.85
+        Public Property nIteration As Integer = 1 '1000
+        Public Property deltaLat As Decimal = 0.025
+        Public Property deltaLon As Decimal = 0.025
         Public Property errorTOAMean As Decimal = 0
         Public Property errorTOASigma As Decimal = 0.00000025
         Public Property c As Decimal = 300000000
@@ -43,7 +44,7 @@ Public Class Form1
         Randomize()
         Dim r1 = Rnd()
         Dim r2 = Rnd()
-        Dim randomResult = mean + sigma * Math.Sqrt(-2 * Math.Log(r1)) * Math.Sin(2 * Math.PI * r2)
+        Dim randomResult = mean + sigma * Math.Sqrt(-2 * Math.Log(r1)) * Math.Cos(2 * Math.PI * r2)
         Return randomResult
     End Function
 
@@ -79,7 +80,10 @@ Public Class Form1
         stationsData.Add(New DataFormat.StationsData(5, -6.127, 106.2472))
         stationsData.Add(New DataFormat.StationsData(6, -7.3259, 107.7953))
         'stationsData.Add(New DataFormat.StationsData(7, -6.5508, 106.745))
-        'stationsData.Add(New DataFormat.StationsData(8, -6.5274, 106.8304))
+        'stationsData.Add(New DataFormat.StationsData(7, -6.5274, 106.8304))
+        'stationsData.Add(New DataFormat.StationsData(7, -6.7076, 105.8071))
+        'stationsData.Add(New DataFormat.StationsData(8, -6.7076, 110.8071))
+
 
         'stationsData.Add(New DataFormat.StationsData(1, -6.7924, 107.6045))
         'stationsData.Add(New DataFormat.StationsData(2, -6.1646, 107.298))
@@ -90,6 +94,52 @@ Public Class Form1
         'stationsData.Add(New DataFormat.StationsData(2, -6.1646, 107.298))
         'stationsData.Add(New DataFormat.StationsData(3, -6.7047, 108.506))
         'stationsData.Add(New DataFormat.StationsData(4, -7.4641, 107.3392))
+
+        'stasiun pa syarif
+        'stationsData.Add(New DataFormat.StationsData(1, -5.8111, 105.7684))
+        'stationsData.Add(New DataFormat.StationsData(2, -6.5314, 105.7187))
+        'stationsData.Add(New DataFormat.StationsData(3, -5.7271, 106.6232))
+        'stationsData.Add(New DataFormat.StationsData(4, -6.9639, 106.3928))
+        'stationsData.Add(New DataFormat.StationsData(5, -6.2173, 107.6244))
+        'stationsData.Add(New DataFormat.StationsData(6, -6.4875, 108.5331))
+        'stationsData.Add(New DataFormat.StationsData(7, -6.8895, 107.6113))
+        'stationsData.Add(New DataFormat.StationsData(8, -7.6722, 108.6542))
+        'stationsData.Add(New DataFormat.StationsData(9, -6.8704, 109.7117))
+        'stationsData.Add(New DataFormat.StationsData(10, -7.8674, 110.0393))
+        'stationsData.Add(New DataFormat.StationsData(11, -6.4841, 110.7321))
+        'stationsData.Add(New DataFormat.StationsData(12, -7.6357, 111.528))
+        'stationsData.Add(New DataFormat.StationsData(13, -6.8896, 112.2854))
+        'stationsData.Add(New DataFormat.StationsData(14, -7.5598, 112.7066))
+        'stationsData.Add(New DataFormat.StationsData(15, -8.311, 112.1648))
+        'stationsData.Add(New DataFormat.StationsData(16, -8.3399, 114.1343))
+        'stationsData.Add(New DataFormat.StationsData(17, -8.8401, 115.1659))
+        'stationsData.Add(New DataFormat.StationsData(18, -8.0765, 115.2229))
+        'stationsData.Add(New DataFormat.StationsData(19, -7.7035, 113.9469))
+        'stationsData.Add(New DataFormat.StationsData(20, -6.8848, 113.6628))
+        'stationsData.Add(New DataFormat.StationsData(21, -5.8356, 112.6882))
+
+        'stasiun pa syarif 2
+        'stationsData.Add(New DataFormat.StationsData(1, -5.8111, 105.7684))
+        'stationsData.Add(New DataFormat.StationsData(2, -6.5314, 105.7187))
+        'stationsData.Add(New DataFormat.StationsData(3, -5.7271, 106.6232))
+        'stationsData.Add(New DataFormat.StationsData(4, -6.9483, 106.4719))
+        'stationsData.Add(New DataFormat.StationsData(5, -5.9971, 107.3357))
+        'stationsData.Add(New DataFormat.StationsData(6, -7.4722, 107.2142))
+        'stationsData.Add(New DataFormat.StationsData(7, -6.8895, 107.6113))
+        'stationsData.Add(New DataFormat.StationsData(8, -6.3484, 108.3806))
+        'stationsData.Add(New DataFormat.StationsData(9, -7.6722, 108.6542))
+        'stationsData.Add(New DataFormat.StationsData(10, -6.8471, 109.5252))
+        'stationsData.Add(New DataFormat.StationsData(11, -7.9852, 110.2823))
+        'stationsData.Add(New DataFormat.StationsData(12, -6.4841, 110.7321))
+        'stationsData.Add(New DataFormat.StationsData(13, -6.8896, 112.2854))
+        'stationsData.Add(New DataFormat.StationsData(14, -8.2573, 111.8945))
+        'stationsData.Add(New DataFormat.StationsData(15, -7.6544, 112.8426))
+        'stationsData.Add(New DataFormat.StationsData(16, -7.0071, 113.9865))
+        'stationsData.Add(New DataFormat.StationsData(17, -8.5584, 113.9059))
+        'stationsData.Add(New DataFormat.StationsData(18, -7.4035, 111.1654))
+        'stationsData.Add(New DataFormat.StationsData(19, -8.8401, 115.1659))
+        'stationsData.Add(New DataFormat.StationsData(20, -8.0765, 115.2229))
+        'stationsData.Add(New DataFormat.StationsData(21, -5.8356, 112.6882))
 
         'setup stationsData gridView
         stationsDataBindingSource.DataSource = stationsData
@@ -198,7 +248,7 @@ Public Class Form1
                                             .Visible = True
                                         End With
                                         With lblProgress
-                                            .Text = "0/" & ProgressBar1.Maximum
+                                            .Text = ""
                                             .Visible = True
                                         End With
                                         With lblStatus
@@ -209,12 +259,15 @@ Public Class Form1
                                         btnToKmlFile.Enabled = False
                                         startButton.Text = "Pause"
                                     End Sub))
+
+        Dim calc As New Calculate
         Dim dataSet As Array
         Dim arcDistance As Decimal
         Dim result As DataFormat.result
         Dim arrayResult(simulation.nIteration - 1) As DataFormat.result
         Dim arrayAccuracy(totalPoint - 1, 2) As Decimal 'lat, lon, accuracy
         Dim resultId As Integer = 0
+        Dim stations_list = New List(Of DataFormat.Station)
 
         'setting up stations array
         Dim stations(stationsData.count - 1)
@@ -227,66 +280,76 @@ Public Class Form1
             stations(i).rFromCenter = vbNull
         Next
         event_1.Set()
+        Me.Invoke(New MethodInvoker(Sub() Me.lblStatus.Text = "Status: Running..."))
         For simLat = simulation.firstLat To simulation.lastLat
             For simLon = simulation.firstLon To simulation.lastLon
+                nPencilan = 0
                 arrayAccuracy(resultId, 2) = 0
-                Me.Invoke(New MethodInvoker(Sub() Me.lblStatus.Text = "Status: " & simLat & ", " & simLon))
+                'Me.Invoke(New MethodInvoker(Sub() Me.lblStatus.Text = "Status: " & simLat & ", " & simLon))
                 For iIteration = 1 To simulation.nIteration
+                    stations_list.Clear()
                     For iStation = 0 To stations.Length - 1
                         arcDistance = calc.Busur(stations(iStation).Latitude, stations(iStation).Longitude, simLat, simLon)
                         stations(iStation).TOA = arcDistance / simulation.c + BoxMullerRandom(simulation.errorTOAMean, simulation.errorTOASigma)
+                        Me.Invoke(New MethodInvoker(Sub()
+                                                        'Console.WriteLine(simLat & ", " & simLon & ", " & stations(iStation).id & ", " & stations(iStation).TOA)
+                                                    End Sub))
+                        If stations(iStation).TOA > 0.002 Then
+                            'Console.WriteLine(simLat & ", " & simLon & ", " & stations(iStation).id & ", " & stations(iStation).TOA)
+                            stations(iStation).TOA = -1
+                            'Console.WriteLine(simLat & ", " & simLon & ", " & stations(iStation).id & ", " & stations(iStation).TOA)
+                        Else
+                            stations_list.Add(stations(iStation))
+                        End If
                     Next
                     Me.Invoke(New MethodInvoker(Sub()
                                                     Me.ProgressBar1.Increment(1)
-                                                    Me.lblProgress.Text = "Process: " & Me.ProgressBar1.Value & "/" & Me.ProgressBar1.Maximum
+                                                    'Me.lblProgress.Text = "Process: " & Me.ProgressBar1.Value & "/" & Me.ProgressBar1.Maximum
                                                 End Sub))
-
+                    'For xxx = 1 To 4
                     Select Case simulation.filterMode
                         Case 1
-                            dataSet = calc.middleCombination(stations, simulation.CalcMode)
+                            dataSet = calc.middleCombination(stations_list.ToArray(), simulation.CalcMode)
                         Case 2
-                            dataSet = calc.nearestCombination1(stations, simulation.CalcMode)
+                            dataSet = calc.nearestCombination1(stations_list.ToArray(), simulation.CalcMode)
                         Case 3
-                            dataSet = calc.nearestCombination2(stations, simulation.CalcMode)
+                            dataSet = calc.nearestCombination2(stations_list.ToArray(), simulation.CalcMode)
                         Case 4
-                            dataSet = calc.nearestCombination3(stations, simulation.CalcMode)
+                            dataSet = calc.nearestCombination3(stations_list.ToArray(), simulation.CalcMode)
                         Case 5
-                            dataSet = stations
+                            dataSet = stations_list.ToArray()
                         Case Else
                             dataSet = Nothing
                     End Select
-
-                    result = calc.Locate(dataSet, simulation.CalcMode, stations)
-
-                    If result.Latitude = 0 And result.Longitude = 0 And result.TimeOfOccurence = 0 Then
-                        'Console.WriteLine("Another try")
-
-                        'Console.WriteLine(result.Latitude & ", " & result.Longitude & ", " & result.TimeOfOccurence)
-                        result = calc.anotherCombination(dataSet, stations)
+                    If False Then 'Not dataSet Is Nothing Then
+                        Me.Invoke(New MethodInvoker(Sub()
+                                                        'Console.WriteLine(xxx)
+                                                        printStation(dataSet)
+                                                    End Sub))
                     End If
-                    'If Not (result.Latitude = 0 And result.Longitude = 0 And result.TimeOfOccurence = 0) Then
-                    'Console.WriteLine(result.Latitude & ", " & result.Longitude)
-                    'End If
-                    result.Accuracy = calc.Busur(result.Latitude, result.Longitude, simLat, simLon)
-                    arrayResult(iIteration - 1) = result
-                    arrayAccuracy(resultId, 2) += arrayResult(iIteration - 1).Accuracy
-                    'Console.WriteLine(simLat & ", " & simLon)
-                    'Console.WriteLine(arrayAccuracy(resultId, 2))
-                    'For i = 0 To dataSet.Length - 1
-                    'Console.WriteLine(dataSet(i).id & vbTab & dataSet(i).Latitude & vbTab & dataSet(i).Longitude & vbTab & vbTab & dataSet(i).TOA)
                     'Next
-                    'If result.Accuracy > 5000 Then
-                    'textTemp += simLat & ", " & simLon
-                    'textTemp += vbCrLf & arrayAccuracy(resultId, 2)
-                    'For i = 0 To dataSet.Length - 1
-                    'textTemp += vbCrLf & dataSet(i).id & vbTab & dataSet(i).Latitude & vbTab & dataSet(i).Longitude & vbTab & vbTab & dataSet(i).TOA
-                    'Next
-                    'textTemp += vbCrLf & vbCrLf
-                    'End If
+                    If dataSet Is Nothing Then
+                        nPencilan += 1
+                        Console.WriteLine(nPencilan)
+                    Else
+                        result = calc.Locate(dataSet, simulation.CalcMode, stations)
+
+                        If result.Latitude = 0 And result.Longitude = 0 And result.TimeOfOccurence = 0 Then
+                            'Console.WriteLine("Another try")
+                            result = calc.anotherCombination(dataSet, stations)
+                        End If
+                        result.Accuracy = calc.Busur(result.Latitude, result.Longitude, simLat, simLon)
+                        arrayResult(iIteration - 1) = result
+                        arrayAccuracy(resultId, 2) += arrayResult(iIteration - 1).Accuracy
+                    End If
                 Next
-                    arrayAccuracy(resultId, 0) = simLat
+                arrayAccuracy(resultId, 0) = simLat
                 arrayAccuracy(resultId, 1) = simLon
-                arrayAccuracy(resultId, 2) /= simulation.nIteration
+                If simulation.nIteration <= nPencilan Then
+                    arrayAccuracy(resultId, 2) = -2
+                Else
+                    arrayAccuracy(resultId, 2) /= (simulation.nIteration - nPencilan)
+                End If
 
                 finalResultData.add(New DataFormat.finalResultData(resultId + 1, arrayAccuracy(resultId, 0), arrayAccuracy(resultId, 1), Decimal.Round(arrayAccuracy(resultId, 2), 2)))
                 Me.Invoke(New MethodInvoker(Sub() Me.finalResultDataBindingSource.ResetBindings(False)))
@@ -484,14 +547,18 @@ Public Class Form1
 
             End Select
             Dim _now = Now
-            Dim folderPath = "E:\Kuliah\Semester 8\TA 2\Hasil Simulasi\" & Format(_now, "d-MMM-yyyy")
-            If (Not Directory.Exists(folderPath)) Then
-                Directory.CreateDirectory(folderPath)
+            Dim folderPath = txtKMLPath.Text & Format(_now, "d-MMM-yyyy")
+            Dim answer As DialogResult
+            answer = MessageBox.Show("do you want to create KML file on:" & vbCrLf & vbCrLf & folderPath, "Yes/no sample", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+            If answer = vbYes Then
+                If (Not Directory.Exists(folderPath)) Then
+                    Directory.CreateDirectory(folderPath)
+                End If
+                Dim filePath = folderPath & "\" & fileName & " (" & Format(_now, "d-MMM-yyyy H.mm.ss") & ")" & " M" & simulation.filterMode
+                'MsgBox(filePath)
+                createTxtFile(filePath & ".txt", finalResultData)
+                createContourKMLFile(filePath & ".kml", finalResultData, limits, simulation, stationsData)
             End If
-            Dim filePath = folderPath & "\" & fileName & " (" & Format(_now, "d-MMM-yyyy H.mm.ss") & ")" & " M" & simulation.filterMode
-            'MsgBox(filePath)
-            createTxtFile(filePath & ".txt", finalResultData)
-            createContourKMLFile(filePath & ".kml", finalResultData, limits, simulation, stationsData)
         End If
     End Sub
 
@@ -518,6 +585,14 @@ Public Class Form1
         For i = 0 To array.Length - 1
             textBox1.Text += vbCrLf & array(i).id & vbTab & array(i).Latitude & vbTab & array(i).Longitude & vbTab & vbTab & array(i).TOA
         Next
+    End Sub
+
+    Private Sub printStation(ByVal array)
+        Console.WriteLine(" - --------------------------------------------------------------")
+        For i = 0 To array.Length - 1
+            Console.WriteLine(array(i).id & vbTab & array(i).Latitude & vbTab & array(i).Longitude & vbTab & vbTab & array(i).TOA)
+        Next
+        Console.WriteLine(" - --------------------------------------------------------------")
     End Sub
 
     Public Function getContourLine(ByVal altitude As Decimal, ByVal data As List(Of DataFormat.finalResultData), ByVal simulation As Form1.SimData) As List(Of DataFormat.finalResultData)
@@ -629,7 +704,7 @@ Public Class Form1
             Console.WriteLine("[TRACE] Wrote Styles")
 
             For index = 0 To stationsData.Count - 1
-                info = New UTF8Encoding(True).GetBytes(kml.point(2, "Station " & stationsData(index).Id, stationsData(index).Latitude, stationsData(index).Longitude, 2000, style:=StationStyle)) : fs.Write(info, 0, info.Length)
+                info = New UTF8Encoding(True).GetBytes(kml.point(2, stationsData(index).Id, stationsData(index).Latitude, stationsData(index).Longitude, 2000, style:=StationStyle)) : fs.Write(info, 0, info.Length)
             Next
 
             Console.WriteLine("[TRACE] Wrote Stations Coordinates")
